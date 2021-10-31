@@ -1,0 +1,7 @@
+<svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 4.5H38L12 45.5H38L12 4.5Z" stroke="black" stroke-width="4"/>
+<path d="M25 25V45.5" stroke="black" stroke-width="4">
+  <animate id="line" attributeName="d" values="M25 4.5V25;M25 4.5V45.5;M25 25V45.5" begin="0s;line.end+.7s;" dur="1s" fill="freeze"/>
+</path>
+<animateTransform attributeName="transform" begin="line.end" dur=".7s" type="rotate" by="180" keySplines=".5 0 .5 1"/>
+</svg>
