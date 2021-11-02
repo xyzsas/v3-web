@@ -7,6 +7,7 @@ let input = $ref('')
 let random = $ref('')
 
 async function next () {
+  if (!input) return
   loading = true
   if (!random) { // first
     random = await request.get('/auth/' + input).then(r => r.data).catch(popError)
