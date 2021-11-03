@@ -10,7 +10,8 @@ async function next () {
   if (!input) return
   loading = true
   if (!random) { // first
-    random = await request.get('/auth/' + input).then(r => r.data).catch(popError)
+    random = await request.get('/sas/auth/' + input).then(r => r.data).catch(popError)
+    console.log(random)
   } else { // second
   }
   input = ''
