@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
-import { U, greet } from '../plugins/state.js'
+import { U } from '../plugins/state.js'
+import { greet } from '../utils/greet.js'
 const router = useRouter(), route = useRoute()
 // if (!U.value) router.push('/login')
 </script>
