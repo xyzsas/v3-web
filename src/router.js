@@ -4,11 +4,11 @@ const routes = [
   {
     path: '/login',
     component: () => import('./views/Login.vue')
-  },
-  {
-    path: '/activation',
-    component: () => import('./views/Activation.vue')
-  }
+  }//,
+  // {
+  //   path: '/activation',
+  //   component: () => import('./views/Activation.vue')
+  // }
 ]
 
 const router = createRouter({ history: createWebHashHistory(), routes }) 
