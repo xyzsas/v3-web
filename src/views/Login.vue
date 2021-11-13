@@ -1,18 +1,25 @@
 <script setup>
 import { ArrowCircleRightIcon } from '@heroicons/vue/solid'
-import { request, popError } from '../utils/request.js'
+import { request } from '../utils/request.js'
+import error from '../utils/error.js'
+import { HS256, sha256 } from '../utils/crypto.js'
 
 let loading = $ref(false)
 let input = $ref('')
 let random = $ref('')
+let uid = ''
 
 async function next () {
   if (!input) return
   loading = true
   if (!random) { // first
-    random = await request.get('/sas/auth/' + input).then(r => r.data).catch(popError)
+    uid = input
+    random = await request.get('/sas/auth/' + uid).then(r => r.data).catch(error)
     console.log(random)
   } else { // second
+    const res = await request.post('/sas/auth/' + uid, { password: input }).then(r => r.data).catch(error)
+    random = ''
+    console.log(res)
   }
   input = ''
   loading = false
