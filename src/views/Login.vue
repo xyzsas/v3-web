@@ -1,5 +1,4 @@
 <script setup>
-import { ArrowCircleRightIcon } from '@heroicons/vue/solid'
 import { request, popError } from '../utils/request.js'
 
 let loading = $ref(false)
