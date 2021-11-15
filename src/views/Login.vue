@@ -33,12 +33,13 @@ async function next () {
     })
   } else { // second
     const res = await request.post('/sas/auth/' + user.id, { password: await HS256(await sha256(input + salt), random) }).then(r => r.data).catch(e => { popError(e) }) // make popError sync
-    random = ''
     if (res) { // login success
-      user.name = res.data.name
-      user.token = res.data.token
+      user.name = res.name
+      user.token = res.token
+      user.random = random
       router.push('/')
-    } 
+    }
+    random = ''
   }
   input = ''
   loading = false

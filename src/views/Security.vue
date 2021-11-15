@@ -5,6 +5,9 @@ import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
 import Wrapper from '../components/Wrapper.vue'
 import { request } from '../utils/request.js'
+import { HS256, sha256, salt } from '../utils/crypto.js'
+import error from '../utils/error.js'
+
 const router = useRouter()
 let title = $ref('安全中心')
 let loading = $ref(false)
@@ -12,18 +15,16 @@ let password = $ref('')
 let newPassword = $ref('')
 let cfmPassword = $ref('')
 let test = $ref(false)
-// user.token = 'jj'
-// if (!user.id) {
-//   setTimeout(async () => {
-//     await Swal.fire('请先登录', '', 'error')
-//     router.push('/login')
-//   }, 1000)
-// }
+if (!user.id) {
+  setTimeout(async () => {
+    await Swal.fire('请先登录', '', 'error')
+    router.push('/login')
+  }, 1000)
+}
 title = '账户激活'
 if (user.token) title = '修改密码'
 setTimeout(() => test = true, 1000)
 const submit = async () => {
-  loading = true
   if (!((user.token && password && newPassword && cfmPassword) || (!user.token && newPassword && cfmPassword))) return
   if (newPassword !== cfmPassword) {
     Swal.fire('确认密码与新设密码不符', '', 'error')
@@ -33,14 +34,18 @@ const submit = async () => {
     Swal.fire('新密码不得与原密码相同', '', 'error')
     return
   }
+  loading = true
   const payload = {
-    newPassword: await HS256(await sha256(newPassword))
+    newPassword: await sha256(newPassword +  salt),
+    random: user.random
   }
-  if (password) payload['password'] = password
-  if (!user?.token) {
-    const res = await request.post('/sas/auth/' + user.id, { password: await HS256(await sha256(input + salt), random) }).then(r => r.data).catch(e => { popError(e) }) 
-    await request.put('/sas/auth/' + user.id, payload)
+  if (password) payload['password'] = await HS256(await sha256(password +  salt), user.random)
+  const res = await request.put('/sas/auth/' + user.id, payload).then(r => r.data).catch(error) 
+  if (res) {
+    await Swal.fire('激活成功', '', 'success')
+    router.push('/')
   }
+  loading = false
 }
 </script>
 
