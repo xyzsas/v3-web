@@ -41,7 +41,7 @@ async function next () {
     random = ''
   }
   input = ''
-  loading = false
+  if (!user.token) loading = false
 }
 </script>
 

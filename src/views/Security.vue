@@ -18,18 +18,28 @@ if (!user.id) router.push('/login')
 if (user.token) title = '修改密码'
 else title = '账户激活'
 let showCard = $ref(false)
+let showAauth = $ref(false)
 setTimeout(() => showCard = true, 1000)
+setTimeout(() => showAauth = true, 2000)
+
+let err = $computed(() => {
+  if (user.token && !password) return '请输入原密码'
+  if (!newPassword) return '请设置新密码'
+  if (newPassword.length < 8) return '新密码至少需要8位'
+  let s = 0 // calculate strength
+  if (newPassword.length >= 12) s++
+  if (newPassword.match(/[A-Z]/)) s++
+  if (newPassword.match(/[a-z]/)) s++
+  if (newPassword.match(/[0-9]/)) s++
+  if (newPassword.match(/[!@#$%^&*+-/=?]/)) s++
+  if (s < 3) return '密码强度太弱'
+  if (newPassword == password) return '新密码不得与原密码相同'
+  if (!cfmPassword) return '请确认新密码'
+  if (newPassword !== cfmPassword) return '确认密码与新密码不符'
+})
 
 async function submit () {
-  if (!((!user.token || password) && newPassword && cfmPassword)) return
-  if (newPassword !== cfmPassword) {
-    Swal.fire('确认密码与新密码不符', '', 'error')
-    return
-  }
-  if (password === newPassword) {
-    Swal.fire('新密码不得与原密码相同', '', 'error')
-    return
-  }
+  if (err) return
   loading = true
   const payload = { newPassword: await sha256(newPassword + salt) }
   if (password) {
@@ -47,16 +57,25 @@ async function submit () {
 </script>
 
 <template>
-  <div class="h-screen bg-gray-100 flex justify-center items-center">
+  <div class="h-screen bg-gray-100 p-10 flex flex-col">
     <overlay-loading :show="loading"></overlay-loading>
-    <div class="absolute w-80 h-auto py-4 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
-      <h1 class="text-2xl font-semibold">{{ title }}</h1>
-      <wrapper :show="showCard" class="flex justify-center items-center flex-col">
-        <input v-if="user.token" :placeholder="'请输入原密码'" :type="'password'" v-model="password" @keyup.enter="$event.target.nextElementSibling.focus()">
-        <input :placeholder="'请设置新密码'" :type="'password'" v-model="newPassword" @keyup.enter="$event.target.nextElementSibling.focus()">
-        <input :placeholder="'请确认新密码'" :type="'password'" v-model="cfmPassword" @keyup.enter="submit">
-        <p class="py-3 text-gray-600">请牢记密码！</p>
-        <button @click="submit"><arrow-circle-right-icon class="w-12 h-12 transition" :class="((!user.token || password) && newPassword && cfmPassword) ? 'text-blue-500' : 'text-gray-300'"/></button>
+    <h1 class="text-3xl font-medium m-3">安全中心</h1>
+    <div class="flex flex-grow flex-col sm:flex-row justify-around items-center">
+      <wrapper :show="showCard">
+        <div class="w-80 h-auto py-4 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
+          <h1 class="text-2xl font-semibold">{{ title }}</h1>
+          <input v-if="user.token" :placeholder="'请输入原密码'" :type="'password'" v-model="password" @keyup.enter="$event.target.nextElementSibling.focus()">
+          <input :placeholder="'请设置新密码'" :type="'password'" v-model="newPassword" @keyup.enter="$event.target.nextElementSibling.focus()">
+          <input :placeholder="'请确认新密码'" :type="'password'" v-model="cfmPassword" @keyup.enter="submit">
+          <p class="py-3" :class="err ? 'text-red-600' : 'text-gray-600'">{{ err || '请牢记密码！' }}</p>
+          <button @click="submit"><arrow-circle-right-icon class="w-12 h-12 transition" :class="err ? 'text-gray-300' : 'text-blue-500'"/></button>
+        </div>
+      </wrapper>
+      <wrapper v-if="user.token" :show="showAauth">
+        <div class="flex flex-col items-center">
+          <h1 class="text-2xl font-semibold">第三方登录设置</h1>
+          <p class="mt-10">还在开发中...</p>
+        </div>
       </wrapper>
     </div>
   </div>
