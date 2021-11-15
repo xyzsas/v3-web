@@ -39,10 +39,13 @@ const submit = async () => {
     newPassword: await sha256(newPassword +  salt),
     random: user.random
   }
-  if (password) payload['password'] = await HS256(await sha256(password +  salt), user.random)
+  if (password) {
+    const random = await request.get('/sas/auth/' + user.id).then(r => r.data.random).catch(error)
+    payload['password'] = await HS256(await sha256(password +  salt), random)
+  }
   const res = await request.put('/sas/auth/' + user.id, payload).then(r => r.data).catch(error) 
   if (res) {
-    await Swal.fire('激活成功', '', 'success')
+    await Swal.fire(user.token ? '修改成功' : '激活成功', '', 'success')
     router.push('/')
   }
   loading = false

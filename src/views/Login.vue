@@ -36,7 +36,6 @@ async function next () {
     if (res) { // login success
       user.name = res.name
       user.token = res.token
-      user.random = random
       router.push('/')
     }
     random = ''
