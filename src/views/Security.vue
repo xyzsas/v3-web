@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ArrowCircleRightIcon } from '@heroicons/vue/solid'
+import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
 import Wrapper from '../components/Wrapper.vue'
 const router = useRouter()
@@ -19,19 +20,17 @@ const submit = () => {}
 
 <template>
   <div class="h-screen bg-gray-100 flex justify-center items-center">
-    <transition name="fade">
-      <img v-if="loading" src="/logo.svg" class="absolute w-20 h-20">
-      <div v-else class="absolute w-80 h-auto py-4 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
-        <h1 class="text-2xl font-semibold">{{ title }}</h1>
-        <wrapper :show="test" class="flex justify-center items-center flex-col">
-          <input v-if="user.token" :placeholder="'请输入原密码'" :type="'password'" v-model="pwd" @keyup.enter="$event.target.nextElementSibling.focus()">
-          <input :placeholder="'请设置新密码'" :type="'password'" v-model="newPwd" @keyup.enter="$event.target.nextElementSibling.focus()">
-          <input :placeholder="'请确认新密码'" :type="'password'" v-model="cfmPwd" @keyup.enter="submit">
-          <p class="py-3 text-gray-600">请牢记密码！</p>
-          <button @click="submit"><arrow-circle-right-icon class="w-12 h-12 transition" :class="(user.token && pwd && newPwd && cfmPwd) || (!user.token && newPwd && cfmPwd) ? 'text-blue-500' : 'text-gray-300'"/></button>
-        </wrapper>
-      </div>
-    </transition>
+    <overlay-loading :show="loading"></overlay-loading>
+    <div class="absolute w-80 h-auto py-4 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
+      <h1 class="text-2xl font-semibold">{{ title }}</h1>
+      <wrapper :show="test" class="flex justify-center items-center flex-col">
+        <input v-if="user.token" :placeholder="'请输入原密码'" :type="'password'" v-model="pwd" @keyup.enter="$event.target.nextElementSibling.focus()">
+        <input :placeholder="'请设置新密码'" :type="'password'" v-model="newPwd" @keyup.enter="$event.target.nextElementSibling.focus()">
+        <input :placeholder="'请确认新密码'" :type="'password'" v-model="cfmPwd" @keyup.enter="submit">
+        <p class="py-3 text-gray-600">请牢记密码！</p>
+        <button @click="submit"><arrow-circle-right-icon class="w-12 h-12 transition" :class="(user.token && pwd && newPwd && cfmPwd) || (!user.token && newPwd && cfmPwd) ? 'text-blue-500' : 'text-gray-300'"/></button>
+      </wrapper>
+    </div>
   </div>
 </template>
 
