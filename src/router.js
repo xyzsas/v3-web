@@ -4,11 +4,11 @@ const routes = [
   {
     path: '/login',
     component: () => import('./views/Login.vue')
-  }/*,
+  },
   {
-    path: '/activation',
-    component: () => import('./views/Activation.vue')
-  }*/,
+    path: '/security',
+    component: () => import('./views/Security.vue')
+  },
   {
     path: '/',
     component: () => import('./views/Home.vue')
