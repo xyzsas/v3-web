@@ -20,6 +20,15 @@ watchEffect(() => {
   if (inputElement) inputElement.focus()
 })
 
+function success (res) {
+  user.id = res.id
+  user.name = res.name
+  user.token = res.token
+  user.aauth = JSON.parse(res.aauth || '{}')
+  user.group = JSON.parse(res.group || '{}')
+  router.push('/')
+}
+
 async function next () {
   if (!input) return
   loading = true
@@ -31,17 +40,27 @@ async function next () {
       const uec = e.response?.data?.UEC
       if (uec == 'XYZSAS-0001') router.push('/security')
     })
+    loading = false
   } else { // second
     const res = await request.post('/sas/auth/' + user.id, { password: await HS256(await sha256(input + salt), random) }).then(r => r.data).catch(e => { popError(e) }) // make popError sync
-    if (res) { // login success
-      user.name = res.name
-      user.token = res.token
-      router.push('/')
-    }
+    if (res) success(res)
     random = ''
   }
   input = ''
   if (!user.token) loading = false
+}
+
+
+async function aauth (token) {
+  loading = true
+  const res = await request.post('/sas/link/', { token }).then(r => r.data).catch(e => { popError(e) })
+  if (res) success(res)
+  if (!user.token) loading = false
+}
+
+function goAauth () {
+  window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
+  window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=400')
 }
 </script>
 
@@ -56,6 +75,10 @@ async function next () {
         v-model="input" @keyup.enter="next"
       >
       <button @click="next"><arrow-circle-right-icon class="w-12 h-12 transition" :class="input ? 'text-blue-500' : 'text-gray-300'"/></button>
+      <button class="flex items-center absolute right-2 bottom-1 text-gray-400 text-sm" @click="goAauth">
+        <img class="w-5" src="https://cn.aauth.link/logo.png">
+        第三方登录
+      </button>
     </div>
   </div>
 </template>
