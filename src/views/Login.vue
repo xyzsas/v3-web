@@ -25,7 +25,7 @@ async function next () {
   loading = true
   if (!random) { // first
     input = input.toUpperCase()
-    user.id = short(await sha256(input))
+    user.id = short(await sha256(input)) + '.0'
     random = await request.get('/sas/auth/' + user.id).then(r => r.data.random).catch(async e => {
       await popError(e)
       const uec = e.response?.data?.UEC
