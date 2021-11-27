@@ -1,44 +1,59 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { CheckIcon, UploadIcon } from '@heroicons/vue/solid'
+import OverlayLoading from '../components/OverlayLoading.vue'
 const router = useRouter()
 import * as faceapi from 'face-api.js'
+import { user } from '../state.js'
+import popError from '../utils/error.js'
 import { request } from '../utils/request.js'
 
-const token = () => { headers: '' }
-
-// if (!U.value) router.push('/login')
 const modelURL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights/'
 const STD = 173.3 // pixel length of face area
 
 let msg = $ref('正在载入人脸检测模块...')
-let ready = $ref(false)
-let ok = $ref(false)
+let ready = $ref(false), ok = $ref(false), src = $ref(''), loading = $ref(true)
+let canvas = $ref(), selector = $ref()
+let ctx, urls = {}
 
-let source, canvas, ctx
+if (!user.token) router.push('/login')
+else request.get('/sas/link/', { headers: { token: user.token } })
+  .then(({ data }) => {
+    urls.GET = data.GET.replace('http://', 'https://')
+    urls.PUT = data.PUT.replace('http://', 'https://')
+    src = urls.GET
+    loading = false
+  }).catch(popError)
 
 async function init () {
   await faceapi.nets.ssdMobilenetv1.loadFromUri(modelURL)
   msg = ''
   ready = true
-  source = document.getElementById('source')
-  canvas = document.getElementById('preview')
   ctx = canvas.getContext('2d')
 }
 init()
 
+function select () {
+  msg = '正在载入图片...'
+  src = ''
+  ok = false
+  selector.click()
+  setTimeout(() => { if (msg == '正在载入图片...') msg = '' }, 10000)
+}
+
 async function uploadImage () {
+  const imgFile = selector.files[0]
+  if (!imgFile) return
   msg = '正在分析人脸与图片尺寸...'
   ok = false
-  const imgFile = document.getElementById('upload').files[0]
   const img = await faceapi.bufferToImage(imgFile)
-  source.src = img.src
+  src = img.src
+  await new Promise(r => setTimeout(r, 100))
   const d = await faceapi.detectSingleFace(img)
   console.log(d)
   if (!d) {
     Swal.fire('人脸识别失败', '请重新选择图片', 'error')
     msg = ''
-    source.src = '/img/placeholder.png'
+    src = ''
     return
   }
   const b = d.box
@@ -53,10 +68,11 @@ async function uploadImage () {
   if (c.l < 0 || c.t < 0 || c.l + c.w > d.imageWidth || c.t + c.h > d.imageHeight) {
     Swal.fire('无法截取标准尺寸', '人脸过于靠近边界，请重新选择图片', 'error')
     msg = ''
-    source.src = '/img/placeholder.png'
+    src = ''
     return
   }
   msg = '自动剪裁中...'
+  await new Promise(r => setTimeout(r, 1000))
   ctx.drawImage(img, c.l, c.t, c.w, c.h, 0, 0, 295, 413)
   ok = true
   msg = ''
@@ -74,18 +90,9 @@ function toBlob (data) {
 
 async function submit () {
   const data = canvas.toDataURL('image/png')
-  function catchErr (e) {
-    Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
-    return false
-  }
   msg = '正在提交，请耐心等待...'
-  let url = await request.post('/store/photo', {}, token())
-    .then(({ data }) => data)
-    .catch(catchErr)
-  if (!url) return
-  url = url.replace('http://', 'https://')
   try {
-    await request.put(url, toBlob(data), { headers: { 'Content-Type': 'image/png' } })
+    await request.put(urls.PUT, toBlob(data), { headers: { 'Content-Type': 'image/png' } })
     Swal.fire('成功', '照片上传成功', 'success')
       .then(() => { router.push('/') })
   } catch (e) {
@@ -96,42 +103,16 @@ async function submit () {
 </script>
 
 <template>
-  <div class="photo flex-center">
-    <h1 class="text-3xl font-semibold mb-1">上传照片</h1>
-    <img v-show="ready && !ok" id="source" class="m-2" src="/placeholder.png">
-    <canvas v-show="ok" id="preview" class="m-2" height="413" width="295"></canvas>
-    <div v-if="msg" style="width: 300px;">
-      {{ msg }}
-    </div>
-    <div class="m-3 flex-center">
-      <label class="label-button flex-center bg-gray-100 hover:bg-gray-200 border-2 border-gray-200 rounded text-1xl p-2 m-4" v-if="!msg">
-        <input id="upload" type="file" @change="uploadImage" accept=".jpg, .jpeg, .png" hidden>
-        <upload-icon class="w-5 h-5 m-1 text-gray-500" />
-        选择图片
-      </label>
-      <label v-if="ok && !msg" class="label-button flex-center bg-green-400 hover:bg-green-500 hover:border-green-500 border-2 border-green-400 rounded text-1xl text-white p-2 m-4" @click="submit">
-        <check-icon class="w-5 h-5 m-1 text-white" />
-        提交图片
-      </label>
+  <div class="flex flex-col items-center justify-center min-h-screen">
+    <overlay-loading :show="loading"></overlay-loading>
+    <h1 class="text-3xl mb-5">上传照片</h1>
+    <img v-show="!ok && src" @error="src = ''" style="max-width: 295px;" :src="src">
+    <canvas v-show="ok" ref="canvas" height="413" width="295"></canvas>
+    <div v-if="msg" class="w-96 m-3 text-center">{{ msg }}</div>
+    <input ref="selector" type="file" @change="uploadImage" accept=".jpg, .jpeg, .png" hidden>
+    <div class="m-3 flex items-center justify-center">
+      <button class="rounded shadow-md bg-blue-500 text-white px-5 py-2" v-if="!msg" @click="select">选择图片</button>
+      <button class="rounded shadow-md bg-green-500 text-white px-5 py-2 ml-5" v-if="ok && !msg" @click="submit">提交照片</button>
     </div>
   </div>
 </template>
-
-<style scoped>
-div.photo {
-  width: 100%;
-  height: 100vh;
-  flex-direction: column;
-}
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-img#source {
-  max-width: 295px;
-}
-.label-button {
-  cursor: pointer;
-}
-</style>
