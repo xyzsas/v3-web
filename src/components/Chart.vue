@@ -4,6 +4,7 @@ let data = $ref([92, 101, 130, 111, 121, 151, 97, 112, 160, 120, 83, 96, 146, 13
 const w = 10, h = 50
 let viewBox = $ref('')
 let parsed = $ref([])
+let focus = $ref([])
 
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 watch($$(data), async () => {
@@ -18,14 +19,30 @@ watch($$(data), async () => {
   }
 }, { immediate: true })
 
-const style = (p, i) => `transform: translate(${i * w}px, ${p[0]}px) scale(${p[1]});`
+const style = (p, i, f) => `transform: translate(${i * w}px, ${p[0]}px) scale(${p[1] * (1 + f)});`
 </script>
 
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" role="img" :viewBox="viewBox" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <line v-for="(p, i) in parsed" :x1="i*w" :y1="h+2*w" :x2="i*w" :y2="p[0]" stroke="#ff0000" stroke-dasharray="2 1" :style="{ opacity: p[1]/2 }" :key="i"></line>
-    <circle v-for="(p, i) in parsed" r="2" fill="#ff0000" :style="style(p, i)" :key="i"></circle>
-  </svg>
+  <div class="flex justify-center items-center" :style="{ width: 2*(data.length*w + 2*w) }">
+    <svg xmlns="http://www.w3.org/2000/svg" role="img" :viewBox="viewBox" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <line class="stroke-current cursor-pointer" :class="{ 'text-blue-600': focus[i], 'text-blue-400': !focus[i] }" v-for="(p, i) in parsed" :x1="i*w" :y1="h+2*w" :x2="i*w" :y2="p[0]" stroke-dasharray="2 1" :style="{ opacity: p[1]/2 }" :key="i" fill="freeze" @mouseover="focus[i] = 1" @mouseleave="focus[i] = 0"></line>
+      <circle class="fill-current cursor-pointer" :class="{ 'text-blue-600': focus[i], 'text-blue-400': !focus[i] }" v-for="(p, i) in parsed" r="2" :style="style(p, i, focus[i] ? 1 : 0)" :key="i" @mouseover="focus[i] = 1" @mouseleave="focus[i] = 0"></circle>
+    </svg>
+    <table class="w-2/5">
+      <thead class="text-blue-800">
+        <tr>
+          <th>Name</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody class="text-blue-500">
+        <tr v-for="(d, i) in data" :class="{ 'bg-blue-100': focus[i] }" @mouseover="focus[i] = 1" @mouseleave="focus[i] = 0">
+          <th>第{{ i }}次</th>
+          <th>{{ d }}</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <style scoped>
@@ -34,5 +51,6 @@ circle {
 }
 line {
   transition: all 0.5s ease 0.5s;
+  stroke-dasharray: 2;
 }
 </style>
