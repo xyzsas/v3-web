@@ -4,9 +4,8 @@ import { ArrowCircleRightIcon, ArrowLeftIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
 import Wrapper from '../components/Wrapper.vue'
-import { request } from '../utils/request.js'
+import { request, error } from '../utils/request.js'
 import { HS256, sha256, salt } from '../utils/crypto.js'
-import error from '../utils/error.js'
 
 const router = useRouter()
 let title = $ref('安全中心')

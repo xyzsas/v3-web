@@ -4,8 +4,7 @@ import { useRouter } from 'vue-router'
 import { ArrowCircleRightIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
-import { request } from '../utils/request.js'
-import popError from '../utils/error.js'
+import { request, error as popError } from '../utils/request.js'
 import { HS256, sha256, short, salt } from '../utils/crypto.js'
 
 const router = useRouter()
