@@ -1,8 +1,16 @@
 <script setup>
+import { watchEffect } from 'vue'
 const props = defineProps(['show', 'transition', 'class'])
-let outer = $ref()
-let inner = $ref()
-let innerHeight = $computed(() => inner && window.getComputedStyle(inner).getPropertyValue('height'))
+let outer = $ref(), inner = $ref()
+let innerHeight = $ref('0px')
+watchEffect(() => {
+  if (!props.show) innerHeight = '0px'
+  else {
+    if (!inner) return
+    innerHeight = window.getComputedStyle(inner).getPropertyValue('height')
+    setTimeout(() => { innerHeight = 'auto' }, 1000)
+  }
+})
 </script>
 
 <template>

@@ -5,9 +5,7 @@ export const user = reactive({})
 const SS = window.sessionStorage
 if (SS.user) {
   const u = JSON.parse(SS.user)
-  user.id = u.id
-  user.name = u.name
-  user.token = u.token
+  for (const k in u) user[k] = u[k]
 }
 
 watchEffect(() => {

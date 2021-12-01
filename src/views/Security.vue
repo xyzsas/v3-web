@@ -1,12 +1,11 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ArrowCircleRightIcon } from '@heroicons/vue/solid'
+import { ArrowCircleRightIcon, ArrowLeftIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
 import Wrapper from '../components/Wrapper.vue'
-import { request } from '../utils/request.js'
+import { request, error } from '../utils/request.js'
 import { HS256, sha256, salt } from '../utils/crypto.js'
-import error from '../utils/error.js'
 
 const router = useRouter()
 let title = $ref('安全中心')
@@ -54,12 +53,30 @@ async function submit () {
   }
   loading = false
 }
+
+async function aauth (token) {
+  loading = true
+  const res = await request.put('/sas/link/', { aauth: token, sas: user.token }).then(r => r.data).catch(error)
+  if (res) {
+    await Swal.fire('绑定成功', '请重新登录', 'success')
+    user.token = user.id = undefined
+    router.push('/login')
+  }
+}
+
+function goAauth () {
+  window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
+  window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=400')
+}
 </script>
 
 <template>
   <div class="h-screen bg-gray-100 p-10 flex flex-col">
     <overlay-loading :show="loading"></overlay-loading>
-    <h1 class="text-3xl font-medium m-3">安全中心</h1>
+    <h1 class="text-3xl font-medium m-3 flex items-center">
+      <arrow-left-icon v-if="user.id" style="transition: all 0.5s ease;" class="w-8 ml-2 mr-3 hover:ml-0 hover:mr-5 cursor-pointer" @click="router.push('/')"></arrow-left-icon>
+      安全中心
+    </h1>
     <div class="flex flex-grow flex-col sm:flex-row justify-around items-center">
       <wrapper :show="showCard">
         <div class="w-80 h-auto py-4 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
@@ -74,7 +91,13 @@ async function submit () {
       <wrapper v-if="user.token" :show="showAauth">
         <div class="flex flex-col items-center">
           <h1 class="text-2xl font-semibold">第三方登录设置</h1>
-          <p class="mt-10">还在开发中...</p>
+          <p v-if="!Object.keys(user.aauth).length" class="m-5">您还未绑定第三方登录</p>
+          <p class="m-5" v-for="(v, k) in user.aauth">{{ v }}</p>
+          <button class="transition flex items-center rounded py-2 px-4 shadow-md bg-white font-bold hover:bg-red-200" @click="goAauth">
+            <img class="w-10" src="https://cn.aauth.link/logo.png">
+            绑定第三方登录
+          </button>
+          <p class="text-sm mt-2 text-gray-400">请在弹出的窗口中完成登录</p>
         </div>
       </wrapper>
     </div>
