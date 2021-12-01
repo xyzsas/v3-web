@@ -18,8 +18,8 @@ const routes = [
     component: () => import('./views/About.vue')
   },
   {
-    path: '/chart',
-    component: () => import('./components/Chart.vue')
+    path: '/dev',
+    component: () => import('./views/Dev.vue')
   }
 ]
 
