@@ -1,10 +1,10 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ArrowCircleRightIcon, ArrowLeftIcon } from '@heroicons/vue/solid'
+import { ArrowCircleRightIcon, ArrowLeftIcon, XIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
 import Wrapper from '../components/Wrapper.vue'
-import { request, error } from '../utils/request.js'
+import { request, error as popError } from '../utils/request.js'
 import { HS256, sha256, salt } from '../utils/crypto.js'
 
 const router = useRouter()
@@ -42,10 +42,10 @@ async function submit () {
   loading = true
   const payload = { newPassword: await sha256(newPassword + salt) }
   if (password) {
-    const random = await request.get('/sas/auth/' + user.id).then(r => r.data.random).catch(error)
+    const random = await request.get('/sas/auth/' + user.id).then(r => r.data.random).catch(popError)
     payload.password = await HS256(await sha256(password + salt), random)
   }
-  const res = await request.put('/sas/auth/' + user.id, payload).then(r => r.data).catch(error) 
+  const res = await request.put('/sas/auth/' + user.id, payload).then(r => r.data).catch(popError) 
   if (res) {
     await Swal.fire(user.token ? '修改成功' : '激活成功', '请重新登录', 'success')
     user.token = user.id = undefined
@@ -56,7 +56,7 @@ async function submit () {
 
 async function aauth (token) {
   loading = true
-  const res = await request.put('/sas/link/', { aauth: token, sas: user.token }).then(r => r.data).catch(error)
+  const res = await request.put('/sas/link/', { aauth: token, sas: user.token }).then(r => r.data).catch(popError)
   if (res) {
     await Swal.fire('绑定成功', '请重新登录', 'success')
     user.token = user.id = undefined
@@ -67,6 +67,23 @@ async function aauth (token) {
 function goAauth () {
   window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
   window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=400')
+}
+
+async function delAauth (id) {
+  const result = await Swal.fire({
+    title: '确认解绑第三方登录？',
+    icon: 'question',
+    text: user.aauth[id].replace('DINGTALK', '钉钉'),
+    showCancelButton: true,
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+  })
+  if (!result.isConfirmed) return
+  loading = true
+  await request.delete(`/sas/link/${id}?debug=1`, { headers: { token: user.token } }).then(() => {
+    delete user.aauth[id]
+  }).catch(popError)
+  loading = false
 }
 </script>
 
@@ -92,8 +109,10 @@ function goAauth () {
         <div class="flex flex-col items-center">
           <h1 class="text-2xl font-semibold">第三方登录设置</h1>
           <p v-if="!Object.keys(user.aauth).length" class="m-5">您还未绑定第三方登录</p>
-          <p class="m-5" v-for="(v, k) in user.aauth">{{ v }}</p>
-          <button class="transition flex items-center rounded py-2 px-4 shadow-md bg-white font-bold hover:bg-red-200" @click="goAauth">
+          <div class="my-5 w-80 flex flex-wrap justify-center">
+            <span class="m-2 px-1 rounded border flex items-center" v-for="(v, k) in user.aauth" :class="v.indexOf('QQ') == -1 ? 'border-blue-400 bg-blue-100 text-blue-400' : 'border-red-400 bg-red-100 text-red-400'">{{ v.replace('DINGTALK', '钉钉') }}<x-icon class="w-4 ml-1 cursor-pointer" @click="delAauth(k)"/></span>
+          </div>
+          <button class="all-transition flex items-center rounded py-2 px-4 shadow bg-white hover:shadow-md font-bold" @click="goAauth">
             <img class="w-10" src="https://cn.aauth.link/logo.png">
             绑定第三方登录
           </button>
