@@ -8,7 +8,7 @@ watchEffect(() => {
   else {
     if (!inner) return
     innerHeight = window.getComputedStyle(inner).getPropertyValue('height')
-    setTimeout(() => { innerHeight = 'auto' }, 1000)
+    setTimeout(() => { innerHeight = 'auto' }, 600)
   }
 })
 </script>

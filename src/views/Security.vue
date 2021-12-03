@@ -74,7 +74,7 @@ function goAauth () {
   <div class="h-screen bg-gray-100 p-10 flex flex-col">
     <overlay-loading :show="loading"></overlay-loading>
     <h1 class="text-3xl font-medium m-3 flex items-center">
-      <arrow-left-icon v-if="user.id" style="transition: all 0.5s ease;" class="w-8 ml-2 mr-3 hover:ml-0 hover:mr-5 cursor-pointer" @click="router.push('/')"></arrow-left-icon>
+      <arrow-left-icon v-if="user.id" class="all-transition w-8 ml-2 mr-3 hover:ml-0 hover:mr-5 cursor-pointer" @click="router.push('/')"></arrow-left-icon>
       安全中心
     </h1>
     <div class="flex flex-grow flex-col sm:flex-row justify-around items-center">

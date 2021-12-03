@@ -9,6 +9,9 @@ body {
 * {
   outline: none;
 }
+.all-transition {
+  transition: all 0.3s ease;
+}
 
 /* following are transitions */
 

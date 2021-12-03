@@ -1,9 +1,16 @@
 <script setup>
-import snarkdown from 'snarkdown'
+import { micromark } from 'micromark'
 const { value } = defineProps(['value', 'index', 'state'])
-let html = $computed(() => snarkdown(value))
+let html = $computed(() => micromark(value, { allowDangerousHtml: true }))
 </script>
 
 <template>
-  <div v-html="html" />
+  <div class="px-3 py-2" v-html="html"></div>
 </template>
+
+<style scoped>
+div:deep() h1 { @apply text-3xl font-bold my-3; }
+div:deep() h2 { @apply text-2xl font-semibold my-2; }
+div:deep() h3 { @apply text-xl font-semibold my-2; }
+div:deep() h4, h5, h6 { @apply text-lg font-semibold my-2; }
+</style>

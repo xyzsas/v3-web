@@ -19,8 +19,8 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
           {{ greet.s }}
         </p>
       </div>
-      <button class="transition flex items-center rounded py-2 px-4 shadow-md bg-white font-bold hover:bg-red-200" @click="router.push('/security')">
-        <finger-print-icon class="w-6 h-6 text-red-500"/>
+      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg" @click="router.push('/security')">
+        <finger-print-icon class="w-6 text-blue-500 mr-2"/>
         安全中心
       </button>
     </div>
