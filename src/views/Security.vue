@@ -91,10 +91,10 @@ async function delAauth (id) {
   <div class="h-screen bg-gray-100 p-10 flex flex-col">
     <overlay-loading :show="loading"></overlay-loading>
     <h1 class="text-3xl font-medium m-3 flex items-center">
-      <arrow-left-icon v-if="user.id" class="all-transition w-8 ml-2 mr-3 hover:ml-0 hover:mr-5 cursor-pointer" @click="router.push('/')"></arrow-left-icon>
+      <arrow-left-icon v-if="user.id" class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5 cursor-pointer" @click="router.push('/')"></arrow-left-icon>
       安全中心
     </h1>
-    <div class="flex flex-grow flex-col sm:flex-row justify-around items-center">
+    <div class="flex flex-grow flex-wrap justify-around items-center">
       <wrapper :show="showCard">
         <div class="w-80 h-auto py-4 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
           <h1 class="text-2xl font-semibold">{{ title }}</h1>
