@@ -8,7 +8,7 @@ let value = $ref({
 
 <template>
   <chart :value="value"/>
-  <!-- <table class="w-2/5">
+  <table class="w-2/5">
     <thead class="text-blue-800">
       <tr>
         <th>Name</th>
@@ -16,10 +16,10 @@ let value = $ref({
       </tr>
     </thead>
     <tbody class="text-blue-500">
-      <tr v-for="(d, i) in value.data" :class="{ 'bg-blue-100': value.focus[i] }" @mouseover="value.focus[i] = 1" @mouseleave="value.focus[i] = 0">
+      <tr v-for="(d, i) in value.data" :class="{ 'bg-blue-100': value.focus === i }" @mouseover="value.focus = i" @mouseleave="value.focus = -1">
         <th>第{{ i }}次</th>
         <th>{{ d }}</th>
       </tr>
     </tbody>
-  </table> -->
+  </table>
 </template>
