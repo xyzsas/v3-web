@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import { user } from '../state.js'
 import { greet } from '../utils/greet.js'
-import { FingerPrintIcon } from '@heroicons/vue/outline'
+import { FingerPrintIcon, TrendingUpIcon } from '@heroicons/vue/outline'
 const router = useRouter()
 if (!user.token) router.push('/login')
 
@@ -19,10 +19,16 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
           {{ greet.s }}
         </p>
       </div>
-      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg" @click="router.push('/security')">
-        <finger-print-icon class="w-6 text-blue-500 mr-2"/>
-        安全中心
-      </button>
+      <div class="flex">
+        <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg mr-2" @click="router.push('/security')">
+          <finger-print-icon class="w-6 text-red-500 mr-2"/>
+          安全中心
+        </button>
+        <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg" @click="router.push('/grade')">
+          <trending-up-icon class="w-6 text-blue-500 mr-2"/>
+          成绩查询
+        </button>
+      </div>
     </div>
   </div>
 </template>
