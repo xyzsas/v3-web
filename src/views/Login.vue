@@ -23,8 +23,8 @@ function success (res) {
   user.id = res.id
   user.name = res.name
   user.token = res.token
+  user.group = res.group
   user.aauth = JSON.parse(res.aauth || '{}')
-  user.group = JSON.parse(res.group || '{}')
   if (route.query.c == 'AAUTH') {
     window.location.href = `https://cn.aauth.link/reenter.html?code=${user.token}&state=${route.query.state}`
     return
