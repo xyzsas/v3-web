@@ -1,13 +1,13 @@
 <script setup>
 import { watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ArrowCircleRightIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
 import { request, error as popError } from '../utils/request.js'
 import { HS256, sha256, short, salt } from '../utils/crypto.js'
 
-const router = useRouter()
+const router = useRouter(), route = useRoute()
 
 let loading = $ref(false)
 let input = $ref('')
@@ -25,6 +25,10 @@ function success (res) {
   user.token = res.token
   user.aauth = JSON.parse(res.aauth || '{}')
   user.group = JSON.parse(res.group || '{}')
+  if (route.query.c == 'AAUTH') {
+    window.location.href = `https://cn.aauth.link/reenter.html?code=${user.token}&state=${route.query.state}`
+    return
+  }
   router.push('/')
 }
 
@@ -74,7 +78,7 @@ function goAauth () {
         v-model="input" @keyup.enter="next"
       >
       <button @click="next"><arrow-circle-right-icon class="w-12 h-12 transition" :class="input ? 'text-blue-500' : 'text-gray-300'"/></button>
-      <button class="flex items-center absolute right-2 bottom-1 text-gray-400 text-sm" @click="goAauth">
+      <button class="flex items-center absolute right-2 bottom-1 text-gray-400 text-sm" @click="goAauth" v-if="route.query.c != 'AAUTH'">
         <img class="w-5" src="https://cn.aauth.link/logo.png">
         第三方登录
       </button>
