@@ -1,0 +1,38 @@
+# Auto deploy to OSS
+
+name: deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get current time
+      uses: 1466587594/get-current-time@v2
+      id: time
+      with:
+        format: "UTC YYYY-MM-DD HH:mm:ss"
+    - uses: actions/checkout@v2
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - name: npm install
+      run: npm install
+    - name: npm build
+      env:
+        VITE_VERSION: ${{ steps.time.outputs.formattedTime }}
+      run: npm run build
+    - name: Setup Aliyun OSS
+      uses: manyuanrong/setup-ossutil@master
+      with:
+        endpoint: oss-cn-shanghai.aliyuncs.com
+        access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+        access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+    - name: Delete Old assets
+      run: ossutil rm -rf oss://xyzsas/assets/
+    - name: Upload files to OSS
+      run: ossutil cp -rf ./dist oss://xyzsas/
