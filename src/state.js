@@ -14,6 +14,12 @@ watchEffect(() => {
   SS.user = JSON.stringify(user)
 })
 
-setInterval(() => {
-  clock.server = Date.now() + clock.delta
-}, 500)
+const sleep = ms => new Promise(r => setTimeout(r, ms))
+async function tick () {
+  while (1) {
+    const t = Date.now()
+    clock.server = t + clock.delta
+    await sleep(1000 - t + Math.floor(t / 1000) * 1000)
+  }
+}
+tick()
