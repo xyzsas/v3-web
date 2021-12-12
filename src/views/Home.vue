@@ -1,10 +1,23 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { user } from '../state.js'
+import { user, clock } from '../state.js'
 import { greet } from '../utils/greet.js'
 import { FingerPrintIcon, TrendingUpIcon } from '@heroicons/vue/outline'
+import AffairCard from '../components/AffairCard.vue'
+import { request, error as popError } from '../utils/request.js'
 const router = useRouter()
+
+let affair = $ref([])
+
 if (!user.token) router.push('/login')
+else {
+  request.get('/sas/affair', { headers: { token: user.token } })
+    .then(({ data }) => {
+      clock.delta = data.time - Date.now()
+      for (const a in data.affair) affair.push({ id: a, ...data.affair[a] })
+    })
+    .catch(popError)
+}
 
 let trans = $ref('opacity-0')
 setTimeout(() => { trans = 'opacity-100' }, 1000)
@@ -28,6 +41,9 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
           <trending-up-icon class="w-6 text-blue-500 mr-2"/>
           成绩查询
         </button>
+      </div>
+      <div class="mt-10 md:m-10">
+        <affair-card v-for="a in affair" :value="a"></affair-card>
       </div>
     </div>
   </div>
