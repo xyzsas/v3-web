@@ -61,6 +61,9 @@ async function aauth (token) {
   if (!user.token) loading = false
 }
 
+// aauth redirect
+if (route.query.token) aauth(route.query.token)
+
 function goAauth () {
   window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
   window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=400')
@@ -81,6 +84,9 @@ function goAauth () {
       <button class="flex items-center absolute right-2 bottom-1 text-gray-400 text-sm" @click="goAauth" v-if="route.query.c != 'AAUTH'">
         <img class="w-5" src="https://cn.aauth.link/logo.png">
         第三方登录
+      </button>
+      <button class="flex items-center absolute right-2 bottom-1 text-gray-400 text-sm" v-else>
+        正在授权登录其他平台
       </button>
     </div>
   </div>
