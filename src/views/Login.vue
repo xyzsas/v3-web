@@ -73,9 +73,9 @@ function goAauth () {
 <template>
   <div class="h-screen bg-gray-100 flex justify-center items-center">
     <overlay-loading :show="loading"></overlay-loading>
-    <div class="absolute w-80 h-56 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
-      <h1 class="text-2xl font-semibold">学生事务系统</h1>
-      <input ref="inputElement" class="mt-6 mb-4 rounded px-3 py-2 radius-2 border-2 border-gray-300 focus:ring-1 focus:border-blue-300 transition"
+    <div class="absolute w-80 h-56 sm:w-96 sm:h-64 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
+      <h1 class="text-2xl sm:text-3xl font-semibold">学生事务系统</h1>
+      <input ref="inputElement" class="w-2/3 mt-6 mb-4 rounded px-3 py-2 radius-2 border-2 border-gray-300 focus:ring-1 focus:border-blue-300 transition"
         :placeholder="random ? '请输入密码' : '请输入用户名'"
         :type="random ? 'password' : 'text'"
         v-model="input" @keyup.enter="next"
