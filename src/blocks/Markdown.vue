@@ -1,7 +1,7 @@
 <script setup>
 import { micromark } from 'micromark'
 const { value } = defineProps(['value', 'index', 'state'])
-let html = $computed(() => micromark(value, { allowDangerousHtml: true }))
+let html = $computed(() => micromark(value.md, { allowDangerousHtml: true }))
 </script>
 
 <template>
