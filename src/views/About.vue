@@ -1,8 +1,7 @@
 <script setup>
 import Wrapper from '../components/Wrapper.vue'
 const LS = window.localStorage
-const user = (LS['web-user-version'] || 'Unavailable').replace(/-/g, '--')
-const admin = (LS['web-admin-version'] || 'Unavailable').replace(/-/g, '--')
+const version = LS['web-version'].replace(/-/g, '--')
 
 let show = $ref(false)
 setTimeout(() => { show = true }, 500)
@@ -19,8 +18,7 @@ setTimeout(() => { show = true }, 500)
       <h1 class="text-5xl">XYZSAS</h1>
       <p class="cursor-pointer text-center mb-3">Powered by yzITI</p>
       <div class="flex flex-col items-center justify-around h-20">
-        <img :src="`https://img.shields.io/badge/user-${user}-blue`">
-        <img :src="`https://img.shields.io/badge/admin-${admin}-red`">
+        <img :src="`https://img.shields.io/badge/version-${version}-green`">
       </div>
     </wrapper>
   </div>
