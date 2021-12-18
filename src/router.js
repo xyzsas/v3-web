@@ -8,7 +8,9 @@ const index = {
   '/photo': () => import('./views/Photo.vue'),
   '/affair': () => import('./views/Affair.vue'),
   '/about': () => import('./views/About.vue'),
-  '/grade': () => import('./views/Grade.vue')
+  '/grade': () => import('./views/Grade.vue'),
+  // admin page
+  '/admin/affair': () => import('./views/admin/Affair.vue')
 }
 
 const routes = []
