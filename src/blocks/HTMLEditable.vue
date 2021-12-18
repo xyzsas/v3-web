@@ -1,14 +1,18 @@
 <script setup>
 import { micromark } from 'micromark'
-const { value } = defineProps(['value', 'index', 'state'])
+import { affair } from '../state.js'
+const { i } = defineProps(['i'])
+const value = affair.content[i][':']
 
 let el = $ref()
 
 function update () {
-  const html = el.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('<p>', '\n\n').replaceAll('</p>', '\n\n').replaceAll('<br>', '\n').replaceAll('<div>', '<div>\n\n').replaceAll('</div>', '\n\n</div>')
-  console.log(html)
+  const html = el.innerHTML
+    .replaceAll('&lt;', '<').replaceAll('&gt;', '>')
+    .replaceAll('<p>', '\n\n').replaceAll('</p>', '\n\n')
+    .replaceAll('<div>', '<div>\n\n').replaceAll('</div>', '\n\n</div>')
+    .replaceAll('<br>', '\n')
   value.html = micromark(html, { allowDangerousHtml: true }).replaceAll('\n', '')
-  console.log(value.html)
 }
 </script>
 

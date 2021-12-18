@@ -1,14 +1,16 @@
 import { reactive, watchEffect } from 'vue'
 export const user = reactive({})
 
+export const clock = reactive({ delta: 0, server: Date.now() })
+
+export const affair = reactive({})
+
 // cache
 const SS = window.sessionStorage
 if (SS.user) {
   const u = JSON.parse(SS.user)
   for (const k in u) user[k] = u[k]
 }
-
-export const clock = reactive({ delta: 0, server: Date.now() })
 
 watchEffect(() => {
   SS.user = JSON.stringify(user)

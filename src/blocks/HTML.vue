@@ -1,9 +1,10 @@
 <script setup>
-const { value } = defineProps(['value', 'index', 'state'])
+import { affair } from '../state.js'
+const { i } = defineProps(['i'])
 </script>
 
 <template>
-  <div class="px-3 py-2" v-html="value.html"></div>
+  <div class="px-3 py-2" v-html="affair.content[i][':'].html"></div>
 </template>
 
 <style scoped>
