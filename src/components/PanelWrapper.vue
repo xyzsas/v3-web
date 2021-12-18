@@ -16,9 +16,9 @@ watch($$(show), v => {
 </script>
 
 <template>
-  <div class="w-full flex justify-between items-center px-3 py-1 shadow">
+  <div class="w-full flex justify-between items-center px-3 py-1 shadow" @click="show = !show">
     <h3 class="font-semibold">{{ props.title }}</h3>
-    <chevron-down-icon class="all-transition w-8" :class="{ 'rotate-90': !show }" @click="show = !show"></chevron-down-icon>
+    <chevron-down-icon class="all-transition w-8" :class="{ 'rotate-90': !show }" />
   </div>
   <wrapper :show="show">
     <slot></slot>
