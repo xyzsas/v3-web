@@ -20,7 +20,12 @@ function swap (i, j) {
 }
 
 function add (k) {
-  affair.content.splice(focus + 1, 0, { _: k, ':': blocks[k].template })
+  affair.content.splice(focus + 1, 0, { _: k, ':': JSON.parse(JSON.stringify(blocks[k].template)) })
+}
+
+function del (i) {
+  affair.content.splice(i, 1)
+  if (focus >= affair.content.length) focus--
 }
 </script>
 
@@ -33,12 +38,12 @@ function add (k) {
       </panel-wrapper>
       <panel-wrapper title="组件属性" v-model="panelShow[1]">
         <component v-if="blocks[focused._].panel" :is="blocks[focused._].panel" :value="focused[':']" :index="focus"></component>
-        <p class="p-3" v-else>没有需要配置的属性</p>
+        <p class="p-3 text-gray-600" v-else>没有需要配置的属性</p>
       </panel-wrapper>
       <panel-wrapper title="添加组件" v-model="panelShow[2]">
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap opacity-60">
           <div class="flex flex-col items-center w-20 m-2 cursor-pointer" v-for="(v, k) in blocks" @click="add(k)">
-            <img class="w-12 opacity-70" :src="v.icon">
+            <img class="w-12" :src="v.icon">
             <p>{{ v.name }}</p>
           </div>
         </div>
@@ -52,7 +57,7 @@ function add (k) {
         <wrapper :show="focus == i" class="flex justify-end">
           <arrow-up-icon v-if="i > 0" class="w-6 m-2 cursor-pointer text-gray-500" @click="swap(i, i-1)" />
           <arrow-down-icon v-if="i+1 < affair.content.length" class="w-6 m-2 cursor-pointer text-gray-500" @click="swap(i, i+1)"/>
-          <trash-icon v-if="affair.content.length > 1" class="w-6 m-2 cursor-pointer text-red-500" @click="affair.content.splice(i, 1)"/>
+          <trash-icon v-if="affair.content.length > 1" class="w-6 m-2 cursor-pointer text-red-500" @click="del(i)"/>
           <plus-icon class="w-6 m-2 cursor-pointer text-blue-500" @click="panelShow[0] = 0; panelShow[2] = 1" />
         </wrapper>
       </div>
