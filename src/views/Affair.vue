@@ -3,13 +3,13 @@ import Wrapper from '../components/Wrapper.vue'
 import blocks from '../blocks/index.js'
 
 const content = [{
-  _: 'markdown',
-  ':': { md: '# hi!' }
+  _: 'HTML',
+  ':': { html: '<h1>hi!</h1>' }
 }]
 
 for (let i = 1; i <= 40; i++) content.push({
-  _: 'markdown',
-  ':': { md: '_this_ is **easy** to `use`.' }
+  _: 'HTML',
+  ':': { html: '<em>this</em> is <b>easy</b> to <code>use</code>.' }
 })
 </script>
 

@@ -1,11 +1,9 @@
 <script setup>
-import { micromark } from 'micromark'
 const { value } = defineProps(['value', 'index', 'state'])
-let html = $computed(() => micromark(value.md, { allowDangerousHtml: true }))
 </script>
 
 <template>
-  <div class="px-3 py-2" v-html="html"></div>
+  <div class="px-3 py-2" v-html="value.html"></div>
 </template>
 
 <style scoped>
