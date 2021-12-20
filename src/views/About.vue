@@ -1,10 +1,15 @@
 <script setup>
 import Wrapper from '../components/Wrapper.vue'
-const LS = window.localStorage
-const version = LS['web-version'].replace(/-/g, '--')
+import { user } from '../state.js'
+import { request } from '../utils/request.js'
+
+const version = window.localStorage['web-version'].replace(/-/g, '--')
 
 let show = $ref(false)
 setTimeout(() => { show = true }, 500)
+
+window.request = request
+window.token = user.token
 </script>
 
 <template>

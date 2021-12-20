@@ -35,13 +35,15 @@ function del (i) {
 <template>
   <div class="flex flex-col md:flex-row">
     <!-- Panel -->
-    <div class="h-auto md:w-96 md:h-screen overflow-y-auto">
+    <div class="h-auto md:w-1/3 md:h-screen overflow-y-auto">
       <panel-wrapper title="事务管理" v-model="panelShow[0]">
         <p class="p-3">here is the panel element</p>
       </panel-wrapper>
       <panel-wrapper title="组件属性" v-model="panelShow[1]">
-        <component style="opacity: 0.6;" v-if="blocks[focused._].panel" :is="blocks[focused._].panel" :i="focus"></component>
-        <p class="p-3 text-gray-400" v-else>没有需要配置的属性</p>
+        <transition name="fade" mode="out-in">
+          <component style="opacity: 0.6;" v-if="blocks[focused._].panel" :is="blocks[focused._].panel" :i="focus"></component>
+          <p class="p-3 text-gray-400" v-else>没有需要配置的属性</p>
+        </transition>
       </panel-wrapper>
       <panel-wrapper title="添加组件" v-model="panelShow[2]">
         <div class="flex flex-wrap opacity-60">
@@ -53,7 +55,7 @@ function del (i) {
       </panel-wrapper>
     </div>
     <!-- Preview -->
-    <div class="bg-gray-100 flex-grow h-auto min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
+    <div class="bg-gray-100 h-auto md:w-2/3 min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
       <input class="text-2xl m-3 mb-6 bg-transparent" v-model="affair.title">
       <div v-for="(b, i) in affair.content" :key="b" class="m-1 bg-white rounded all-transition" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[1] = 1">
         <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
