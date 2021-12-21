@@ -17,8 +17,8 @@ export async function error (err) {
 const wrap = p => p.then(r => r.data).catch(error)
 
 export default {
-  get: (url, opt) => wrap(axios.get(url, opt)),
-  post: (url, body, opt) => wrap(axios.post(url, body, opt)),
-  put: (url, body, opt) => wrap(axios.put(url, body, opt)),
-  delete: (url, opt) => wrap(axios.delete(url, opt))
+  get: (url, opt) => wrap(request.get(url, opt)),
+  post: (url, body, opt) => wrap(request.post(url, body, opt)),
+  put: (url, body, opt) => wrap(request.put(url, body, opt)),
+  delete: (url, opt) => wrap(request.delete(url, opt))
 }

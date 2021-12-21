@@ -67,7 +67,7 @@ if (route.query.token) aauth(route.query.token)
 
 function goAauth () {
   window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
-  window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=400')
+  window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=50')
 }
 </script>
 
