@@ -6,7 +6,7 @@ import Wrapper from '../../components/Wrapper.vue'
 import PanelWrapper from '../../components/PanelWrapper.vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import blocks from '../../blocks/index.js'
-import { request, error as popError } from '../../utils/request.js'
+import request from '../../utils/request.js'
 import { affair, user } from '../../state.js'
 
 const route = useRoute(), router = useRouter()
@@ -25,7 +25,7 @@ async function fetch () {
     loading = false
     return
   }
-  const res = await request.get('/xyz/admin/' + id, { headers: { token: user.token } }).then(r => r.data).catch(popError)
+  const res = await request.get('/xyz/admin/' + id, { headers: { token: user.token } })
   if (res) {
     affair.title = res.title
     affair.content = JSON.parse(res.content)
@@ -42,7 +42,7 @@ async function submit () {
   const body = { title: affair.title, content: JSON.stringify(affair.content) }
   for (const k in affair.variable) body[k] = affair.variable[k]
   loading = true
-  const res = await request.post('/xyz/admin/' + id, body, { headers: { token: user.token } }).then(r => r.data).catch(popError)
+  const res = await request.post('/xyz/admin/' + id, body, { headers: { token: user.token } })
   if (res) {
     await Swal.fire('提交成功', '', 'success')
     if (!id) {
@@ -67,7 +67,7 @@ async function remove () {
   }).then(r => r.isConfirmed)
   if (!isConfirmed) return
   loading = true
-  const res = await request.delete('/xyz/admin/' + id, { headers: { token: user.token } }).then(r => r.data).catch(popError)
+  const res = await request.delete('/xyz/admin/' + id, { headers: { token: user.token } })
   if (res) {
     await Swal.fire('删除成功', '', 'success')
     delete user.admin.affair[id]
