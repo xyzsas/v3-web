@@ -1,17 +1,82 @@
 <script setup>
 import { reactive } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '@heroicons/vue/outline'
 import Wrapper from '../../components/Wrapper.vue'
 import PanelWrapper from '../../components/PanelWrapper.vue'
+import OverlayLoading from '../../components/OverlayLoading.vue'
 import blocks from '../../blocks/index.js'
+import { request, error as popError } from '../../utils/request.js'
+import { affair, user } from '../../state.js'
 
-import { affair } from '../../state.js'
+const route = useRoute(), router = useRouter()
+let loading = $ref(true), id = route.params.id == 'NEW' ? '' : route.params.id
 
-// test
+if (!user.token || !user.admin?.affair) router.push('/')
+else fetch()
+
 affair.title = '请填写事务标题'
 affair.content = [{ _: 'HTML', ':': { html: '<h3>欢迎使用学生事务系统</h3><p>您可以在此处编辑事务</p>' } }]
 affair.response = {}
+affair.variable = {}
 
+async function fetch () {
+  if (!id) {
+    loading = false
+    return
+  }
+  const res = await request.get('/xyz/admin/' + id, { headers: { token: user.token } }).then(r => r.data).catch(popError)
+  if (res) {
+    affair.title = res.title
+    affair.content = JSON.parse(res.content)
+    affair.variable = {}
+    for (const k in res) {
+      if (k[0] == '$') affair.variable[k] = res[k]
+    }
+    affair.response = {}
+  }
+  loading = false
+}
+
+async function submit () {
+  const body = { title: affair.title, content: JSON.stringify(affair.content) }
+  for (const k in affair.variable) body[k] = affair.variable[k]
+  loading = true
+  const res = await request.post('/xyz/admin/' + id, body, { headers: { token: user.token } }).then(r => r.data).catch(popError)
+  if (res) {
+    await Swal.fire('提交成功', '', 'success')
+    if (!id) {
+      id = res
+      user.admin.affair[id] = 1
+      router.push('/admin/affair/' + id)
+    }
+  }
+  loading = false
+}
+
+async function remove () {
+  if (!id) return
+  const isConfirmed = await Swal.fire({
+    title: '删除事务？',
+    text: '此操作不可恢复！',
+    icon: 'warning',
+    showCancelButton: true,
+    cancelButtonText: '取消',
+    confirmButtonText: '确认删除',
+    confirmButtonColor: '#aa0000'
+  }).then(r => r.isConfirmed)
+  if (!isConfirmed) return
+  loading = true
+  const res = await request.delete('/xyz/admin/' + id, { headers: { token: user.token } }).then(r => r.data).catch(popError)
+  if (res) {
+    await Swal.fire('删除成功', '', 'success')
+    delete user.admin.affair[id]
+    router.push('/admin/xyz')
+  }
+  loading = false
+}
+
+// following are for editor
 let focus = $ref(0)
 const panelShow = reactive([1, 0, 1])
 let focused = $computed(() => affair.content[focus] || {})
@@ -33,11 +98,15 @@ function del (i) {
 </script>
 
 <template>
+  <overlay-loading :show="loading" />
   <div class="flex flex-col md:flex-row">
     <!-- Panel -->
     <div class="h-auto md:w-1/3 md:h-screen overflow-y-auto">
       <panel-wrapper title="事务管理" v-model="panelShow[0]">
-        <p class="p-3">here is the panel element</p>
+        <p class="p-3">
+          <button class="all-transition bg-blue-700 px-3 py-1 m-1 text-white rounded hover:shadow-md" @click="submit">提交事务</button>
+          <button class="all-transition bg-red-700 px-3 py-1 m-1 text-white rounded hover:shadow-md" @click="remove">删除事务</button>
+        </p>
       </panel-wrapper>
       <panel-wrapper title="组件属性" v-model="panelShow[1]">
         <transition name="fade" mode="out-in">
