@@ -4,7 +4,7 @@ import { ArrowCircleRightIcon, ArrowLeftIcon, XIcon } from '@heroicons/vue/solid
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
 import Wrapper from '../components/Wrapper.vue'
-import { request, error as popError } from '../utils/request.js'
+import request from '../utils/request.js'
 import { HS256, sha256, salt } from '../utils/crypto.js'
 
 const router = useRouter()
@@ -42,10 +42,10 @@ async function submit () {
   loading = true
   const payload = { newPassword: await sha256(newPassword + salt) }
   if (password) {
-    const random = await request.get('/sas/auth/' + user.id).then(r => r.data.random).catch(popError)
-    payload.password = await HS256(await sha256(password + salt), random)
+    const data = await request.get('/sas/auth/' + user.id)
+    payload.password = await HS256(await sha256(password + salt), data.random)
   }
-  const res = await request.put('/sas/auth/' + user.id, payload).then(r => r.data).catch(popError) 
+  const res = await request.put('/sas/auth/' + user.id, payload)
   if (res) {
     await Swal.fire(user.token ? '修改成功' : '激活成功', '请重新登录', 'success')
     user.token = user.id = undefined
@@ -56,7 +56,7 @@ async function submit () {
 
 async function aauth (token) {
   loading = true
-  const res = await request.put('/sas/link/', { aauth: token, sas: user.token }).then(r => r.data).catch(popError)
+  const res = await request.put('/sas/link/', { aauth: token, sas: user.token })
   if (res) {
     await Swal.fire('绑定成功', '请重新登录', 'success')
     user.token = user.id = undefined
@@ -80,9 +80,8 @@ async function delAauth (id) {
   })
   if (!result.isConfirmed) return
   loading = true
-  await request.delete(`/sas/link/${id}?debug=1`, { headers: { token: user.token } }).then(() => {
-    delete user.aauth[id]
-  }).catch(popError)
+  await request.delete(`/sas/link/${id}?debug=1`, { headers: { token: user.token } })
+  delete user.aauth[id]
   loading = false
 }
 </script>

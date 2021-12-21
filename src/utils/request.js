@@ -13,3 +13,12 @@ export async function error (err) {
   if (uec) return alert(uec)
   return alert(err.response.data.error || '未知错误')
 }
+
+const wrap = p => p.then(r => r.data).catch(error)
+
+export default {
+  get: (url, opt) => wrap(axios.get(url, opt)),
+  post: (url, body, opt) => wrap(axios.post(url, body, opt)),
+  put: (url, body, opt) => wrap(axios.put(url, body, opt)),
+  delete: (url, opt) => wrap(axios.delete(url, opt))
+}

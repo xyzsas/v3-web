@@ -1,7 +1,7 @@
 <script setup>
 import Wrapper from '../components/Wrapper.vue'
 import { user } from '../state.js'
-import { request } from '../utils/request.js'
+import request from '../utils/request.js'
 
 const version = window.localStorage['web-version'].replace(/-/g, '--')
 
