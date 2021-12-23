@@ -9,6 +9,7 @@ const index = {
   '/about': () => import('./views/About.vue'),
   '/grade': () => import('./views/Grade.vue'),
   // admin page
+  '/admin/xyz': () => import('./views/admin/XYZ.vue'),
   '/admin/affair/:id': () => import('./views/admin/Affair.vue')
 }
 

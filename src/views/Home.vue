@@ -25,7 +25,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
 </script>
 
 <template>
-  <div class="p-5 sm:p-10 h-screen bg-gray-100 all-transition" v-if="user.token">
+  <div class="p-5 sm:p-10 min-h-screen bg-gray-100 all-transition" v-if="user.token">
     <div class="mb-3">
       <h1 class="text-3xl font-medium mt-3">{{ greet.g }}, {{ user.name }}!</h1>
       <p :class="trans" class="mt-1 text-1xl font-serif text-gray-500" style="transition: all 2s ease;">
