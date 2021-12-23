@@ -47,7 +47,6 @@ async function submit () {
     await Swal.fire('提交成功', '', 'success')
     if (!id) {
       id = res
-      user.admin.affair[id] = 1
       router.push('/admin/affair/' + id)
     }
   }
@@ -70,7 +69,6 @@ async function remove () {
   const res = await request.delete('/xyz/admin/' + id, { headers: { token: user.token } })
   if (res) {
     await Swal.fire('删除成功', '', 'success')
-    delete user.admin.affair[id]
     router.push('/admin/xyz')
   }
   loading = false
@@ -125,7 +123,7 @@ function del (i) {
     </div>
     <!-- Preview -->
     <div class="bg-gray-100 h-auto md:w-2/3 min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
-      <input class="text-2xl m-3 mb-6 bg-transparent" v-model="affair.title">
+      <input class="text-2xl m-3 mb-6 bg-transparent w-full" v-model="affair.title">
       <div v-for="(b, i) in affair.content" :key="b" class="m-1 bg-white rounded all-transition" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[1] = 1">
         <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
         <wrapper :show="focus == i" class="flex justify-end">
