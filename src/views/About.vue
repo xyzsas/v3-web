@@ -23,7 +23,7 @@ window.token = user.token
       <h1 class="text-5xl">XYZSAS</h1>
       <p class="cursor-pointer text-center mb-3">Powered by yzITI</p>
       <div class="flex flex-col items-center justify-around h-20">
-        <img :src="`https://img.shields.io/badge/version-${version}-green`">
+        <img :src="`https://img.shields.io/badge/version-${version}-green?style=for-the-badge`">
       </div>
     </wrapper>
   </div>
