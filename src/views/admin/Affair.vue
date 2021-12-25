@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '@heroicons/vue/outline'
+import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon, ArrowLeftIcon} from '@heroicons/vue/outline'
 import Wrapper from '../../components/Wrapper.vue'
 import PanelWrapper from '../../components/PanelWrapper.vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
@@ -101,9 +101,12 @@ function del (i) {
     <!-- Panel -->
     <div class="h-auto md:w-1/3 md:h-screen overflow-y-auto">
       <panel-wrapper title="事务管理" v-model="panelShow[0]">
-        <p class="p-3">
-          <button class="all-transition bg-blue-700 px-3 py-1 m-1 text-white rounded hover:shadow-md" @click="submit">提交事务</button>
-          <button class="all-transition bg-red-700 px-3 py-1 m-1 text-white rounded hover:shadow-md" @click="remove">删除事务</button>
+        <p class="p-3 flex items-center">
+          <button class="cursor-pointer" @click="router.push('/admin/xyz')">
+            <arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" />
+          </button>
+          <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
+          <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
         </p>
       </panel-wrapper>
       <panel-wrapper title="添加组件" v-model="panelShow[1]">
