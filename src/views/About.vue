@@ -20,7 +20,7 @@ window.token = user.token
       <img style="transition: all 0.5s ease;" src="/Z.svg" class="absolute w-1/3 group-hover:left-2/3 left-1/3">
     </div>
     <wrapper :show="show">
-      <h1 class="text-5xl">XYZSAS</h1>
+      <h1 class="text-5xl text-center">XYZSAS</h1>
       <p class="cursor-pointer text-center mb-3">Powered by yzITI</p>
       <div class="flex flex-col items-center justify-around h-20">
         <img :src="`https://img.shields.io/badge/version-${version}-green?style=for-the-badge`">
