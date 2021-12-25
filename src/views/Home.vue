@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import { user, clock } from '../state.js'
 import { greet } from '../utils/greet.js'
-import { FingerPrintIcon, TrendingUpIcon } from '@heroicons/vue/outline'
+import { FingerPrintIcon, TrendingUpIcon, PencilAltIcon } from '@heroicons/vue/outline'
 import AffairCard from '../components/AffairCard.vue'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { request, error as popError } from '../utils/request.js'
@@ -32,14 +32,18 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
         {{ greet.s }}
       </p>
     </div>
-    <div class="flex">
-      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg mr-2" @click="router.push('/security')">
+    <div class="flex flex-wrap">
+      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg m-2" @click="router.push('/security')">
         <finger-print-icon class="w-6 text-red-500 mr-2"/>
         安全中心
       </button>
-      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg" @click="router.push('/grade')">
+      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg m-2" @click="router.push('/grade')">
         <trending-up-icon class="w-6 text-blue-500 mr-2"/>
         成绩查询
+      </button>
+      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg m-2" @click="router.push('/admin/xyz')" v-if="user.admin?.affair">
+        <pencil-alt-icon class="w-6 text-purple-500 mr-2"/>
+        事务管理
       </button>
     </div>
     <div class="mt-10 md:m-10 relative all-transition" style="min-height: 50vh;">

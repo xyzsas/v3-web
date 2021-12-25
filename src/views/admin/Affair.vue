@@ -19,6 +19,7 @@ affair.title = '请填写事务标题'
 affair.content = [{ _: 'HTML', ':': { html: '<h3>欢迎使用学生事务系统</h3><p>您可以在此处编辑事务</p>' } }]
 affair.response = {}
 affair.variable = {}
+affair.access = [['start', Date.now()], ['group', '/yzzx/*']]
 
 async function fetch () {
   if (!id) {
@@ -29,6 +30,7 @@ async function fetch () {
   if (res) {
     affair.title = res.title
     affair.content = JSON.parse(res.content)
+    affair.access = JSON.parse(res.access)
     affair.variable = {}
     for (const k in res) {
       if (k[0] == '$') affair.variable[k] = res[k]
@@ -39,7 +41,7 @@ async function fetch () {
 }
 
 async function submit () {
-  const body = { title: affair.title, content: JSON.stringify(affair.content) }
+  const body = { title: affair.title, content: JSON.stringify(affair.content), access: JSON.stringify(affair.access) }
   for (const k in affair.variable) body[k] = affair.variable[k]
   loading = true
   const res = await request.post('/xyz/admin/' + id, body, { headers: { token: user.token } })
@@ -101,13 +103,16 @@ function del (i) {
     <!-- Panel -->
     <div class="h-auto md:w-1/3 md:h-screen overflow-y-auto">
       <panel-wrapper title="事务管理" v-model="panelShow[0]">
-        <p class="p-3 flex items-center">
+        <p class="p-2 flex items-center">
           <button class="cursor-pointer" @click="router.push('/admin/xyz')">
             <arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" />
           </button>
           <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
           <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
         </p>
+        <hr>
+        <h3 class="m-2">访问控制</h3>
+        <p class="m-2">Under development</p>
       </panel-wrapper>
       <panel-wrapper title="添加组件" v-model="panelShow[1]">
         <div class="flex flex-wrap opacity-60 p-3">
