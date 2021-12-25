@@ -9,7 +9,7 @@ import blocks from '../../blocks/index.js'
 import request from '../../utils/request.js'
 import { affair, user } from '../../state.js'
 
-const route = useRoute(), router = useRouter()
+const route = useRoute(), router = useRouter(), origin = window.location.origin
 let loading = $ref(true), id = route.params.id == 'NEW' ? '' : route.params.id
 
 if (!user.token || !user.admin?.affair) router.push('/')
@@ -19,7 +19,7 @@ affair.title = '请填写事务标题'
 affair.content = [{ _: 'HTML', ':': { html: '<h3>欢迎使用学生事务系统</h3><p>您可以在此处编辑事务</p>' } }]
 affair.response = {}
 affair.variable = {}
-affair.access = [['start', Date.now()], ['group', '/yzzx/*']]
+affair.access = []
 
 async function fetch () {
   if (!id) {
@@ -110,7 +110,8 @@ function del (i) {
           <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
           <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
         </p>
-        <hr>
+        <code class="m-3 text-gray-400">{{ origin }}/#/@/{{ id }}</code>
+        <hr class="mt-3">
         <h3 class="m-2">访问控制</h3>
         <p class="m-2">Under development</p>
       </panel-wrapper>

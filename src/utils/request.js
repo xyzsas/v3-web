@@ -10,7 +10,10 @@ const alert = async (msg, title = '错误') => {
 export async function error (err) {
   if (!err.response?.data) return alert('', '网络错误')
   const uec = window.UEC[err.response.data.UEC]
-  if (uec) return alert(uec)
+  if (uec) {
+    window.lastUEC = uec
+    return alert(uec)
+  }
   return alert(err.response.data.error || '未知错误')
 }
 

@@ -26,8 +26,9 @@ function success (res) {
   user.group = res.group
   user.aauth = JSON.parse(res.aauth || '{}')
   user.admin = res.admin && JSON.parse(res.admin)
-  if (route.query.c == 'AAUTH') {
-    window.location.href = `https://cn.aauth.link/reenter.html?code=${user.token}&state=${route.query.state}`
+  if (route.query.c) {
+    if (route.query.c == 'AAUTH') window.location.href = `https://cn.aauth.link/reenter.html?code=${user.token}&state=${route.query.state}`
+    else router.push('/@/' + route.query.c)
     return
   }
   router.push('/')

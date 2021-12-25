@@ -5,12 +5,12 @@ const index = {
   '/login': () => import('./views/Login.vue'),
   '/security': () => import('./views/Security.vue'),
   '/photo': () => import('./views/Photo.vue'),
-  '/affair': () => import('./views/Affair.vue'),
+  '/@/:id': () => import('./views/Affair.vue'),
   '/about': () => import('./views/About.vue'),
   '/grade': () => import('./views/Grade.vue'),
   // admin page
   '/admin/xyz': () => import('./views/admin/XYZ.vue'),
-  '/admin/affair/:id': () => import('./views/admin/Affair.vue')
+  '/admin/@/:id': () => import('./views/admin/Affair.vue')
 }
 
 const routes = []
