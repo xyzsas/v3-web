@@ -15,7 +15,7 @@ const blocks = {
     icon: '/blocks/input.svg',
     block: () => import('./Input.vue'),
     panel: () => import('./InputPanel.vue'),
-    template: { title: '输入框标题' }
+    template: { title: '输入框标题', placeholder: '提示文本' }
   }
 }
 

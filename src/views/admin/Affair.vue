@@ -1,7 +1,7 @@
 <script setup>
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '@heroicons/vue/outline'
+import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon, ArrowLeftIcon} from '@heroicons/vue/outline'
 import Wrapper from '../../components/Wrapper.vue'
 import PanelWrapper from '../../components/PanelWrapper.vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
@@ -47,7 +47,6 @@ async function submit () {
     await Swal.fire('提交成功', '', 'success')
     if (!id) {
       id = res
-      user.admin.affair[id] = 1
       router.push('/admin/affair/' + id)
     }
   }
@@ -70,7 +69,6 @@ async function remove () {
   const res = await request.delete('/xyz/admin/' + id, { headers: { token: user.token } })
   if (res) {
     await Swal.fire('删除成功', '', 'success')
-    delete user.admin.affair[id]
     router.push('/admin/xyz')
   }
   loading = false
@@ -78,7 +76,7 @@ async function remove () {
 
 // following are for editor
 let focus = $ref(0)
-const panelShow = reactive([1, 0, 1])
+const panelShow = reactive([1, 0, 0])
 let focused = $computed(() => affair.content[focus] || {})
 
 function swap (i, j) {
@@ -103,36 +101,39 @@ function del (i) {
     <!-- Panel -->
     <div class="h-auto md:w-1/3 md:h-screen overflow-y-auto">
       <panel-wrapper title="事务管理" v-model="panelShow[0]">
-        <p class="p-3">
-          <button class="all-transition bg-blue-700 px-3 py-1 m-1 text-white rounded hover:shadow-md" @click="submit">提交事务</button>
-          <button class="all-transition bg-red-700 px-3 py-1 m-1 text-white rounded hover:shadow-md" @click="remove">删除事务</button>
+        <p class="p-3 flex items-center">
+          <button class="cursor-pointer" @click="router.push('/admin/xyz')">
+            <arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" />
+          </button>
+          <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
+          <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
         </p>
       </panel-wrapper>
-      <panel-wrapper title="组件属性" v-model="panelShow[1]">
-        <transition name="fade" mode="out-in">
-          <component style="opacity: 0.6;" v-if="blocks[focused._].panel" :is="blocks[focused._].panel" :i="focus"></component>
-          <p class="p-3 text-gray-400" v-else>没有需要配置的属性</p>
-        </transition>
-      </panel-wrapper>
-      <panel-wrapper title="添加组件" v-model="panelShow[2]">
-        <div class="flex flex-wrap opacity-60">
-          <div class="flex flex-col items-center w-20 m-2 cursor-pointer" v-for="(v, k) in blocks" @click="add(k)">
-            <img class="w-10" :src="v.icon">
-            <p>{{ v.name }}</p>
+      <panel-wrapper title="添加组件" v-model="panelShow[1]">
+        <div class="flex flex-wrap opacity-60 p-3">
+          <div class="flex flex-col items-center w-16 cursor-pointer" v-for="(v, k) in blocks" @click="add(k)">
+            <img class="w-9" :src="v.icon">
+            <p class="text-sm">{{ v.name }}</p>
           </div>
         </div>
+      </panel-wrapper>
+      <panel-wrapper title="组件属性" v-model="panelShow[2]">
+        <div v-if="blocks[focused._].panel" style="opacity: 0.6;">
+          <component :is="blocks[focused._].panel" :i="focus" />
+        </div>
+        <p class="p-3 text-gray-400" v-else>没有需要配置的属性</p>
       </panel-wrapper>
     </div>
     <!-- Preview -->
     <div class="bg-gray-100 h-auto md:w-2/3 min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
-      <input class="text-2xl m-3 mb-6 bg-transparent" v-model="affair.title">
-      <div v-for="(b, i) in affair.content" :key="b" class="m-1 bg-white rounded all-transition" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[1] = 1">
+      <input class="text-2xl m-3 mb-6 bg-transparent w-full" v-model="affair.title">
+      <div v-for="(b, i) in affair.content" :key="b" class="m-1 bg-white rounded all-transition" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[2] = 1">
         <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
         <wrapper :show="focus == i" class="flex justify-end">
           <arrow-up-icon v-if="i > 0" class="w-6 m-2 cursor-pointer text-gray-500" @click="swap(i, i-1)" />
           <arrow-down-icon v-if="i+1 < affair.content.length" class="w-6 m-2 cursor-pointer text-gray-500" @click="swap(i, i+1)"/>
           <trash-icon v-if="affair.content.length > 1" class="w-6 m-2 cursor-pointer text-red-500" @click="del(i)"/>
-          <plus-icon class="w-6 m-2 cursor-pointer text-blue-500" @click="panelShow[0] = 0; panelShow[2] = 1" />
+          <plus-icon class="w-6 m-2 cursor-pointer text-blue-500" @click="panelShow[0] = 0; panelShow[1] = 1" />
         </wrapper>
       </div>
     </div>
