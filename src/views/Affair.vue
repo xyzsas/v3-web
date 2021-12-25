@@ -11,7 +11,8 @@ const router = useRouter(), route = useRoute()
 let loading = $ref(true)
 
 async function fetch () {
-  const res = await request.get('/xyz/affair/' + route.params.id, { headers: { token: user.token } })
+  const opt = user.token ? { headers: { token: user.token } } : {}
+  const res = await request.get('/xyz/affair/' + route.params.id, opt)
   if (!res) {
     if (window.lastUEC == 'XYZSAS-0021') router.go(-1)
     else if (user.token) router.push('/')
