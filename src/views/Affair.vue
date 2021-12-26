@@ -22,6 +22,7 @@ async function fetch () {
   affair.response = {}
   affair.title = res.title
   affair.content = JSON.parse(res.content)
+  affair.data = res.data || {}
   loading = false
 }
 fetch()
@@ -31,7 +32,7 @@ fetch()
   <overlay-loading :show="loading" />
   <div class="min-h-screen bg-gray-100 p-4 lg:px-20 lg:py-8">
     <h1 class="text-2xl m-3 mb-6">{{ affair.title }}</h1>
-    <div v-for="(b, i) in affair.content" :key="b" class="m-1">
+    <div v-for="(b, i) in affair.content" :key="b['#']" class="m-1">
       <wrapper :show="1" class="bg-white rounded">
         <component :is="blocks[b._].block" :i="i"></component>
       </wrapper>

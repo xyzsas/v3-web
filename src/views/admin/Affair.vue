@@ -8,6 +8,7 @@ import OverlayLoading from '../../components/OverlayLoading.vue'
 import blocks from '../../blocks/index.js'
 import request from '../../utils/request.js'
 import { affair, user } from '../../state.js'
+import { random } from '../../utils/crypto.js'
 
 const route = useRoute(), router = useRouter(), origin = window.location.origin
 let loading = $ref(true), id = route.params.id == 'NEW' ? '' : route.params.id
@@ -16,8 +17,8 @@ if (!user.token || !user.admin?.affair) router.push('/')
 else fetch()
 
 affair.title = '请填写事务标题'
-affair.content = [{ _: 'HTML', ':': { html: '<h3>欢迎使用学生事务系统</h3><p>您可以在此处编辑事务</p>' } }]
-affair.response = {}
+affair.content = [{ '#': 'default', _: 'HTML', ':': { html: '<h3>欢迎使用学生事务系统</h3><p>您可以在此处编辑事务</p>' } }]
+affair.data = {}
 affair.variable = {}
 affair.access = []
 
@@ -49,7 +50,7 @@ async function submit () {
     await Swal.fire('提交成功', '', 'success')
     if (!id) {
       id = res
-      router.push('/admin/affair/' + id)
+      router.push('/admin/@/' + id)
     }
   }
   loading = false
@@ -88,7 +89,7 @@ function swap (i, j) {
 }
 
 function add (k) {
-  affair.content.splice(focus + 1, 0, { _: k, ':': JSON.parse(JSON.stringify(blocks[k].template)) })
+  affair.content.splice(focus + 1, 0, { '#': random(), _: k, ':': JSON.parse(JSON.stringify(blocks[k].template)) })
 }
 
 function del (i) {
@@ -110,10 +111,10 @@ function del (i) {
           <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
           <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
         </p>
-        <code class="m-3 text-gray-400">{{ origin }}/#/@/{{ id }}</code>
+        <a :href="'/#/@/' + id" target="_blank" class="ml-3 font-mono text-gray-300 text-sm">{{ origin }}/#/@/{{ id }}</a>
         <hr class="mt-3">
         <h3 class="m-2">访问控制</h3>
-        <p class="m-2">Under development</p>
+        <p class="p-2">Under development</p>
       </panel-wrapper>
       <panel-wrapper title="添加组件" v-model="panelShow[1]">
         <div class="flex flex-wrap opacity-60 p-3">
@@ -133,13 +134,14 @@ function del (i) {
     <!-- Preview -->
     <div class="bg-gray-100 h-auto md:w-2/3 min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
       <input class="text-2xl m-3 mb-6 bg-transparent w-full" v-model="affair.title">
-      <div v-for="(b, i) in affair.content" :key="b" class="m-1 bg-white rounded all-transition" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[2] = 1">
+      <div v-for="(b, i) in affair.content" :key="b['#']" class="m-1 bg-white rounded all-transition relative" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[2] = 1">
         <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
-        <wrapper :show="focus == i" class="flex justify-end">
+        <wrapper :show="focus == i" class="flex justify-end relative">
           <arrow-up-icon v-if="i > 0" class="w-6 m-2 cursor-pointer text-gray-500" @click="swap(i, i-1)" />
           <arrow-down-icon v-if="i+1 < affair.content.length" class="w-6 m-2 cursor-pointer text-gray-500" @click="swap(i, i+1)"/>
           <trash-icon v-if="affair.content.length > 1" class="w-6 m-2 cursor-pointer text-red-500" @click="del(i)"/>
           <plus-icon class="w-6 m-2 cursor-pointer text-blue-500" @click="panelShow[0] = 0; panelShow[1] = 1" />
+          <div class="absolute left-2 bottom-2 text-gray-100 text-xs">{{ b['#'] }}</div>
         </wrapper>
       </div>
     </div>

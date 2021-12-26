@@ -24,10 +24,10 @@ else fetch()
     <overlay-loading :show="loading"></overlay-loading>
     <h1 class="text-2xl font-bold flex items-center mb-6"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5 cursor-pointer" @click="router.push('/')"></arrow-left-icon>事务管理</h1>
     <p v-if="!Object.keys(list).length">暂无可以管理的事务</p>
-    <div v-for="(v, k) in list" :key="k" class="bg-white rounded py-4 px-6 shadow cursor-pointer flex items-center m-3" @click="router.push('/admin/affair/' + k)">
+    <div v-for="(v, k) in list" :key="k" class="bg-white rounded py-4 px-6 shadow cursor-pointer flex items-center m-3" @click="router.push('/admin/@/' + k)">
       <h3 class="text-xl flex items-center">{{ v }}</h3>
     </div>
-    <button class="all-transition fixed right-20 bottom-20 rounded-full bg-blue-500 p-3 md:p-4 shadow-md hover:shadow-xl group" @click="router.push('/admin/affair/NEW')">
+    <button class="all-transition fixed right-20 bottom-20 rounded-full bg-blue-500 p-3 md:p-4 shadow-md hover:shadow-xl group" @click="router.push('/admin/@/NEW')">
       <plus-icon class="all-transition w-10 text-white group-hover:rotate-180"></plus-icon>
     </button>
   </div>
