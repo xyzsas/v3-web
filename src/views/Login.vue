@@ -82,7 +82,7 @@ function goAauth () {
         :type="random ? 'password' : 'text'"
         v-model="input" @keyup.enter="next"
       >
-      <button @click="next"><arrow-circle-right-icon class="w-12 h-12 transition" :class="input ? 'text-blue-500' : 'text-gray-300'"/></button>
+      <button @click="next" name="next"><arrow-circle-right-icon class="w-12 h-12 transition" :class="input ? 'text-blue-500' : 'text-gray-300'"/></button>
       <button class="flex items-center absolute right-2 bottom-1 text-gray-400 text-sm" @click="goAauth" v-if="route.query.c != 'AAUTH'">
         <img class="w-5" src="https://cn.aauth.link/logo.png">
         第三方登录

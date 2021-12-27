@@ -3,7 +3,6 @@ import { reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Draggable from 'vuedraggable'
 import { PlusIcon, TrashIcon, ArrowLeftIcon, HandIcon } from '@heroicons/vue/outline'
-import Wrapper from '../../components/Wrapper.vue'
 import PanelWrapper from '../../components/PanelWrapper.vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import AccessControl from '../../components/AccessControl.vue'
@@ -133,16 +132,16 @@ function dragEnd (e) {
     <!-- Preview -->
     <div class="bg-gray-100 h-auto md:w-2/3 min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
       <input class="text-2xl m-3 mb-6 bg-transparent w-full" v-model="affair.title">
-      <draggable :list="affair.content" handle=".handle" item-key="#" tag="transition-group" @start="focus = -1" @end="dragEnd">
+      <draggable :list="affair.content" handle=".handle" item-key="#" @start="focus = -1" @end="dragEnd" tag="transition-group">
         <template #item="{ element: b, index: i }">
-          <div class="m-1 bg-white rounded all-transition" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[2] = 1" :key="b['#']">
+          <div class="m-1 bg-white rounded" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[2] = 1" :key="b['#']">
             <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
-            <wrapper :show="focus === i" class="flex items-center justify-end relative">
+            <div class="flex items-center justify-end relative all-transition overflow-hidden" :class="focus == i ? 'h-10' : 'h-0'">
               <trash-icon v-if="affair.content.length > 1" class="w-6 m-2 cursor-pointer text-red-500" @click="del(i)"/>
               <plus-icon class="w-6 m-2 cursor-pointer text-blue-500" @click="panelShow[0] = 0; panelShow[1] = 1" />
               <hand-icon class="w-6 m-2 cursor-pointer text-gray-500 handle" />
               <div class="absolute left-2 bottom-2 text-gray-100 text-xs">{{ b['#'] }}</div>
-            </wrapper>
+            </div>
           </div>
         </template>
       </draggable>
