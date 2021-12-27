@@ -1,10 +1,12 @@
 <script setup>
 import { reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon, ArrowLeftIcon} from '@heroicons/vue/outline'
+import Draggable from 'vuedraggable'
+import { PlusIcon, TrashIcon, ArrowLeftIcon, HandIcon } from '@heroicons/vue/outline'
 import Wrapper from '../../components/Wrapper.vue'
 import PanelWrapper from '../../components/PanelWrapper.vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
+import AccessControl from '../../components/AccessControl.vue'
 import blocks from '../../blocks/index.js'
 import request from '../../utils/request.js'
 import { affair, user } from '../../state.js'
@@ -82,12 +84,6 @@ let focus = $ref(0)
 const panelShow = reactive([1, 0, 0])
 let focused = $computed(() => affair.content[focus] || {})
 
-function swap (i, j) {
-  focus = j
-  const x = affair.content.splice(i, 1, affair.content[j])[0]
-  affair.content.splice(j, 1, x)
-}
-
 function add (k) {
   affair.content.splice(focus + 1, 0, { '#': random(), _: k, ':': JSON.parse(JSON.stringify(blocks[k].template)) })
 }
@@ -95,6 +91,10 @@ function add (k) {
 function del (i) {
   affair.content.splice(i, 1)
   if (focus >= affair.content.length) focus--
+}
+
+function dragEnd (e) {
+  focus = e.newDraggableIndex
 }
 </script>
 
@@ -113,19 +113,18 @@ function del (i) {
         </p>
         <a :href="'/#/@/' + id" target="_blank" class="ml-3 font-mono text-gray-300 text-sm">{{ origin }}/#/@/{{ id }}</a>
         <hr class="mt-3">
-        <h3 class="m-2">访问控制</h3>
-        <p class="p-2">Under development</p>
+        <access-control />
       </panel-wrapper>
       <panel-wrapper title="添加组件" v-model="panelShow[1]">
         <div class="flex flex-wrap opacity-60 p-3">
-          <div class="flex flex-col items-center w-16 cursor-pointer" v-for="(v, k) in blocks" @click="add(k)">
+          <div class="flex flex-col items-center w-16 cursor-pointer" v-for="(v, k) in blocks" @click="add(k)" :key="k">
             <img class="w-9" :src="v.icon">
             <p class="text-sm">{{ v.name }}</p>
           </div>
         </div>
       </panel-wrapper>
       <panel-wrapper title="组件属性" v-model="panelShow[2]">
-        <div v-if="blocks[focused._].panel" style="opacity: 0.6;">
+        <div v-if="focus >= 0 && blocks[focused._].panel" style="opacity: 0.6;" :key="focused['#']">
           <component :is="blocks[focused._].panel" :i="focus" />
         </div>
         <p class="p-3 text-gray-400" v-else>没有需要配置的属性</p>
@@ -134,16 +133,19 @@ function del (i) {
     <!-- Preview -->
     <div class="bg-gray-100 h-auto md:w-2/3 min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
       <input class="text-2xl m-3 mb-6 bg-transparent w-full" v-model="affair.title">
-      <div v-for="(b, i) in affair.content" :key="b['#']" class="m-1 bg-white rounded all-transition relative" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[2] = 1">
-        <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
-        <wrapper :show="focus == i" class="flex justify-end relative">
-          <arrow-up-icon v-if="i > 0" class="w-6 m-2 cursor-pointer text-gray-500" @click="swap(i, i-1)" />
-          <arrow-down-icon v-if="i+1 < affair.content.length" class="w-6 m-2 cursor-pointer text-gray-500" @click="swap(i, i+1)"/>
-          <trash-icon v-if="affair.content.length > 1" class="w-6 m-2 cursor-pointer text-red-500" @click="del(i)"/>
-          <plus-icon class="w-6 m-2 cursor-pointer text-blue-500" @click="panelShow[0] = 0; panelShow[1] = 1" />
-          <div class="absolute left-2 bottom-2 text-gray-100 text-xs">{{ b['#'] }}</div>
-        </wrapper>
-      </div>
+      <draggable :list="affair.content" handle=".handle" item-key="#" tag="transition-group" @start="focus = -1" @end="dragEnd">
+        <template #item="{ element: b, index: i }">
+          <div class="m-1 bg-white rounded all-transition" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[2] = 1" :key="b['#']">
+            <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
+            <wrapper :show="focus === i" class="flex items-center justify-end relative">
+              <trash-icon v-if="affair.content.length > 1" class="w-6 m-2 cursor-pointer text-red-500" @click="del(i)"/>
+              <plus-icon class="w-6 m-2 cursor-pointer text-blue-500" @click="panelShow[0] = 0; panelShow[1] = 1" />
+              <hand-icon class="w-6 m-2 cursor-pointer text-gray-500 handle" />
+              <div class="absolute left-2 bottom-2 text-gray-100 text-xs">{{ b['#'] }}</div>
+            </wrapper>
+          </div>
+        </template>
+      </draggable>
     </div>
   </div>
 </template>

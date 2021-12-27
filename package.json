@@ -11,7 +11,8 @@
     "face-api.js": "^0.22.2",
     "micromark": "^3.0.10",
     "vue": "^3.2.16",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.0.1",
