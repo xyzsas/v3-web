@@ -13,6 +13,10 @@ body {
   transition: all 0.3s ease;
 }
 
+.gray-gradient {
+  background: linear-gradient(to right, white, rgb(243, 244, 246));
+}
+
 /* following are transitions */
 
 .fade-enter-active,

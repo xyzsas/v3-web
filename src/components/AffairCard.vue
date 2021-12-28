@@ -21,16 +21,10 @@ function parseDiff (diff) {
 </script>
 
 <template>
-  <div class="all-transition hover:shadow-lg bg-white rounded py-4 px-6 shadow md:shadow-none cursor-pointer md:hover:shadow-none flex items-center flex-wrap my-3">
+  <div class="all-transition hover:shadow-lg gray-gradient rounded py-4 px-6 shadow md:shadow-none cursor-pointer md:hover:shadow-none flex items-center flex-wrap my-3">
     <div class="all-transition text-xl sm:text-2xl font-bold text-gray-500 mb-1 flex items-center">
       {{ value[':'] }}
     </div>
     <div class="all-transition px-2 py-1 rounded border text-xs sm:text-sm ml-1 sm:ml-3" :class="msg.style">{{ msg.text }} <code class="font-mono">{{ msg.time }}</code></div>
   </div>
 </template>
-
-<style scoped>
-.bg-white {
-  background: linear-gradient(to right, white, rgb(243, 244, 246));
-}
-</style>

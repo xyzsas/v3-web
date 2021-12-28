@@ -16,6 +16,13 @@ const blocks = {
     block: () => import('./Input.vue'),
     panel: () => import('./InputPanel.vue'),
     template: { title: '输入框标题', placeholder: '提示文本' }
+  },
+  select: {
+    name: '下拉框',
+    icon: '/blocks/select.svg',
+    block: () => import('./Select.vue'),
+    panel: () => import('./SelectPanel.vue'),
+    template: { title: '下拉框标题', options: [{ '#': 1, ':': '选项1' }, { '#': 2, ':': '选项2' }] }
   }
 }
 

@@ -101,16 +101,16 @@ function dragEnd (e) {
   <overlay-loading :show="loading" />
   <div class="flex flex-col md:flex-row">
     <!-- Panel -->
-    <div class="h-auto md:w-1/3 md:h-screen overflow-y-auto">
+    <div class="h-auto md:w-96 md:h-screen overflow-y-auto">
       <panel-wrapper title="事务管理" v-model="panelShow[0]">
-        <p class="p-2 flex items-center">
+        <p class="px-2 pt-2 flex items-center">
           <button class="cursor-pointer" @click="router.push('/admin/xyz')">
             <arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" />
           </button>
           <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
           <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
         </p>
-        <a :href="'/#/@/' + id" target="_blank" class="ml-3 font-mono text-gray-300 text-sm">{{ origin }}/#/@/{{ id }}</a>
+        <a :href="'/#/@/' + id" target="_blank" class="ml-3 font-mono text-gray-300 text-xs whitespace-nowrap">{{ origin }}/#/@/{{ id }}</a>
         <hr class="mt-3">
         <access-control />
       </panel-wrapper>
@@ -130,7 +130,7 @@ function dragEnd (e) {
       </panel-wrapper>
     </div>
     <!-- Preview -->
-    <div class="bg-gray-100 h-auto md:w-2/3 min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
+    <div class="bg-gray-100 h-auto md:flex-grow min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
       <input class="text-2xl m-3 mb-6 bg-transparent w-full" v-model="affair.title">
       <draggable :list="affair.content" handle=".handle" item-key="#" @start="focus = -1" @end="dragEnd" tag="transition-group">
         <template #item="{ element: b, index: i }">

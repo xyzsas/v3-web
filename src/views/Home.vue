@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import { user, clock } from '../state.js'
 import { greet } from '../utils/greet.js'
-import { FingerPrintIcon, TrendingUpIcon, PencilAltIcon } from '@heroicons/vue/outline'
+import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon } from '@heroicons/vue/outline'
 import AffairCard from '../components/AffairCard.vue'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { request, error as popError } from '../utils/request.js'
@@ -33,22 +33,33 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       </p>
     </div>
     <div class="flex flex-wrap">
-      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg m-2" @click="router.push('/security')">
+      <button class="card" @click="router.push('/security')">
         <finger-print-icon class="w-6 text-red-500 mr-2"/>
         安全中心
       </button>
-      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg m-2" @click="router.push('/grade')">
+      <button class="card" @click="router.push('/grade')">
         <trending-up-icon class="w-6 text-blue-500 mr-2"/>
         成绩查询
       </button>
-      <button class="all-transition flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg m-2" @click="router.push('/admin/xyz')" v-if="user.admin?.affair">
+      <button class="card" @click="router.push('/admin/xyz')" v-if="user.admin?.affair">
         <pencil-alt-icon class="w-6 text-purple-500 mr-2"/>
         事务管理
+      </button>
+      <button class="card" v-if="user.admin">
+        <user-group-icon class="w-6 text-orange-500 mr-2"/>
+        用户管理
       </button>
     </div>
     <div class="mt-10 md:m-10 relative all-transition" style="min-height: 50vh;">
       <overlay-loading :show="!affair.length" :absolute="true"></overlay-loading>
-      <affair-card v-for="a in affair" :value="a"></affair-card>
+      <affair-card v-for="a in affair" :value="a" :key="a['#']"></affair-card>
     </div>
   </div>
 </template>
+
+<style scoped>
+button.card {
+  transition: all 0.5s ease;
+  @apply flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg m-2
+}
+</style>
