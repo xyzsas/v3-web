@@ -1,6 +1,6 @@
 <script setup>
 import { affair } from '../state.js'
-import { PlusIcon, DotsVerticalIcon } from '@heroicons/vue/solid'
+import { HandIcon, PlusIcon, TrashIcon } from '@heroicons/vue/outline'
 import Draggable from 'vuedraggable'
 
 let types = $ref({
@@ -18,7 +18,7 @@ if (!affair.access) affair.access = []
 function add () {
   if (!edit[0] || !edit[1]) return
   if (edit[0] === 'START' || edit[0] === 'END') {
-    if (!edit[1].match(/^(((\d{4}-((0[13578]-|1[02]-)(0[1-9]|[12]\d|3[01])|(0[13456789]-|1[012]-)(0[1-9]|[12]\d|30)|02-(0[1-9]|1\d|2[0-8])))|((([02468][048]|[13579][26])00|\d{2}([13579][26]|0[48]|[2468][048])))-02-29)){0,10} ([01]?\d|2[0-3]|24(?=:00?:00?$)):([0-5]\d):([0-5]\d)$/)) return
+    if (!edit[1].match(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/)) return
     edit[1] = new Date(edit[1].replace(' ', 'T') + '.000+08:00').getTime()
   }
   if (edit[0] === 'group' || edit[0] === '!group') {
@@ -26,6 +26,10 @@ function add () {
   }
   affair.access.push([...edit])
   edit = ['START', '', 0]
+}
+
+function del (i) {
+  affair.access.splice(i, 1)
 }
 
 const parseTimestamp = timestamp => {
@@ -44,21 +48,25 @@ function displayValue (el) {
 
 <template>
   <div class="p-3">
-    <h3>访问控制</h3>
+    <h3 class="font-bold">访问限制条件</h3>
     <draggable :list="affair.access" handle=".handle" item-key="1" tag="transition-group">
-      <template #item="{ element: el }">
-        <div class="py-1 flex flex-wrap justify-between items-center text-sm">
+      <template #item="{ element: el, index: i }">
+        <div class="my-1 flex flex-wrap justify-between items-center text-sm p-1 pl-3 rounded-full" style="background: linear-gradient(to right, rgb(243, 244, 246), white);">
           <div>
-            <label v-if="el[2]" class="text-red-500">*</label>
+            <label v-if="el[2]" class="text-red-500">* </label>
             <label>{{ types[el[0]].title }}：</label>
-            <label>{{ displayValue(el) }}</label>
+            <code>{{ displayValue(el) }}</code>
           </div>
-          <dots-vertical-icon class="w-4 handle opacity-50" />
+          <div class="flex">
+            <trash-icon v-if="affair.content.length > 1" class="w-4 m-2 cursor-pointer text-red-500" @click="del(i)"/>
+            <hand-icon class="w-4 handle opacity-50" />
+          </div>
         </div> 
       </template>
     </draggable>
     <div class="py-1 flex flex-wrap items-center justify-between">
-      <select class="border px-2" v-model="edit[0]">
+      添加条件:
+      <select class="border rounded-xl bg-gray-50 px-2" v-model="edit[0]">
         <option v-for="(t, k) in types" :key="k" :value="k">{{ t.title }}</option>
       </select>
       <label class="mx-2 opacity-50">
@@ -67,6 +75,6 @@ function displayValue (el) {
       </label>
       <plus-icon class="all-transition w-7 text-green-500 cursor-pointer hover:rotate-180" @click="add" />
     </div>
-    <input class="border px-2 w-full" v-model="edit[1]" :placeholder="types[edit[0]]?.placeholder || '请选择条件类型'">
+    <input class="border rounded px-2 w-full" v-model="edit[1]" :placeholder="types[edit[0]]?.placeholder || '请选择条件类型'">
   </div>
 </template>
