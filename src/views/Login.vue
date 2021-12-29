@@ -66,7 +66,7 @@ async function aauth (token) {
 if (route.query.token) aauth(route.query.token)
 
 function goAauth () {
-  if (route.query.c != 'AAUTH') return
+  if (route.query.c == 'AAUTH') return
   window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
   window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=50')
 }
