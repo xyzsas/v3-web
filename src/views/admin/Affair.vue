@@ -2,7 +2,7 @@
 import { reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Draggable from 'vuedraggable'
-import { PlusIcon, TrashIcon, ArrowLeftIcon, HandIcon } from '@heroicons/vue/outline'
+import { MenuIcon, PencilIcon, PlusIcon, TrashIcon, ArrowLeftIcon, HandIcon } from '@heroicons/vue/outline'
 import PanelWrapper from '../../components/PanelWrapper.vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import AccessControl from '../../components/AccessControl.vue'
@@ -24,20 +24,17 @@ affair.variable = {}
 affair.access = []
 
 async function fetch () {
-  if (!id) {
-    loading = false
-    return
-  }
+  if (!id) return loading = false
   const res = await request.get('/xyz/admin/' + id, { headers: { token: user.token } })
   if (res) {
     affair.title = res.title
     affair.content = JSON.parse(res.content)
     affair.access = JSON.parse(res.access)
+    affair.data = {}
     affair.variable = {}
     for (const k in res) {
       if (k[0] == '$') affair.variable[k] = res[k]
     }
-    affair.response = {}
   }
   loading = false
 }
@@ -78,10 +75,12 @@ async function remove () {
   loading = false
 }
 
-// following are for editor
-let focus = $ref(0)
+// editor properties and methods
+let focus = $ref(0), isMobile = $ref(false), showPanel = $ref(false)
 const panelShow = reactive([1, 0, 0])
 let focused = $computed(() => affair.content[focus] || {})
+window.onresize = () => { isMobile = window.innerWidth < 768 }
+window.onresize()
 
 function add (k) {
   affair.content.splice(focus + 1, 0, { '#': random(), _: k, ':': JSON.parse(JSON.stringify(blocks[k].template)) })
@@ -99,14 +98,16 @@ function dragEnd (e) {
 
 <template>
   <overlay-loading :show="loading" />
-  <div class="flex flex-col md:flex-row">
+  <div class="relative">
+    <!-- Overlay -->
+    <transition name="fade">
+      <div v-if="isMobile && showPanel" @click="showPanel = false" class="absolute w-full h-screen bg-black opacity-30 z-10" />
+    </transition>
     <!-- Panel -->
-    <div class="bg-white h-auto md:w-96 md:h-screen overflow-y-auto">
+    <div class="all-transition bg-white w-96 h-screen overflow-y-auto absolute top-0 z-20" style="max-width: 90%;" :style="{ left: (!isMobile || showPanel) ? 0 : '-25rem' }">
       <panel-wrapper title="事务管理" v-model="panelShow[0]">
         <p class="px-2 pt-2 flex items-center">
-          <button class="cursor-pointer" @click="router.push('/admin/xyz')">
-            <arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" />
-          </button>
+          <button class="cursor-pointer" @click="router.push('/admin/xyz')"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" /></button>
           <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
           <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
         </p>
@@ -130,16 +131,20 @@ function dragEnd (e) {
       </panel-wrapper>
     </div>
     <!-- Preview -->
-    <div class="h-auto md:flex-grow min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
-      <input class="text-2xl m-3 mb-6 bg-transparent w-full" v-model="affair.title">
+    <div class="all-transition p-4 w-full h-screen overflow-y-auto lg:py-8 overflow-y-auto md:pl-100">
+      <div class="flex items-center w-full mb-6">
+        <menu-icon v-if="isMobile" class="w-8" @click="showPanel = 1" />
+        <input class="text-2xl ml-3 bg-transparent flex-grow" v-model="affair.title">
+      </div>
       <draggable :list="affair.content" handle=".handle" item-key="#" @start="focus = -1" @end="dragEnd" tag="transition-group">
         <template #item="{ element: b, index: i }">
           <div class="m-1 bg-white rounded" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[2] = 1" :key="b['#']">
             <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
             <div class="flex items-center justify-end relative all-transition overflow-hidden" :class="focus == i ? 'h-10' : 'h-0'">
-              <trash-icon v-if="affair.content.length > 1" class="w-6 m-2 cursor-pointer text-red-500" @click="del(i)"/>
-              <plus-icon class="w-6 m-2 cursor-pointer text-blue-500" @click="panelShow[0] = 0; panelShow[1] = 1" />
-              <hand-icon class="w-6 m-2 cursor-pointer text-gray-500 handle" />
+              <pencil-icon v-if="isMobile" class="icon text-gray-500" @click="panelShow[2] = 1; panelShow[0] = 0; showPanel = 1"/>
+              <trash-icon v-if="affair.content.length > 1" class="icon text-red-500" @click="del(i)"/>
+              <plus-icon class="icon text-blue-500" @click="panelShow[0] = 0; panelShow[1] = 1; showPanel = 1" />
+              <hand-icon class="icon text-gray-500 handle" />
               <div class="absolute left-2 bottom-2 text-gray-100 text-xs">{{ b['#'] }}</div>
             </div>
           </div>
@@ -148,3 +153,9 @@ function dragEnd (e) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.icon {
+  @apply w-6 m-2 cursor-pointer
+}
+</style>
