@@ -13,6 +13,9 @@ body {
 .all-transition {
   transition: all 0.3s ease;
 }
+.gradient-card {
+  @apply all-transition cursor-pointer bg-gradient-to-r from-white to-gray-100 rounded shadow md:shadow-none hover:shadow-lg md:hover:shadow-none
+}
 
 /* following are transitions */
 .flip-list-move {

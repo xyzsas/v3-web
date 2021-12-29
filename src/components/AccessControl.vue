@@ -45,9 +45,9 @@ function displayValue (el) {
 <template>
   <div class="p-3">
     <h3 class="font-bold">访问限制条件</h3>
-    <draggable :list="affair.access" handle=".handle" item-key="1" tag="transition-group" :component-data="{ name: 'flip-list' }">
+    <draggable :list="affair.access" handle=".handle" item-key="1" tag="transition-group">
       <template #item="{ element: el, index: i }">
-        <div class="my-1 flex flex-wrap justify-between items-center text-sm p-1 pl-3 rounded-full bg-gradient-to-r from-green-100 to-white">
+        <div class="my-1 flex flex-wrap justify-between items-center text-sm p-1 pl-3 rounded-full bg-gradient-to-r from-lime-100 to-white">
           <div>
             <label v-if="el[2]" class="text-red-500">* </label>
             <label>{{ types[el[0]].title }}：</label>

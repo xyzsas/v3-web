@@ -21,9 +21,9 @@ function add () {
     </div>
     <div class="flex justify-between items-center">
       <input class="border rounded px-2 w-full" v-model="edit" placeholder="添加新选项">
-      <plus-icon class="w-7 text-green-500 cursor-pointer" @click="add" />
+      <plus-icon class="w-7 text-blue-500 cursor-pointer" @click="add" />
     </div>
-    <draggable :list="value.options" handle=".handle" item-key="#" tag="transition-group" :component-data="{ name: 'flip-list' }">
+    <draggable :list="value.options" handle=".handle" item-key="#" tag="transition-group">
       <template #item="{ element: el, index: i }">
         <div class="my-1 flex flex-wrap justify-between items-center text-sm p-1 pl-3 rounded-full bg-gradient-to-r from-blue-100 to-white">
           <label>{{ el[':'] }}</label>
