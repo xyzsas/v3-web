@@ -62,7 +62,7 @@ function parseTime (t) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100 px-3 lg:px-10 py-8">
+  <div class="min-h-screen px-3 lg:px-10 py-8">
     <h1 class="text-3xl font-medium m-3 flex items-center">
       <arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5 cursor-pointer" @click="router.push('/')"></arrow-left-icon>
       成绩查询

@@ -101,7 +101,7 @@ function dragEnd (e) {
   <overlay-loading :show="loading" />
   <div class="flex flex-col md:flex-row">
     <!-- Panel -->
-    <div class="h-auto md:w-96 md:h-screen overflow-y-auto">
+    <div class="bg-white h-auto md:w-96 md:h-screen overflow-y-auto">
       <panel-wrapper title="事务管理" v-model="panelShow[0]">
         <p class="px-2 pt-2 flex items-center">
           <button class="cursor-pointer" @click="router.push('/admin/xyz')">
@@ -123,14 +123,14 @@ function dragEnd (e) {
         </div>
       </panel-wrapper>
       <panel-wrapper title="组件属性" v-model="panelShow[2]">
-        <div v-if="focus >= 0 && blocks[focused._].panel" style="opacity: 0.6;" :key="focused['#']">
+        <div v-if="focus >= 0 && blocks[focused._].panel" class="opacity-80" :key="focused['#']">
           <component :is="blocks[focused._].panel" :i="focus" />
         </div>
         <p class="p-3 text-gray-400" v-else>没有需要配置的属性</p>
       </panel-wrapper>
     </div>
     <!-- Preview -->
-    <div class="bg-gray-100 h-auto md:flex-grow min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
+    <div class="h-auto md:flex-grow min-h-screen md:h-screen p-4 lg:px-20 lg:py-8 overflow-y-auto">
       <input class="text-2xl m-3 mb-6 bg-transparent w-full" v-model="affair.title">
       <draggable :list="affair.content" handle=".handle" item-key="#" @start="focus = -1" @end="dragEnd" tag="transition-group">
         <template #item="{ element: b, index: i }">

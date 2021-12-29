@@ -5,6 +5,7 @@
 body {
   margin: 0px;
   font-family: sans-serif;
+  @apply bg-gray-100
 }
 * {
   outline: none;
@@ -13,11 +14,10 @@ body {
   transition: all 0.3s ease;
 }
 
-.gray-gradient {
-  background: linear-gradient(to right, white, rgb(243, 244, 246));
-}
-
 /* following are transitions */
+.flip-list-move {
+  transition: transform 0.5s;
+}
 
 .fade-enter-active,
 .fade-leave-active {

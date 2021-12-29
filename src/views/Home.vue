@@ -25,30 +25,16 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
 </script>
 
 <template>
-  <div class="p-5 sm:p-10 min-h-screen bg-gray-100 all-transition" v-if="user.token">
-    <div class="mb-3">
+  <div class="p-5 sm:p-10 min-h-screen" v-if="user.token">
+    <div class="mb-3"><!-- header -->
       <h1 class="text-3xl font-medium mt-3">{{ greet.g }}, {{ user.name }}!</h1>
-      <p :class="trans" class="mt-1 text-1xl font-serif text-gray-500" style="transition: all 2s ease;">
-        {{ greet.s }}
-      </p>
+      <p :class="trans" class="mt-1 text-1xl font-serif text-gray-500" style="transition: all 2s ease;">{{ greet.s }}</p>
     </div>
-    <div class="flex flex-wrap">
-      <button class="card" @click="router.push('/security')">
-        <finger-print-icon class="w-6 text-red-500 mr-2"/>
-        安全中心
-      </button>
-      <button class="card" @click="router.push('/grade')">
-        <trending-up-icon class="w-6 text-blue-500 mr-2"/>
-        成绩查询
-      </button>
-      <button class="card" @click="router.push('/admin/xyz')" v-if="user.admin?.affair">
-        <pencil-alt-icon class="w-6 text-purple-500 mr-2"/>
-        事务管理
-      </button>
-      <button class="card" v-if="user.admin">
-        <user-group-icon class="w-6 text-orange-500 mr-2"/>
-        用户管理
-      </button>
+    <div class="flex flex-wrap"><!-- function buttons -->
+      <button class="card" @click="router.push('/security')"><finger-print-icon class="w-6 text-red-500 mr-2"/>安全中心</button>
+      <button class="card" @click="router.push('/grade')"><trending-up-icon class="w-6 text-blue-500 mr-2"/>成绩查询</button>
+      <button class="card" @click="router.push('/admin/xyz')" v-if="user.admin?.affair"><pencil-alt-icon class="w-6 text-purple-500 mr-2"/>事务管理</button>
+      <button class="card" v-if="user.admin"><user-group-icon class="w-6 text-orange-500 mr-2"/>用户管理</button>
     </div>
     <div class="mt-10 md:m-10 relative all-transition" style="min-height: 50vh;">
       <overlay-loading :show="!affair.length" :absolute="true"></overlay-loading>
@@ -59,7 +45,6 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
 
 <style scoped>
 button.card {
-  transition: all 0.5s ease;
-  @apply flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg m-2
+  @apply flex items-center rounded py-2 px-4 shadow-md bg-white hover:shadow-lg m-2 transition-all
 }
 </style>

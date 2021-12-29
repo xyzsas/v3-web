@@ -21,7 +21,7 @@ function parseDiff (diff) {
 </script>
 
 <template>
-  <div class="all-transition hover:shadow-lg gray-gradient rounded py-4 px-6 shadow md:shadow-none cursor-pointer md:hover:shadow-none flex items-center flex-wrap my-3">
+  <div class="all-transition hover:shadow-lg bg-gradient-to-r from-gray-200 to-white rounded py-4 px-6 shadow md:shadow-none cursor-pointer md:hover:shadow-none flex items-center flex-wrap my-3">
     <div class="all-transition text-xl sm:text-2xl font-bold text-gray-500 mb-1 flex items-center">
       {{ value[':'] }}
     </div>

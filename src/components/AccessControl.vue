@@ -28,10 +28,6 @@ function add () {
   edit = ['START', '', 0]
 }
 
-function del (i) {
-  affair.access.splice(i, 1)
-}
-
 const parseTimestamp = timestamp => {
   const tzoffset = -480 * 60000
   const s = new Date(timestamp - tzoffset).toISOString().split('T')
@@ -49,16 +45,16 @@ function displayValue (el) {
 <template>
   <div class="p-3">
     <h3 class="font-bold">访问限制条件</h3>
-    <draggable :list="affair.access" handle=".handle" item-key="1" tag="transition-group">
+    <draggable :list="affair.access" handle=".handle" item-key="1" tag="transition-group" :component-data="{ name: 'flip-list' }">
       <template #item="{ element: el, index: i }">
-        <div class="my-1 flex flex-wrap justify-between items-center text-sm p-1 pl-3 rounded-full" style="background: linear-gradient(to right, rgb(243, 244, 246), white);">
+        <div class="my-1 flex flex-wrap justify-between items-center text-sm p-1 pl-3 rounded-full bg-gradient-to-r from-green-100 to-white">
           <div>
             <label v-if="el[2]" class="text-red-500">* </label>
             <label>{{ types[el[0]].title }}：</label>
             <code>{{ displayValue(el) }}</code>
           </div>
           <div class="flex">
-            <trash-icon v-if="affair.content.length > 1" class="w-4 m-2 cursor-pointer text-red-500" @click="del(i)"/>
+            <trash-icon class="w-4 mx-2 cursor-pointer text-red-500" @click="affair.access.splice(i, 1)"/>
             <hand-icon class="w-4 handle opacity-50" />
           </div>
         </div> 
