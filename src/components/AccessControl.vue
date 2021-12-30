@@ -1,7 +1,7 @@
 <script setup>
 import { affair } from '../state.js'
 import { HandIcon, PlusIcon, TrashIcon } from '@heroicons/vue/outline'
-import Draggable from 'vuedraggable'
+import EditableList from './EditableList.vue'
 
 let types = $ref({
   'START': { title: '开始时间', placeholder: 'YYYY-MM-DD 00:00:00' }, 
@@ -45,21 +45,13 @@ function displayValue (el) {
 <template>
   <div class="p-3">
     <h3 class="font-bold">访问限制条件</h3>
-    <draggable :list="affair.access" handle=".handle" item-key="1" tag="transition-group">
+    <editable-list :list="affair.access" handle=".handle" item-key="1" class="from-lime-50">
       <template #item="{ element: el, index: i }">
-        <div class="my-1 flex flex-wrap justify-between items-center text-sm p-1 pl-3 rounded-full bg-gradient-to-r from-lime-100 to-white">
-          <div>
-            <label v-if="el[2]" class="text-red-500">* </label>
-            <label>{{ types[el[0]].title }}：</label>
-            <code>{{ displayValue(el) }}</code>
-          </div>
-          <div class="flex">
-            <trash-icon class="w-4 mx-2 cursor-pointer text-red-500" @click="affair.access.splice(i, 1)"/>
-            <hand-icon class="w-4 handle opacity-50" />
-          </div>
-        </div> 
+        <label v-if="el[2]" class="text-red-500">* </label>
+        <label>{{ types[el[0]].title }}：</label>
+        <code>{{ displayValue(el) }}</code>
       </template>
-    </draggable>
+    </editable-list>
     <div class="py-1 flex flex-wrap items-center justify-between">
       添加条件:
       <select class="border rounded-xl bg-gray-50 px-2" v-model="edit[0]">
