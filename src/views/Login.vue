@@ -45,6 +45,7 @@ async function next () {
       router.push('/security')
       return
     }
+    random = random.random
     loading = false
   } else { // second
     const res = await request.post('/sas/auth/' + user.id, { password: await HS256(await sha256(input + salt), random) })
