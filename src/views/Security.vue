@@ -61,6 +61,7 @@ async function aauth (token) {
     user.aauth = res
     await Swal.fire('绑定成功', '', 'success')
   }
+  loading = false
 }
 
 function goAauth () {

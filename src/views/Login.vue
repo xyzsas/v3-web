@@ -58,16 +58,20 @@ async function next () {
 
 async function aauth (token) {
   loading = true
-  const res = await request.post('/sas/link/', { token })
-  if (res) success(res)
-  if (!user.token) loading = false
+  const res = await request.post('/sas/link/' + user.id, { token })
+  if (res) {
+    await Swal.fire('重置账户成功', '请前往激活您的账户，并设置初始密码', 'success')
+    router.push('/security')
+  } else loading = false
 }
 
 // aauth redirect
 if (route.query.token) aauth(route.query.token)
 
-function goAauth () {
-  if (route.query.c == 'AAUTH') return
+async function goAauth () {
+  if (route.query.c == 'AAUTH' || !user.id) return
+  const res = await Swal.fire('重置账户', '您可以使用预先绑定的第三方账户重置您的密码', 'question')
+  if (!res.isConfirmed) return
   window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
   window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=50')
 }
@@ -84,7 +88,7 @@ function goAauth () {
         v-model="input" @keyup.enter="next"
       >
       <button @click="next" name="next"><arrow-circle-right-icon class="w-12 h-12 transition" :class="input ? 'text-blue-500' : 'text-gray-300'"/></button>
-      <button class="flex items-center absolute right-2 bottom-1 text-gray-400 text-sm" @click="goAauth">{{ route.query.c == 'AAUTH' ? '正在授权登录其他平台' : '第三方登录' }}</button>
+      <button class="flex items-center absolute right-2 bottom-1 text-gray-400 text-sm" v-if="random || route.query.c == 'AAUTH'" @click="goAauth">{{ route.query.c == 'AAUTH' ? '正在授权登录其他平台' : '忘记密码' }}</button>
     </div>
   </div>
 </template>
