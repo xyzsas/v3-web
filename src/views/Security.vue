@@ -1,5 +1,5 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ArrowCircleRightIcon, ArrowLeftIcon, XIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
@@ -7,7 +7,7 @@ import Wrapper from '../components/Wrapper.vue'
 import request from '../utils/request.js'
 import { HS256, sha256, salt } from '../utils/crypto.js'
 
-const router = useRouter()
+const router = useRouter(), route = useRoute()
 let title = $ref('安全中心')
 let loading = $ref(false)
 let password = $ref('')
@@ -64,7 +64,11 @@ async function aauth (token) {
   loading = false
 }
 
-function goAauth () {
+if (route.query.token && user.token) aauth(route.query.token)
+else if (route.query.token) router.push('/login?token=' + route.query.token)
+
+async function goAauth () {
+  await Swal.fire('前往第三方登录', '手机端进行QQ、钉钉登录时，请使用手机默认浏览器或在对应APP中打开', 'info')
   window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
   window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=400')
 }

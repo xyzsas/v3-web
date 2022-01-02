@@ -57,6 +57,10 @@ async function next () {
 }
 
 async function aauth (token) {
+  if (!user.id) {
+    Swal.fire('会话错误', '手机端进行QQ、钉钉登录时，请使用手机默认浏览器或在对应APP中打开', 'error')
+    return
+  }
   loading = true
   const res = await request.post('/sas/link/' + user.id, { token })
   if (res) {
