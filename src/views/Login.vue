@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { ArrowCircleRightIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { user } from '../state.js'
-import { request, error as popError } from '../utils/request.js'
+import request from '../utils/request.js'
 import { HS256, sha256, short, salt } from '../utils/crypto.js'
 
 const router = useRouter(), route = useRoute()
@@ -40,14 +40,15 @@ async function next () {
   if (!random) { // first
     input = input.toUpperCase()
     user.id = short(await sha256(input)) + '.0'
-    random = await request.get('/sas/auth/' + user.id).then(r => r.data.random).catch(async e => {
-      await popError(e)
-      const uec = e.response?.data?.UEC
-      if (uec == 'XYZSAS-0001') router.push('/security')
-    })
+    random = await request.get('/sas/auth/' + user.id)
+    if (!random && window.lastUEC === 'XYZSAS-0001') {
+      router.push('/security')
+      return
+    }
+    random = random.random
     loading = false
   } else { // second
-    const res = await request.post('/sas/auth/' + user.id, { password: await HS256(await sha256(input + salt), random) }).then(r => r.data).catch(e => { popError(e) }) // make popError sync
+    const res = await request.post('/sas/auth/' + user.id, { password: await HS256(await sha256(input + salt), random) })
     if (res) success(res)
     random = ''
   }
@@ -57,7 +58,7 @@ async function next () {
 
 async function aauth (token) {
   loading = true
-  const res = await request.post('/sas/link/', { token }).then(r => r.data).catch(e => { popError(e) })
+  const res = await request.post('/sas/link/', { token })
   if (res) success(res)
   if (!user.token) loading = false
 }

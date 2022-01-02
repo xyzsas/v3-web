@@ -1,6 +1,8 @@
 import { reactive, watchEffect } from 'vue'
 export const user = reactive({})
 
+export const group = reactive({})
+
 export const clock = reactive({ delta: 0, server: Date.now() })
 
 export const affair = reactive({})

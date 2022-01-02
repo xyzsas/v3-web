@@ -11,7 +11,7 @@ export async function error (err) {
   if (!err.response?.data) return alert('', '网络错误')
   const uec = window.UEC[err.response.data.UEC]
   if (uec) {
-    window.lastUEC = uec
+    window.lastUEC = err.response.data.UEC
     return alert(uec)
   }
   return alert(err.response.data.error || '未知错误')
