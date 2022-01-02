@@ -4,7 +4,6 @@ import { user, clock } from '../state.js'
 import { greet } from '../utils/greet.js'
 import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon } from '@heroicons/vue/outline'
 import AffairCard from '../components/AffairCard.vue'
-import OverlayLoading from '../components/OverlayLoading.vue'
 import { request, error as popError } from '../utils/request.js'
 const router = useRouter()
 
@@ -12,12 +11,7 @@ let affair = $ref([])
 
 if (!user.token) router.push('/login')
 else {
-  request.get('/sas/affair', { headers: { token: user.token } })
-    .then(({ data }) => {
-      clock.delta = data.time - Date.now()
-      for (const a in data.affair) affair.push({ id: a, ...data.affair[a] })
-    })
-    .catch(popError)
+  if (!user.aauth) Swal.fire('您尚未绑定第三方账号', '绑定第三方账户可以用于重置密码', 'question').then(r => { if (r.isConfirmed) router.push('/security') })
 }
 
 let trans = $ref('opacity-0')
@@ -37,7 +31,6 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       <button class="card" @click="router.push('/admin/user-group')" v-if="user.admin"><user-group-icon class="w-6 text-orange-500 mr-2"/>用户管理</button>
     </div>
     <div class="mt-10 md:m-10 relative all-transition" style="min-height: 50vh;">
-      <overlay-loading :show="!affair.length" :absolute="true"></overlay-loading>
       <affair-card v-for="a in affair" :value="a" :key="a['#']"></affair-card>
     </div>
   </div>

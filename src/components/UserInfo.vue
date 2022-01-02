@@ -23,7 +23,7 @@ let ready = $computed(() => {
   }
   if (!edit.name) return false
   if (edit.group[edit.group.length - 1] !== '/') return false
-  if (edit.isAdmin) {
+  if (edit.isAdmin && edit.admin.group) {
     const groups = edit.admin.group.replace(/\s/g, '').split(',')
     for (const g of groups) {
       if (!g) continue
@@ -37,11 +37,11 @@ let ready = $computed(() => {
 async function fetch () {
   const res = await request.get('/sas/admin/' + userid, { headers: { token: user.token } })
   if (res) {
-    res.aauth = JSON.parse(res.aauth || '{}')
     res.affair = JSON.parse(res.affair || '{}')
     res.isAdmin = Boolean(res.admin)
-    res.admin = JSON.parse(res.admin || '{"affair": 0, "group": []}')
+    res.admin = JSON.parse(res.admin || '{}')
     if (res.admin.group) res.admin.group = res.admin.group.join()
+    if (res.admin.affair) res.admin.affair = true
     edit = res
   }
 }
@@ -49,12 +49,12 @@ async function fetch () {
 async function submit () {
   if (!ready) return
   loading = true
-  const id = userid === 'NEW' ? short(await sha256(edit.username.toUpperCase())) + '.0' : userid
+  const id = userid === 'NEW' ? short(await sha256(edit.username.toUpperCase())) : userid
   const body = {
     name: edit.name,
     password: edit.password,
     group: edit.group,
-    aauth: JSON.stringify(edit.aauth),
+    aauth: edit.aauth,
     affair: JSON.stringify(edit.affair)
   }
   if (edit.isAdmin) body.admin = JSON.stringify({

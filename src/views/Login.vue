@@ -24,7 +24,7 @@ function success (res) {
   user.name = res.name
   user.token = res.token
   user.group = res.group
-  user.aauth = JSON.parse(res.aauth || '{}')
+  user.aauth = res.aauth
   user.admin = res.admin && JSON.parse(res.admin)
   if (route.query.c) {
     if (route.query.c == 'AAUTH') window.location.href = `https://cn.aauth.link/reenter.html?code=${user.token}&state=${route.query.state}`
@@ -39,7 +39,7 @@ async function next () {
   loading = true
   if (!random) { // first
     input = input.toUpperCase()
-    user.id = short(await sha256(input)) + '.0'
+    user.id = short(await sha256(input))
     random = await request.get('/sas/auth/' + user.id)
     if (!random && window.lastUEC === 'XYZSAS-0001') {
       router.push('/security')

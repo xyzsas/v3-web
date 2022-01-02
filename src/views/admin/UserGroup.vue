@@ -39,7 +39,7 @@ window.onresize()
         <input placeholder="Search Box">
       </div>
       <div>/breadcrumb/breadcrumb/breadcrumb/</div>
-      <div class="gradient-card p-2 m-2" @click="focus='dhDSHoW5F3.0'">
+      <div class="gradient-card p-2 m-2" @click="focus='kkFUCPXRsj'">
         /
       </div>
     </div>

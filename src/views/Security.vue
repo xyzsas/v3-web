@@ -31,8 +31,8 @@ let err = $computed(() => {
   if (newPassword.match(/[a-z]/)) s++
   if (newPassword.match(/[0-9]/)) s++
   if (newPassword.match(/[!@#$%^&*+-/=?]/)) s++
-  if (s < 3) return '密码强度太弱'
-  if (newPassword == password) return '新密码不得与原密码相同'
+  if (s < 2) return '密码强度太弱'
+  if (newPassword === password) return '新密码不得与原密码相同'
   if (!cfmPassword) return '请确认新密码'
   if (newPassword !== cfmPassword) return '确认密码与新密码不符'
 })
@@ -58,31 +58,14 @@ async function aauth (token) {
   loading = true
   const res = await request.put('/sas/link/', { aauth: token, sas: user.token })
   if (res) {
-    await Swal.fire('绑定成功', '请重新登录', 'success')
-    user.token = user.id = undefined
-    router.push('/login')
+    user.aauth = res
+    await Swal.fire('绑定成功', '', 'success')
   }
 }
 
 function goAauth () {
   window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
   window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=400')
-}
-
-async function delAauth (id) {
-  const result = await Swal.fire({
-    title: '确认解绑第三方登录？',
-    icon: 'question',
-    text: user.aauth[id].replace('DINGTALK', '钉钉'),
-    showCancelButton: true,
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-  })
-  if (!result.isConfirmed) return
-  loading = true
-  await request.delete(`/sas/link/${id}?debug=1`, { headers: { token: user.token } })
-  delete user.aauth[id]
-  loading = false
 }
 </script>
 
@@ -92,10 +75,10 @@ async function delAauth (id) {
     <h1 class="text-3xl font-medium m-3 flex items-center">
       <arrow-left-icon v-if="user.id" class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5 cursor-pointer" @click="router.push('/')"/>安全中心
     </h1>
-    <p v-if="user.group" class="ml-4 text-gray-400"><strong class="mr-3">{{ user.name }}</strong> 用户组: <code class="font-mono">{{ user.group }}</code></p>
+    <p v-if="user.group" class="ml-4 mb-2 text-gray-400"><strong class="mr-3">{{ user.name }}</strong> 用户组: <code class="font-mono">{{ user.group }}</code></p>
     <div class="flex flex-grow flex-wrap justify-around items-center">
       <wrapper :show="showCard"><!-- change password -->
-        <div class="w-80 h-auto py-4 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
+        <div class="w-72 h-auto py-4 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
           <h1 class="text-2xl font-semibold">{{ title }}</h1>
           <input v-if="user.token" :placeholder="'请输入原密码'" :type="'password'" v-model="password" @keyup.enter="$event.target.nextElementSibling.focus()">
           <input :placeholder="'请设置新密码'" :type="'password'" v-model="newPassword" @keyup.enter="$event.target.nextElementSibling.focus()">
@@ -104,15 +87,15 @@ async function delAauth (id) {
           <button @click="submit"><arrow-circle-right-icon class="w-12 h-12 transition" :class="err ? 'text-gray-300' : 'text-blue-500'"/></button>
         </div>
       </wrapper>
-      <wrapper v-if="user.token" :show="showAauth" class="flex flex-col items-center"><!-- Aauth -->
-        <h1 class="text-2xl font-semibold">第三方登录设置</h1>
-        <p v-if="!Object.keys(user.aauth).length" class="m-5">您还未绑定第三方登录</p>
-        <div class="my-5 w-80 flex flex-wrap justify-center">
-          <span class="m-2 px-1 rounded border flex items-center" v-for="(v, k) in user.aauth" :class="v.indexOf('QQ') == -1 ? 'border-blue-400 bg-blue-100 text-blue-400' : 'border-red-400 bg-red-100 text-red-400'">{{ v }}<x-icon class="w-4 ml-1 cursor-pointer" @click="delAauth(k)"/></span>
+      <wrapper v-if="user.token" :show="showAauth" class="mt-2 flex flex-col items-center"><!-- Aauth -->
+        <h1 class="text-2xl font-semibold">第三方账号设置</h1>
+        <p v-if="!user.aauth" class="m-5">您还未绑定第三方账号</p>
+        <div v-else class="my-5 w-80 flex flex-wrap justify-center">
+          <span class="m-2 px-1 rounded border flex items-center border-blue-400 bg-blue-100 text-blue-400">{{ user.aauth.substr(10) }}</span>
         </div>
         <button class="all-transition flex items-center rounded py-2 px-4 shadow bg-white hover:shadow-md font-bold" @click="goAauth">
           <img class="w-10" src="https://cn.aauth.link/logo.png">
-          绑定第三方登录
+          绑定第三方账号
         </button>
         <p class="text-sm mt-2 text-gray-400">请在弹出的窗口中完成登录</p>
       </wrapper>
