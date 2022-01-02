@@ -25,6 +25,7 @@ function success (res) {
   user.token = res.token
   user.group = res.group
   user.aauth = res.aauth
+  user.affair = res.affair && JSON.parse(res.affair)
   user.admin = res.admin && JSON.parse(res.admin)
   if (route.query.c) {
     if (route.query.c == 'AAUTH') window.location.href = `https://cn.aauth.link/reenter.html?code=${user.token}&state=${route.query.state}`
@@ -62,7 +63,7 @@ async function aauth (token) {
     return
   }
   loading = true
-  const res = await request.post('/sas/link/' + user.id, { token })
+  const res = await request.post('/sas/link/' + user.id, { aauth: token })
   if (res) {
     await Swal.fire('重置账户成功', '请前往激活您的账户，并设置初始密码', 'success')
     router.push('/security')

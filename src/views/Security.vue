@@ -56,7 +56,7 @@ async function submit () {
 
 async function aauth (token) {
   loading = true
-  const res = await request.put('/sas/link/', { aauth: token, sas: user.token })
+  const res = await request.post('/sas/link/', { aauth: token, sas: user.token })
   if (res) {
     user.aauth = res
     await Swal.fire('绑定成功', '', 'success')
