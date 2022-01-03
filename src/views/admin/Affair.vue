@@ -76,7 +76,7 @@ async function remove () {
 }
 
 // editor properties and methods
-let focus = $ref(0), isMobile = $ref(false), showPanel = $ref(false)
+let focus = $ref(0), isMobile = $ref(false), showPanel = $ref(false), dragging = $ref(false)
 const panelShow = reactive([1, 0, 0])
 let focused = $computed(() => affair.content[focus] || {})
 window.onresize = () => { isMobile = window.innerWidth < 768 }
@@ -92,6 +92,7 @@ function del (i) {
 }
 
 function dragEnd (e) {
+  dragging = false
   focus = e.newDraggableIndex
 }
 </script>
@@ -136,11 +137,11 @@ function dragEnd (e) {
         <menu-icon v-if="isMobile" class="w-8" @click="showPanel = 1" />
         <input class="text-2xl ml-3 bg-transparent flex-grow" v-model="affair.title">
       </div>
-      <draggable :list="affair.content" handle=".handle" item-key="#" @start="focus = -1" @end="dragEnd" tag="transition-group">
+      <draggable :list="affair.content" handle=".handle" item-key="#" @start="dragging = true" @end="dragEnd" tag="transition-group">
         <template #item="{ element: b, index: i }">
-          <div class="m-1 bg-white rounded" :class="{ 'shadow': focus == i }" @click="focus = i; panelShow[2] = 1" :key="b['#']">
+          <div class="m-1 bg-white rounded transition-shadow" :class="{ 'shadow-md': focus == i }" @click="focus = i; panelShow[2] = 1" :key="b['#']">
             <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
-            <div class="flex items-center justify-end relative all-transition overflow-hidden" :class="focus == i ? 'h-10' : 'h-0'">
+            <div class="flex items-center justify-end relative all-transition overflow-hidden" :class="focus == i && !dragging ? 'h-10' : 'h-0'">
               <pencil-icon v-if="isMobile" class="icon text-gray-500" @click="panelShow[2] = 1; panelShow[0] = 0; showPanel = 1"/>
               <trash-icon v-if="affair.content.length > 1" class="icon text-red-500" @click="del(i)"/>
               <plus-icon class="icon text-blue-500" @click="panelShow[0] = 0; panelShow[1] = 1; showPanel = 1" />
