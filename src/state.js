@@ -5,10 +5,19 @@ export const group = reactive({})
 
 export const clock = reactive({ delta: 0, server: Date.now() })
 
+const state = reactive({
+  rid: '' // random user id for anonymous affair
+})
+
+export default state
+
 export const affair = reactive({})
 
 // cache
-const SS = window.sessionStorage
+const SS = window.sessionStorage, LS = window.localStorage
+if (LS.rid) state.rid = LS.rid
+else state.rid = LS.rid = '^' + Math.random().toString(36).substr(2, 10)
+
 if (SS.user) {
   const u = JSON.parse(SS.user)
   for (const k in u) user[k] = u[k]

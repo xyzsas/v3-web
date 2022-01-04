@@ -13,7 +13,7 @@ import { affair, user } from '../../state.js'
 import { random } from '../../utils/crypto.js'
 
 const route = useRoute(), router = useRouter(), origin = window.location.origin
-let loading = $ref(true), id = route.params.id == 'NEW' ? '' : route.params.id
+let loading = $ref(true), id = $ref(route.params.id == 'NEW' ? '' : route.params.id)
 
 if (!user.token || !user.admin?.affair) router.push('/')
 else fetch()
@@ -41,6 +41,7 @@ async function fetch () {
 }
 
 async function submit () {
+  if (!affair.title.match(/\S/)) return
   const body = { title: affair.title, content: JSON.stringify(affair.content), access: JSON.stringify(affair.access) }
   for (const k in affair.variable) body[k] = affair.variable[k]
   loading = true
@@ -107,7 +108,7 @@ function dragEnd (e) {
           <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
           <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
         </p>
-        <a :href="'/#/@/' + id" target="_blank" class="ml-3 font-mono text-gray-300 text-xs whitespace-nowrap">{{ origin }}/#/@/{{ id }}</a>
+        <a v-if="id" :href="'/#/@/' + id" target="_blank" class="ml-3 font-mono text-gray-300 text-xs whitespace-nowrap">{{ origin }}/#/@/{{ id }}</a>
         <hr class="mt-3">
         <access-control />
       </panel-wrapper>
