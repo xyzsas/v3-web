@@ -95,6 +95,10 @@ function dragEnd (e) {
   dragging = false
   focus = e.newDraggableIndex
 }
+
+function preview () {
+  window.open(`/#/@/${id}`, id, 'width=400,height=800,top=50,left=50')
+}
 </script>
 
 <template>
@@ -108,7 +112,7 @@ function dragEnd (e) {
           <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
           <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
         </p>
-        <a v-if="id" :href="'/#/@/' + id" target="_blank" class="ml-3 font-mono text-gray-300 text-xs whitespace-nowrap">{{ origin }}/#/@/{{ id }}</a>
+        <a v-if="id" @click="preview" class="ml-3 font-mono text-gray-300 text-xs whitespace-nowrap">{{ origin }}/#/@/{{ id }}</a>
         <hr class="mt-3">
         <access-control />
       </panel-wrapper>

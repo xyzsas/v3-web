@@ -1,4 +1,5 @@
 import { reactive, watchEffect } from 'vue'
+import { random } from './utils/crypto.js'
 export const user = reactive({})
 
 export const group = reactive({})
@@ -16,7 +17,7 @@ export const affair = reactive({})
 // cache
 const SS = window.sessionStorage, LS = window.localStorage
 if (LS.rid) state.rid = LS.rid
-else state.rid = LS.rid = '^' + Math.random().toString(36).substr(2, 10)
+else state.rid = LS.rid = '^' + random()
 
 if (SS.user) {
   const u = JSON.parse(SS.user)

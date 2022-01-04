@@ -11,7 +11,8 @@ const index = {
   // admin page
   '/admin/sas': () => import('./views/admin/SAS.vue'),
   '/admin/xyz': () => import('./views/admin/XYZ.vue'),
-  '/admin/@/:id': () => import('./views/admin/Affair.vue')
+  '/admin/@/:id': () => import('./views/admin/Affair.vue'),
+  '/admin/data/:id': () => import('./views/admin/Data.vue')
 }
 
 const routes = []
