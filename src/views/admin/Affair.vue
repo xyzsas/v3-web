@@ -5,6 +5,7 @@ import Draggable from 'vuedraggable'
 import { MenuIcon, PencilIcon, PlusIcon, TrashIcon, ArrowLeftIcon, HandIcon } from '@heroicons/vue/outline'
 import PanelWrapper from '../../components/PanelWrapper.vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
+import SideDrawer from '../../components/SideDrawer.vue'
 import AccessControl from '../../components/AccessControl.vue'
 import blocks from '../../blocks/index.js'
 import request from '../../utils/request.js'
@@ -76,11 +77,9 @@ async function remove () {
 }
 
 // editor properties and methods
-let focus = $ref(0), isMobile = $ref(false), showPanel = $ref(false), dragging = $ref(false)
+let focus = $ref(0), showPanel = $ref(false), dragging = $ref(false)
 const panelShow = reactive([1, 0, 0])
 let focused = $computed(() => affair.content[focus] || {})
-window.onresize = () => { isMobile = window.innerWidth < 768 }
-window.onresize()
 
 function add (k) {
   affair.content.splice(focus + 1, 0, { '#': random(), _: k, ':': JSON.parse(JSON.stringify(blocks[k].template)) })
@@ -99,13 +98,9 @@ function dragEnd (e) {
 
 <template>
   <overlay-loading :show="loading" />
-  <div class="relative">
-    <!-- Overlay -->
-    <transition name="fade">
-      <div v-if="isMobile && showPanel" @click="showPanel = false" class="absolute w-full h-screen bg-black opacity-30 z-10" />
-    </transition>
+  <div class="relative flex">
     <!-- Panel -->
-    <div class="all-transition bg-white w-96 h-screen overflow-y-auto absolute top-0 z-20" style="max-width: 90%;" :style="{ left: (!isMobile || showPanel) ? 0 : '-25rem' }">
+    <side-drawer v-model="showPanel">
       <panel-wrapper title="事务管理" v-model="panelShow[0]">
         <p class="px-2 pt-2 flex items-center">
           <button class="cursor-pointer" @click="router.push('/admin/xyz')"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" /></button>
@@ -130,11 +125,11 @@ function dragEnd (e) {
         </div>
         <p class="p-3 text-gray-400" v-else>没有需要配置的属性</p>
       </panel-wrapper>
-    </div>
+    </side-drawer>
     <!-- Preview -->
-    <div class="all-transition p-4 w-full h-screen overflow-y-auto lg:py-8 overflow-y-auto md:pl-100">
+    <div class="all-transition p-3 h-screen overflow-y-auto sm:p-6 lg:p-8 overflow-y-auto flex-grow">
       <div class="flex items-center w-full mb-6">
-        <menu-icon v-if="isMobile" class="w-8" @click="showPanel = 1" />
+        <menu-icon class="w-8 md:hidden" @click="showPanel = 1" />
         <input class="text-2xl ml-3 bg-transparent flex-grow" v-model="affair.title">
       </div>
       <draggable :list="affair.content" handle=".handle" item-key="#" @start="dragging = true" @end="dragEnd" tag="transition-group">
@@ -142,7 +137,7 @@ function dragEnd (e) {
           <div class="m-1 bg-white rounded transition-shadow" :class="{ 'shadow-md': focus == i }" @click="focus = i; panelShow[2] = 1" :key="b['#']">
             <component :is="blocks[b._].editable || blocks[b._].block" :i="i"></component>
             <div class="flex items-center justify-end relative all-transition overflow-hidden" :class="focus == i && !dragging ? 'h-10' : 'h-0'">
-              <pencil-icon v-if="isMobile" class="icon text-gray-500" @click="panelShow[2] = 1; panelShow[0] = 0; showPanel = 1"/>
+              <pencil-icon class="icon text-gray-500 md:hidden" @click="panelShow[2] = 1; panelShow[0] = 0; showPanel = 1"/>
               <trash-icon v-if="affair.content.length > 1" class="icon text-red-500" @click="del(i)"/>
               <plus-icon class="icon text-blue-500" @click="panelShow[0] = 0; panelShow[1] = 1; showPanel = 1" />
               <hand-icon class="icon text-gray-500 handle" />
