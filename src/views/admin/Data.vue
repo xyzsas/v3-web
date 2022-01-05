@@ -1,7 +1,7 @@
 <script setup>
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
-import { MenuIcon, ArrowLeftIcon } from '@heroicons/vue/outline'
+import { MenuIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/outline'
 import request from '../../utils/request.js'
 import blocks from '../../blocks/index.js'
 
@@ -17,20 +17,6 @@ const id = route.params.id
 if (!user.token || !user.admin?.affair) router.push('/')
 else fetch()
 
-async function fetch () {
-  if (!state.group) state.group = await request.get('/sas/admin', { headers: { token: user.token } })
-  const res = await request.get(`/xyz/admin/${id}?data=1`, { headers: { token: user.token } })
-  if (!res) return router.push('/admin/xyz')
-  res.content = JSON.parse(res.content).filter(x => blocks[x._]?.data)
-  for (const k in res.data) res.data[k] = JSON.parse(res.data[k])
-  affair = res
-  view = 'doc'
-  loading = false
-}
-
-// UI
-let view = $ref(''), showPanel = $ref(false)
-
 // @return string
 function parseData (b, v) {
   if (!v[b['#']]) return ''
@@ -38,17 +24,41 @@ function parseData (b, v) {
   return block.data(b[':'], data)
 }
 
-// @return [name, group]
+// @return { name, group }
 function parseUser (uid) {
-  if (uid[0] === '!') return ['异常数据', '']
-  if (uid[0] === '^') return ['未登录用户', '']
+  if (uid[0] === '!') return { name: '异常数据' }
+  if (uid[0] === '^') return { name: '未登录用户' }
   for (const g in state.group) {
     for (const u in state.group[g]) {
-      if (u === uid) return [state.group[g][u], g]
+      if (u === uid) return { name: state.group[g][u], group: g }
     }
   }
-  return ['未知用户', '']
+  return { name: '未知用户' }
 }
+
+async function fetch () {
+  if (!state.group) state.group = await request.get('/sas/admin', { headers: { token: user.token } })
+  const res = await request.get(`/xyz/admin/${id}?data=1`, { headers: { token: user.token } })
+  if (!res) return router.push('/admin/xyz')
+  res.content = JSON.parse(res.content).filter(x => blocks[x._]?.data)
+  const data = []
+  for (const k in res.data) {
+    data.push({
+      id: k, ...parseUser(k),
+      data: JSON.parse(res.data[k])
+    })
+  }
+  affair = res
+  affair.data = data
+  loading = false
+}
+
+// UI
+let showPanel = $ref(false), page = $ref(1)
+let length = $computed(() => affair.data ? affair.data.length : 0)
+let totalPage = $computed(() => Math.ceil(length / 20))
+let pageLength = $computed(() => Math.min(20, length - page * 20 + 20))
+const item = p => affair.data[p + page * 20 - 21] || {}
 </script>
 
 <template>
@@ -68,19 +78,24 @@ function parseUser (uid) {
       <div class="flex items-center w-full mb-6">
         <menu-icon class="w-8 md:hidden mr-3" @click="showPanel = 1" />
         <h1 class="text-2xl">{{ affair.title }}</h1>
-        <span class="tag text-xs ml-3">数据 ({{ Object.keys(affair.data || {}).length }})</span>
+        <span class="tag text-xs ml-3">数据 ({{ length }})</span>
       </div>
-      <!-- doc view -->
-      <div v-if="view === 'doc'">
-        <div class="rounded shadow bg-white m-2 p-4 relative" v-for="(v, k) in affair.data" :key="k">
-          <label class="absolute right-1 top-0 text-gray-200 text-xs">{{ k }}</label>
+      <!-- docs -->
+      <div v-if="affair.data">
+        <div class="rounded shadow bg-white m-2 p-4 relative" v-for="p in pageLength" :key="item(p).id">
+          <label class="absolute right-1 top-0 text-gray-200 text-xs">{{ item(p).id }}</label>
           <div>
-            <label class="font-bold">{{ parseUser(k)[0] }}</label>
-            <code class="ml-2 text-gray-500">{{ parseUser(k)[1] }}</code>
+            <label class="font-bold">{{ item(p).name }}</label>
+            <code class="ml-2 text-gray-500">{{ item(p).group }}</code>
           </div>
           <hr class="mb-1">
-          <label class="block my-1" v-for="b in affair.content" :key="b['#']">{{ b[':'].title }}：{{ parseData(b, v) }}</label>
+          <label class="block my-1" v-for="b in affair.content" :key="b['#']">{{ b[':'].title }}：{{ parseData(b, item(p).data) }}</label>
         </div>
+      </div>
+      <div v-if="totalPage > 1" class="fixed bottom-2 right-4 bg-blue-100 rounded shadow-md flex items-center p-2 select-none">
+        <chevron-left-icon v-if="page > 1" class="cursor-pointer w-6" @click="page--" />
+        <span class="whitespace-nowrap m-2 font-bold">{{ page }} / {{ totalPage }}</span>
+        <chevron-right-icon v-if="page < totalPage" class="cursor-pointer w-6" @click="page++" />
       </div>
     </div>
   </div>
