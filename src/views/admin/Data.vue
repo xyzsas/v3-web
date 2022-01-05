@@ -1,7 +1,7 @@
 <script setup>
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
-import { MenuIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/outline'
+import { DownloadIcon, MenuIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/outline'
 import request from '../../utils/request.js'
 import blocks from '../../blocks/index.js'
 
@@ -53,6 +53,22 @@ async function fetch () {
   loading = false
 }
 
+function excel () {
+  let csv = 'sep=,\n'
+  csv += '"id","name",\n'
+  for (const d of affair.data) {
+    csv += `"${d.id}","${d.name}",\n`
+  }
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.style = 'visibility: hidden;'
+  link.download = affair.title + '.csv'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
 // UI
 let showPanel = $ref(false), page = $ref(1)
 let length = $computed(() => affair.data ? affair.data.length : 0)
@@ -67,10 +83,10 @@ const item = p => affair.data[p + page * 20 - 21] || {}
     <side-drawer v-model="showPanel">
       <div class="p-3 md:p-6">
         <h1 class="text-2xl font-bold flex items-center">
-          <button class="cursor-pointer" @click="router.push('/admin/xyz')"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" /></button>
+          <button class="cursor-pointer" @click="router.go(-1)"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" /></button>
           事务数据
         </h1>
-        <p class="m-2">Under development</p>
+        <button v-if="affair.data" class="block m-4 py-2 px-4 bg-green-700 text-white shadow rounded-full flex items-center" @click="excel"><download-icon class="w-6" />导出到Excel</button>
       </div>
     </side-drawer>
     <div class="all-transition p-3 h-screen overflow-y-auto sm:p-6 lg:p-8 overflow-y-auto flex-grow">
