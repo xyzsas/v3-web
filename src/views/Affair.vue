@@ -43,7 +43,8 @@ async function submit () {
 <template>
   <overlay-loading :show="loading" />
   <div class="min-h-screen p-4 lg:px-20 lg:py-8">
-    <h1 class="text-2xl m-3 mb-6">{{ affair.title }}</h1>
+    <h1 class="text-2xl m-2">{{ affair.title }}</h1>
+    <p class="ml-2 mb-6 text-gray-400">用户：{{ user.token ? user.name : '未登录' }}</p>
     <div v-for="(b, i) in affair.content" :key="b['#']" class="m-1">
       <wrapper :show="1" class="bg-white rounded">
         <component :is="blocks[b._].block" :i="i"></component>
