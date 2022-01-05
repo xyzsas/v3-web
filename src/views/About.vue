@@ -1,6 +1,6 @@
 <script setup>
 import Wrapper from '../components/Wrapper.vue'
-import { user } from '../state.js'
+import state from '../state.js'
 import request from '../utils/request.js'
 
 const version = window.localStorage['web-version'].replace(/-/g, '--')
@@ -9,7 +9,7 @@ let show = $ref(false)
 setTimeout(() => { show = true }, 500)
 
 window.request = request
-window.token = user.token
+window.token = state.user.token
 </script>
 
 <template>

@@ -1,11 +1,14 @@
 <script setup>
 import request from '../../utils/request.js'
-import { useRouter } from 'vue-router'
 import { PlusIcon, ArrowLeftIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../../components/OverlayLoading.vue'
-import { user } from '../../state.js'
 
+import { useRouter } from 'vue-router'
 const router = useRouter()
+
+import state from '../../state.js'
+const user = state.user
+
 let loading = $ref(true)
 let list = $ref({})
 

@@ -1,6 +1,7 @@
 <script setup>
 import { micromark } from 'micromark'
-import { affair } from '../state.js'
+import state from '../state.js'
+const affair = state.affair
 const { i } = defineProps(['i'])
 const value = affair.content[i][':']
 

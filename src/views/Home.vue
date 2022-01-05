@@ -1,18 +1,19 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { user, clock } from '../state.js'
 import { greet } from '../utils/greet.js'
 import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon } from '@heroicons/vue/outline'
 import AffairCard from '../components/AffairCard.vue'
 import { request, error as popError } from '../utils/request.js'
+
+import { useRouter } from 'vue-router'
 const router = useRouter()
+
+import state from '../state.js'
+const user = state.user
 
 let affair = $ref([])
 
 if (!user.token) router.push('/login')
-else {
-  if (!user.aauth) Swal.fire('您尚未绑定第三方账号', '绑定第三方账户可以用于重置密码', 'question').then(r => { if (r.isConfirmed) router.push('/security') })
-}
+else if (!user.aauth) Swal.fire('您尚未绑定第三方账号', '绑定第三方账户可以用于重置密码', 'question').then(r => { if (r.isConfirmed) router.push('/security') })
 
 let trans = $ref('opacity-0')
 setTimeout(() => { trans = 'opacity-100' }, 1000)

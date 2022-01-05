@@ -1,5 +1,6 @@
 <script setup>
-import { affair } from '../state.js'
+import state from '../state.js'
+const affair = state.affair
 const { i } = defineProps(['i'])
 </script>
 

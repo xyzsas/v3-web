@@ -1,10 +1,13 @@
 <script setup>
-import { useRouter } from 'vue-router'
 import OverlayLoading from '../components/OverlayLoading.vue'
-const router = useRouter()
 import * as faceapi from 'face-api.js'
-import { user } from '../state.js'
 import { request, error as popError } from '../utils/request.js'
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+import state from '../state.js'
+const user = state.user
 
 const modelURL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights/'
 const STD = 173.3 // pixel length of face area

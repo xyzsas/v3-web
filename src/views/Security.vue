@@ -1,18 +1,18 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
 import { ArrowCircleRightIcon, ArrowLeftIcon, XIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
-import { user } from '../state.js'
 import Wrapper from '../components/Wrapper.vue'
 import request from '../utils/request.js'
 import { HS256, sha256, salt } from '../utils/crypto.js'
 
+import state from '../state.js'
+const user = state.user
+
+import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
-let title = $ref('安全中心')
-let loading = $ref(false)
-let password = $ref('')
-let newPassword = $ref('')
-let cfmPassword = $ref('')
+
+let loading = $ref(false), title = $ref('安全中心')
+let password = $ref(''), newPassword = $ref(''), cfmPassword = $ref('')
 if (!user.id) router.push('/login')
 if (user.token) title = '修改密码'
 else title = '账户激活'

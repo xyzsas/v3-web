@@ -1,13 +1,15 @@
 <script setup>
 import { watchEffect } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 import { ArrowCircleRightIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
-import { user } from '../state.js'
 import request from '../utils/request.js'
 import { HS256, sha256, short, salt } from '../utils/crypto.js'
 
+import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
+
+import state from '../state.js'
+const user = state.user
 
 let loading = $ref(false)
 let input = $ref('')

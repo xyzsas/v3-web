@@ -1,7 +1,9 @@
 <script setup>
-import { affair } from '../state.js'
 import { HandIcon, PlusIcon, TrashIcon } from '@heroicons/vue/outline'
 import EditableList from './EditableList.vue'
+
+import state from '../state.js'
+const affair = state.affair
 
 let types = $ref({
   'START': { title: '开始时间', placeholder: 'YYYY-MM-DD 00:00:00' }, 

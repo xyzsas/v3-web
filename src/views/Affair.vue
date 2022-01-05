@@ -1,14 +1,16 @@
 <script setup>
-import { reactive } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import Wrapper from '../components/Wrapper.vue'
 import OverlayLoading from '../components/OverlayLoading.vue'
 import { CheckIcon } from '@heroicons/vue/solid'
 import blocks from '../blocks/index.js'
-import state, { affair, user } from '../state.js'
 import request from '../utils/request.js'
 
+import { useRoute, useRouter } from 'vue-router'
 const router = useRouter(), route = useRoute()
+
+import state from '../state.js'
+const user = state.user, affair = state.affair
+
 let loading = $ref(true)
 const opt = user.token ? { headers: { token: user.token } } : {}
 const url = '/xyz/affair/' + route.params.id + (user.token ? '' : '?id=' + state.rid)

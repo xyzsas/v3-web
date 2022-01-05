@@ -2,7 +2,8 @@
 import EditableList from '../components/EditableList.vue'
 import { PlusIcon } from '@heroicons/vue/outline'
 import { random } from '../utils/crypto.js'
-import { affair } from '../state.js'
+import state from '../state.js'
+const affair = state.affair
 const { i } = defineProps(['i'])
 const value = affair.content[i][':']
 let edit = $ref('')

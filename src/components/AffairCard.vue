@@ -1,5 +1,7 @@
 <script setup>
-import { clock } from '../state.js'
+import state from '../state.js'
+const clock = state.clock
+
 const { value } = defineProps(['value'])
 
 let msg = $computed(() => {

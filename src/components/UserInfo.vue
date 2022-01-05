@@ -1,11 +1,13 @@
 <script setup>
 import { watch } from 'vue'
-import { user } from '../state.js'
 import request from '../utils/request.js'
 import { short, sha256 } from '../utils/crypto.js'
 import { CheckIcon } from '@heroicons/vue/outline'
 import OverlayLoading from './OverlayLoading.vue'
 import Wrapper from '../components/Wrapper.vue'
+
+import state from '../state.js'
+const user = state.user
 
 const props = defineProps(['user'])
 let edit = $ref({}), loading = $ref(false), userid = $ref(props.user)

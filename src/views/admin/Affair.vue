@@ -1,6 +1,5 @@
 <script setup>
 import { reactive, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import Draggable from 'vuedraggable'
 import { MenuIcon, PencilIcon, PlusIcon, TrashIcon, ArrowLeftIcon, HandIcon } from '@heroicons/vue/outline'
 import PanelWrapper from '../../components/PanelWrapper.vue'
@@ -9,10 +8,14 @@ import SideDrawer from '../../components/SideDrawer.vue'
 import AccessControl from '../../components/AccessControl.vue'
 import blocks from '../../blocks/index.js'
 import request from '../../utils/request.js'
-import { affair, user } from '../../state.js'
 import { random } from '../../utils/crypto.js'
 
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute(), router = useRouter(), origin = window.location.origin
+
+import state from '../../state.js'
+const user = state.user, affair = state.affair
+
 let loading = $ref(true), id = $ref(route.params.id == 'NEW' ? '' : route.params.id)
 
 if (!user.token || !user.admin?.affair) router.push('/')

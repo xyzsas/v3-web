@@ -1,13 +1,16 @@
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
 import UserInfo from '../../components/UserInfo.vue'
-import { user, group } from '../../state.js'
 import { MenuIcon, ArrowLeftIcon, PlusIcon } from '@heroicons/vue/outline'
 import request from '../../utils/request'
 
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute(), router = useRouter()
+
+import state from '../../state.js'
+const user = state.user
+
 let loading = $ref(false)
 
 if (!user.token || !user.admin?.affair) router.push('/')
@@ -16,7 +19,7 @@ else fetch()
 async function fetch () {
   loading = true
   const res = await request.get('/sas/admin', { headers: { token: user.token } })
-  group.data = res
+  state.group = res
   console.log(res)
   loading = false
 }
