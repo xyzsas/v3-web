@@ -96,7 +96,7 @@ async function goAauth () {
         <h1 class="text-2xl font-semibold">第三方账号设置</h1>
         <p v-if="!user.aauth" class="m-5">您还未绑定第三方账号</p>
         <div v-else class="my-5 w-80 flex flex-wrap justify-center">
-          <span class="m-2 px-1 rounded border flex items-center border-blue-400 bg-blue-100 text-blue-400">{{ user.aauth.substr(10) }}</span>
+          <span class="tag m-3">{{ user.aauth.substr(10) }}</span>
         </div>
         <button class="all-transition flex items-center rounded py-2 px-4 shadow bg-white hover:shadow-md font-bold" @click="goAauth">
           <img class="w-10" src="https://cn.aauth.link/logo.png">

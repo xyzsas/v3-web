@@ -15,14 +15,16 @@ const blocks = {
     icon: '/blocks/input.svg',
     block: () => import('./Input.vue'),
     panel: () => import('./InputPanel.vue'),
-    template: { title: '输入框标题', placeholder: '提示文本' }
+    template: { title: '输入框标题', placeholder: '提示文本' },
+    data: (v, d) => d
   },
   select: {
     name: '下拉框',
     icon: '/blocks/select.svg',
     block: () => import('./Select.vue'),
     panel: () => import('./SelectPanel.vue'),
-    template: { title: '下拉框标题', options: [{ '#': 1, ':': '选项1' }, { '#': 2, ':': '选项2' }] }
+    template: { title: '下拉框标题', options: [{ '#': 1, ':': '选项1' }, { '#': 2, ':': '选项2' }] },
+    data: (v, d) => { for (const o of v.options) if (o['#'] == d) return o[':'] }
   }
 }
 

@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, watch } from 'vue'
 import Draggable from 'vuedraggable'
-import { MenuIcon, PencilIcon, PlusIcon, TrashIcon, ArrowLeftIcon, HandIcon } from '@heroicons/vue/outline'
+import { MenuIcon, DatabaseIcon, PencilIcon, PlusIcon, TrashIcon, ArrowLeftIcon, HandIcon } from '@heroicons/vue/outline'
 import PanelWrapper from '../../components/PanelWrapper.vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
@@ -62,8 +62,8 @@ async function submit () {
 async function remove () {
   if (!id) return
   const isConfirmed = await Swal.fire({
-    title: '删除事务？',
-    text: '此操作不可恢复！',
+    title: '危险操作',
+    text: '事务和所有数据都将被删除',
     icon: 'warning',
     showCancelButton: true,
     cancelButtonText: '取消',
@@ -113,7 +113,8 @@ function preview () {
         <p class="px-2 pt-2 flex items-center">
           <button class="cursor-pointer" @click="router.push('/admin/xyz')"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" /></button>
           <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
-          <button class="bg-red-200 hover:bg-red-500 hover:text-white text-red-500 text-center py-1 px-3 m-1 rounded" @click="remove">删除事务</button>
+          <trash-icon class="text-red-500 w-6 cursor-pointer mx-3" @click="remove" />
+          <database-icon v-if="id !== 'NEW'" class="text-green-700 w-6 cursor-pointer" @click="router.push('/admin/data/' + id)" />
         </p>
         <a v-if="id" @click="preview" class="ml-3 font-mono text-gray-300 text-xs whitespace-nowrap">{{ origin }}/#/@/{{ id }}</a>
         <hr class="mt-3">

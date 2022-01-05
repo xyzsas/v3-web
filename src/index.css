@@ -16,6 +16,9 @@ body {
 .gradient-card {
   @apply all-transition cursor-pointer bg-gradient-to-r from-white to-gray-100 rounded shadow md:shadow-none hover:shadow-lg md:hover:shadow-none
 }
+.tag {
+  @apply py-1 px-2 rounded border flex items-center border-blue-400 bg-blue-100 text-blue-400
+}
 
 /* following are transitions */
 .flip-list-move {
