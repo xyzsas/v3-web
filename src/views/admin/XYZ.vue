@@ -29,7 +29,7 @@ else fetch()
     <p v-if="!Object.keys(list).length">暂无可以管理的事务</p>
     <div v-for="(v, k) in list" :key="k" class="gradient-card py-4 px-6 flex flex-wrap items-center justify-between m-3" @click="router.push('/admin/@/' + k)">
       <h3 class="text-xl flex items-center">{{ v }}</h3>
-      <button class="tag" @click.stop="router.push('/admin/data/' + k)">查看数据</button>
+      <button class="tag m-0" @click.stop="router.push('/admin/data/' + k)">查看数据</button>
     </div>
     <button class="all-transition fixed right-20 bottom-20 rounded-full bg-blue-500 p-3 md:p-4 shadow-md hover:shadow-xl group" @click="router.push('/admin/@/NEW')">
       <plus-icon class="all-transition w-10 text-white group-hover:rotate-180" />

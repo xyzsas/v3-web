@@ -4,7 +4,7 @@ import { random } from './utils/crypto.js'
 const state = reactive({
   user: {},
   affair: {},
-  group: {},
+  group: null,
   clock: { delta: 0, server: Date.now() },
   rid: '' // random user id for anonymous affair
 })
