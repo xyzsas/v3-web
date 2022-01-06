@@ -24,7 +24,7 @@ async function fetch () {
 }
 // UI
 let focus = $ref('NEW'), showPanel = $ref(false)
-let choice = $ref('/')
+let choice = $ref('/'), search = $ref('')
 let bread = $computed(() => choice.split('/').slice(0, -1))
 function setChoice (index) {
   let newChoice = ''
@@ -52,7 +52,7 @@ let subGroups = $computed(() => {
     <div class="all-transition p-3 h-screen overflow-y-auto sm:p-6 lg:p-8 relative flex-grow">
       <h1 class="text-2xl font-bold flex items-center mb-6"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5 cursor-pointer" @click="router.push('/')" />用户管理</h1>
       <div>
-        <input class="flex border border-gray-200 rounded-full p-2 shadow text-l pl-5" placeholder="搜索框">
+        <input class="flex border border-gray-200 rounded-full p-2 shadow text-l pl-5" placeholder="搜索" v-model="search">
       </div>
       <code class="cursor-pointer flex pt-4">
         <chevron-double-right-icon class="w-5 mr-2"/>
@@ -71,7 +71,7 @@ let subGroups = $computed(() => {
     <!-- User -->
     <side-drawer v-model="showPanel" side="right">
       <div class="p-4 relative h-screen">
-        <user-info v-if="focus" :user="focus" :key="focus" />
+        <user-info v-if="focus" :user="focus" :group="choice" :key="focus" />
       </div>
     </side-drawer>
     <button class="all-transition fixed z-0 left-20 bottom-20 rounded-full bg-blue-500 p-3 md:p-4 shadow-md hover:shadow-xl group">
