@@ -37,7 +37,7 @@ function parseUser (uid) {
 }
 
 async function fetch () {
-  if (!state.group) state.group = await request.get('/sas/admin', { headers: { token: user.token } })
+  if (!state.group) state.group = user.admin.group ? await request.get('/sas/admin', { headers: { token: user.token } }) : {}
   const res = await request.get(`/xyz/admin/${id}?data=1`, { headers: { token: user.token } })
   if (!res) return router.push('/admin/xyz')
   res.content = JSON.parse(res.content).filter(x => blocks[x._]?.data)

@@ -37,6 +37,10 @@ async function fetch () {
   affair.content = JSON.parse(res.content)
   affair.data = JSON.parse(res.data || '{}')
   affair.ok = {}
+  affair.variable = {}
+  for (const k in res) {
+    if (k[0] === '$') affair.variable[k] = res[k]
+  }
   loading = false
 }
 fetch()

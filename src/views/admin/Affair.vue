@@ -25,6 +25,7 @@ affair.title = '请填写事务标题'
 affair.content = [{ '#': 'default', _: 'HTML', ':': { html: '<h3>欢迎使用学生事务系统</h3><p>您可以在此处编辑事务</p>' } }]
 affair.data = {}
 affair.variable = {}
+affair.ok = {}
 affair.access = []
 
 async function fetch () {
@@ -114,7 +115,7 @@ function preview () {
           <button class="cursor-pointer" @click="router.push('/admin/xyz')"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" /></button>
           <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
           <trash-icon class="text-red-500 w-6 cursor-pointer mx-3" @click="remove" />
-          <database-icon v-if="id !== 'NEW'" class="text-green-700 w-6 cursor-pointer" @click="router.push('/admin/data/' + id)" />
+          <database-icon v-if="id" class="text-green-700 w-6 cursor-pointer" @click="router.push('/admin/data/' + id)" />
         </p>
         <a v-if="id" @click="preview" class="ml-3 font-mono text-gray-300 text-xs whitespace-nowrap">{{ origin }}/#/@/{{ id }}</a>
         <hr class="mt-3">

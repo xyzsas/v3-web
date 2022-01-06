@@ -27,7 +27,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
     </div>
     <div class="flex flex-wrap"><!-- function buttons -->
       <button class="card" @click="router.push('/security')"><finger-print-icon class="w-6 text-red-500 mr-2"/>安全中心</button>
-      <button class="card" @click="router.push('/grade')"><trending-up-icon class="w-6 text-blue-500 mr-2"/>成绩查询</button>
+      <!-- <button class="card" @click="router.push('/grade')"><trending-up-icon class="w-6 text-blue-500 mr-2"/>成绩查询</button> -->
       <button class="card" @click="router.push('/admin/xyz')" v-if="user.admin?.affair"><pencil-alt-icon class="w-6 text-purple-500 mr-2"/>事务管理</button>
       <button class="card" @click="router.push('/admin/sas')" v-if="user.admin?.group"><user-group-icon class="w-6 text-orange-500 mr-2"/>用户管理</button>
     </div>
