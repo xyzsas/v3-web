@@ -54,11 +54,17 @@ async function fetch () {
 }
 
 function excel () {
-  let csv = 'sep=,\n'
-  csv += '"id","name",\n'
+  // header
+  let csv = '\uFEFF"id","姓名","用户组",'
+  for (const b of affair.content) csv += `"${b[':'].title}",`
+  csv += '\n'
+  // body
   for (const d of affair.data) {
-    csv += `"${d.id}","${d.name}",\n`
+    csv += `"${d.id}","${d.name}","${d.group || ''}",`
+    for (const b of affair.content) csv += `"${parseData(b, d.data)}",`
+    csv += '\n'
   }
+  // download
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
