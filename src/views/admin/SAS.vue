@@ -2,7 +2,7 @@
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
 import UserInfo from '../../components/UserInfo.vue'
-import { MenuIcon, ArrowLeftIcon, PlusIcon } from '@heroicons/vue/outline'
+import { MenuIcon, ArrowLeftIcon, PlusIcon, UserIcon, FolderOpenIcon } from '@heroicons/vue/outline'
 import request from '../../utils/request'
 
 import { useRoute, useRouter } from 'vue-router'
@@ -13,18 +13,36 @@ const user = state.user
 
 let loading = $ref(false)
 
-if (!user.token || !user.admin?.affair) router.push('/')
+if (!user.token || !user.admin?.group) router.push('/')
 else fetch()
 
 async function fetch () {
   loading = true
   const res = await request.get('/sas/admin', { headers: { token: user.token } })
   state.group = res
-  console.log(res)
   loading = false
 }
 // UI
 let focus = $ref('NEW'), showPanel = $ref(false)
+let choice = $ref('/')
+let bread = $computed(() => choice.split('/').slice(0, -1))
+function setChoice (index) {
+  let newChoice = ''
+  for (let i = 0; i <= index; i++) {
+    newChoice += bread[i] + '/'
+  }
+  choice = newChoice
+}
+let subGroups = $computed(() => {
+  const res = new Set(), cot = choice.split('/').length
+  for (const k in state.group) {
+    if (k.indexOf(choice) !== 0 || k === choice) continue
+    const gs = k.split('/')
+    res.add(choice + gs[cot - 1] + '/')
+  }
+  return res
+})
+
 </script>
 
 <template>
@@ -36,9 +54,16 @@ let focus = $ref('NEW'), showPanel = $ref(false)
       <div>
         <input placeholder="Search Box">
       </div>
-      <div>/breadcrumb/breadcrumb/breadcrumb/</div>
-      <div class="gradient-card p-2 m-2" @click="focus='kkFUCPXRsj'; showPanel = true">
-        /
+      <code class="cursor-pointer">
+        <span v-for="(subread, index) in bread" @click="setChoice(index)">{{ subread + '/' }}</span>
+      </code>
+      <div class="gradient-card p-2 m-2 flex items-center font-mono text-gray-500" v-for="v in subGroups" @click="choice = v">
+        <folder-open-icon class="w-6 mr-2"/>
+        {{ v }}
+      </div>
+      <div class="gradient-card p-2 m-2 flex items-center text-gray-700" v-for="(v, k) in state.group[choice]" @click="focus = k; showPanel = true"> 
+        <user-icon class="w-6 mr-2"/>
+        {{ v }}
       </div>
     </div>
     <!-- User -->
