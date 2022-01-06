@@ -2,7 +2,7 @@
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
 import UserInfo from '../../components/UserInfo.vue'
-import { MenuIcon, ArrowLeftIcon, PlusIcon, UserIcon, FolderOpenIcon } from '@heroicons/vue/outline'
+import { MenuIcon, ArrowLeftIcon, PlusIcon, UserIcon, FolderOpenIcon, ChevronDoubleRightIcon } from '@heroicons/vue/outline'
 import request from '../../utils/request'
 
 import { useRoute, useRouter } from 'vue-router'
@@ -52,11 +52,13 @@ let subGroups = $computed(() => {
     <div class="all-transition p-3 h-screen overflow-y-auto sm:p-6 lg:p-8 relative flex-grow">
       <h1 class="text-2xl font-bold flex items-center mb-6"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5 cursor-pointer" @click="router.push('/')" />用户管理</h1>
       <div>
-        <input placeholder="Search Box">
+        <input class="flex border border-gray-200 rounded-full p-2 shadow text-l pl-5" placeholder="搜索框">
       </div>
-      <code class="cursor-pointer">
+      <code class="cursor-pointer flex pt-4">
+        <chevron-double-right-icon class="w-5 mr-2"/>
         <span v-for="(subread, index) in bread" @click="setChoice(index)">{{ subread + '/' }}</span>
       </code>
+      <hr>
       <div class="gradient-card p-2 m-2 flex items-center font-mono text-gray-500" v-for="v in subGroups" @click="choice = v">
         <folder-open-icon class="w-6 mr-2"/>
         {{ v }}
