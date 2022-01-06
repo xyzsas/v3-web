@@ -2,6 +2,8 @@
 import state from '../state.js'
 const affair = state.affair
 const { i } = defineProps(['i'])
+
+affair.ok[affair.content[i]['#']] = true
 </script>
 
 <template>

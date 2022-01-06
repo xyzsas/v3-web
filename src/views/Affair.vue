@@ -15,6 +15,14 @@ let loading = $ref(true)
 const opt = user.token ? { headers: { token: user.token } } : {}
 const url = '/xyz/affair/' + route.params.id + (user.token ? '' : '?id=' + state.rid)
 
+let ready = $computed(() => {
+  if (!affair || !affair.ok) return false
+  for (const b of affair.content) {
+    if (!affair.ok[b['#']]) return false
+  }
+  return true
+})
+
 async function fetch () {
   loading = true
   affair.title = ''
@@ -28,11 +36,13 @@ async function fetch () {
   affair.title = res.title
   affair.content = JSON.parse(res.content)
   affair.data = JSON.parse(res.data || '{}')
+  affair.ok = {}
   loading = false
 }
 fetch()
 
 async function submit () {
+  if (!ready) return
   loading = true
   const res = await request.post(url, affair.data, opt)
   if (res) await Swal.fire('提交成功', '', 'success')
@@ -50,7 +60,7 @@ async function submit () {
         <component :is="blocks[b._].block" :i="i"></component>
       </wrapper>
     </div>
-    <button v-if="affair.title" @click="submit" class="text-white font-bold w-full sm:w-32 py-2 my-8 sm:mx-4 rounded shadow flex items-center justify-center all-transition hover:shadow-md bg-blue-500"><check-icon class="w-6 mr-2" />提交<div class="w-4" /></button>
+    <button @click="submit" class="text-white font-bold w-full sm:w-32 py-2 my-8 sm:mx-4 rounded shadow flex items-center justify-center all-transition hover:shadow-md" :class="ready ? 'bg-blue-500' : 'bg-gray-500'"><check-icon class="w-6 mr-2" />提交<div class="w-4" /></button>
   </div>
 </template>
 
