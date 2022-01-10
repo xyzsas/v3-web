@@ -49,14 +49,13 @@ async function next () {
       return
     }
     random = random.random
-    loading = false
   } else { // second
     const res = await request.post('/sas/auth/' + user.id, { password: await HS256(await sha256(input + salt), random) })
-    if (res) success(res)
+    if (res) return success(res)
     random = ''
   }
   input = ''
-  if (!user.token) loading = false
+  loading = false
 }
 
 async function aauth (token) {

@@ -2,7 +2,6 @@
 import { greet } from '../utils/greet.js'
 import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon } from '@heroicons/vue/outline'
 import AffairCard from '../components/AffairCard.vue'
-import { request, error as popError } from '../utils/request.js'
 
 import { useRouter } from 'vue-router'
 const router = useRouter()

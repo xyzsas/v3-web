@@ -1,7 +1,7 @@
 <script setup>
 import OverlayLoading from '../components/OverlayLoading.vue'
 import * as faceapi from 'face-api.js'
-import { request, error as popError } from '../utils/request.js'
+import request from '../utils/request.js'
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -19,12 +19,12 @@ let ctx, urls = {}
 
 if (!user.token) router.push('/login')
 else request.get('/sas/link/', { headers: { token: user.token } })
-  .then(({ data }) => {
+  .then(data => {
     urls.GET = data.GET.replace('http://', 'https://')
     urls.PUT = data.PUT.replace('http://', 'https://')
     src = urls.GET
     loading = false
-  }).catch(popError)
+  })
 
 async function init () {
   await faceapi.nets.ssdMobilenetv1.loadFromUri(modelURL)
