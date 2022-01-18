@@ -15,5 +15,9 @@ const value = affair.content[i][':']
       <label class="font-semibold mr-3">提示</label>
       <input class="border py-1 px-2" v-model="value.placeholder">
     </div>
+    <div class="mb-2">
+      <input type="checkbox" class="form-checkbox" v-model="value.optional">
+      <span class="ml-2">optional</span>
+    </div>  
   </div>
 </template>
