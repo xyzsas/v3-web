@@ -1,11 +1,12 @@
 <script setup>
 import { reactive, watch } from 'vue'
 import Draggable from 'vuedraggable'
-import { MenuIcon, DatabaseIcon, PencilIcon, PlusIcon, TrashIcon, ArrowLeftIcon, HandIcon } from '@heroicons/vue/outline'
+import { MenuIcon, DatabaseIcon, PencilIcon, PlusIcon, TrashIcon, HandIcon } from '@heroicons/vue/outline'
 import PanelWrapper from '../../components/PanelWrapper.vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
 import AccessControl from '../../components/AccessControl.vue'
+import BackHeader from '../../components/BackHeader.vue'
 import blocks from '../../blocks/index.js'
 import request from '../../utils/request.js'
 import { random } from '../../utils/crypto.js'
@@ -83,7 +84,7 @@ async function remove () {
 
 // editor properties and methods
 let focus = $ref(0), showPanel = $ref(false), dragging = $ref(false)
-const panelShow = reactive([1, 0, 0])
+const panelShow = reactive([0, 1, 0])
 let focused = $computed(() => affair.content[focus] || {})
 
 function add (k) {
@@ -110,15 +111,14 @@ function preview () {
   <div class="relative flex">
     <!-- Panel -->
     <side-drawer v-model="showPanel">
-      <panel-wrapper title="事务管理" v-model="panelShow[0]">
-        <p class="px-2 pt-2 flex items-center">
-          <button class="cursor-pointer" @click="router.push('/admin/xyz')"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" /></button>
-          <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
-          <trash-icon class="text-red-500 w-6 cursor-pointer mx-3" @click="remove" />
-          <database-icon v-if="id" class="text-green-700 w-6 cursor-pointer" @click="router.push('/admin/data/' + id)" />
-        </p>
-        <a v-if="id" @click="preview" class="ml-3 font-mono text-gray-300 text-xs whitespace-nowrap">{{ origin }}/#/@/{{ id }}</a>
-        <hr class="mt-3">
+      <back-header @back="router.push('/admin/xyz')">事务管理</back-header>
+      <p class="pl-6 flex items-center">
+        <button class="bg-blue-200 hover:bg-blue-500 hover:text-white text-blue-500 text-center py-1 px-3 m-1 rounded" @click="submit">提交事务</button>  
+        <trash-icon class="text-red-500 w-6 cursor-pointer mx-3" @click="remove" />
+        <database-icon v-if="id" class="text-green-700 w-6 cursor-pointer" @click="router.push('/admin/data/' + id)" />
+      </p>
+      <a v-if="id" @click="preview" class="pl-6 font-mono text-gray-300 text-xs whitespace-nowrap">{{ origin }}/#/@/{{ id }}</a>
+      <panel-wrapper title="访问控制" v-model="panelShow[0]">
         <access-control />
       </panel-wrapper>
       <panel-wrapper title="添加组件" v-model="panelShow[1]">

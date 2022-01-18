@@ -1,7 +1,8 @@
 <script setup>
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
-import { DownloadIcon, MenuIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/outline'
+import BackHeader from '../../components/BackHeader.vue'
+import { DownloadIcon, MenuIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/outline'
 import request from '../../utils/request.js'
 import blocks from '../../blocks/index.js'
 
@@ -88,10 +89,7 @@ const item = p => affair.data[p + page * 20 - 21] || {}
   <div class="relative flex">
     <side-drawer v-model="showPanel">
       <div class="p-3 md:p-6">
-        <h1 class="text-2xl font-bold flex items-center">
-          <button class="cursor-pointer" @click="router.go(-1)"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5" /></button>
-          事务数据
-        </h1>
+        <back-header @back="router.go(-1)">事务数据</back-header>
         <button v-if="affair.data" class="block m-4 py-2 px-4 bg-green-700 text-white shadow rounded-full flex items-center" @click="excel"><download-icon class="w-6" />导出到Excel</button>
       </div>
     </side-drawer>

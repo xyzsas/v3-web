@@ -46,7 +46,6 @@ function displayValue (el) {
 
 <template>
   <div class="p-3">
-    <h3 class="font-bold">访问限制条件</h3>
     <editable-list :list="affair.access" handle=".handle" item-key="1" class="from-lime-50">
       <template #item="{ element: el, index: i }">
         <label v-if="el[2]" class="text-red-500">* </label>

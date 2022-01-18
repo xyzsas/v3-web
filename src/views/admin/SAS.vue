@@ -3,7 +3,8 @@ import { watchEffect } from 'vue'
 import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
 import UserInfo from '../../components/UserInfo.vue'
-import { MenuIcon, ArrowLeftIcon, PlusIcon, UserIcon, FolderOpenIcon, ChevronDoubleRightIcon } from '@heroicons/vue/outline'
+import BackHeader from '../../components/BackHeader.vue'
+import { MenuIcon, PlusIcon, UserIcon, FolderOpenIcon, ChevronDoubleRightIcon } from '@heroicons/vue/outline'
 import { short, sha256 } from '../../utils/crypto.js'
 import request from '../../utils/request'
 
@@ -68,7 +69,7 @@ let showUsers = $computed(() => {
   <div class="relative flex">
     <!-- Main View -->
     <div class="all-transition p-3 h-screen overflow-y-auto sm:p-6 lg:p-8 relative flex-grow">
-      <h1 class="text-2xl font-bold flex items-center mb-6"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5 cursor-pointer" @click="router.push('/')" />用户管理</h1>
+      <back-header @back="router.push('/')">用户管理</back-header>
       <div>
         <input class="flex border border-gray-200 rounded-full p-2 shadow text-l pl-5" placeholder="搜索用户" v-model="search">
       </div>

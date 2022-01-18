@@ -1,6 +1,7 @@
 <script setup>
-import { ArrowCircleRightIcon, ArrowLeftIcon, XIcon } from '@heroicons/vue/solid'
+import { ArrowCircleRightIcon, XIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../components/OverlayLoading.vue'
+import BackHeader from '../components/BackHeader.vue'
 import Wrapper from '../components/Wrapper.vue'
 import request from '../utils/request.js'
 import { HS256, sha256, salt } from '../utils/crypto.js'
@@ -77,12 +78,10 @@ async function goAauth () {
 <template>
   <overlay-loading :show="loading" />
   <div class="h-screen p-10 flex flex-col">
-    <h1 class="text-3xl font-medium m-3 flex items-center">
-      <arrow-left-icon v-if="user.id" class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5 cursor-pointer" @click="router.push('/')"/>安全中心
-    </h1>
+    <back-header @back="router.push('/')">安全中心</back-header>
     <p v-if="user.group" class="ml-4 mb-2 text-gray-400"><strong class="mr-3">{{ user.name }}</strong> 用户组: <code class="font-mono">{{ user.group }}</code></p>
     <div class="flex flex-grow flex-wrap justify-around items-center">
-      <wrapper :show="showCard"><!-- change password -->
+      <wrapper :show="showCard" class="py-4"><!-- change password -->
         <div class="w-72 h-auto py-4 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
           <h1 class="text-2xl font-semibold">{{ title }}</h1>
           <input v-if="user.token" :placeholder="'请输入原密码'" :type="'password'" v-model="password" @keyup.enter="$event.target.nextElementSibling.focus()">

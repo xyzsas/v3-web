@@ -1,7 +1,8 @@
 <script setup>
 import request from '../../utils/request.js'
-import { PlusIcon, ArrowLeftIcon } from '@heroicons/vue/solid'
+import { PlusIcon } from '@heroicons/vue/solid'
 import OverlayLoading from '../../components/OverlayLoading.vue'
+import BackHeader from '../../components/BackHeader.vue'
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -25,7 +26,7 @@ else fetch()
 <template>
   <overlay-loading :show="loading"></overlay-loading>
   <div class="p-5 sm:p-10 min-h-screen">
-    <h1 class="text-2xl font-bold flex items-center mb-6"><arrow-left-icon class="all-transition w-12 pl-2 pr-3 hover:pl-0 hover:pr-5 cursor-pointer" @click="router.push('/')" />事务管理</h1>
+    <back-header @back="router.push('/')">事务管理</back-header>
     <p v-if="!Object.keys(list).length">暂无可以管理的事务</p>
     <div v-for="(v, k) in list" :key="k" class="gradient-card py-4 px-6 flex flex-wrap items-center justify-between m-3" @click="router.push('/admin/@/' + k)">
       <h3 class="text-xl flex items-center">{{ v }}</h3>
