@@ -1,10 +1,9 @@
 <script setup>
 import { watchEffect } from 'vue'
-import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
 import UserInfo from '../../components/UserInfo.vue'
 import BackHeader from '../../components/BackHeader.vue'
-import { MenuIcon, PlusIcon, UserIcon, FolderOpenIcon, ChevronDoubleRightIcon } from '@heroicons/vue/outline'
+import { MenuIcon, PlusIcon, UserIcon, FolderOpenIcon, DotsHorizontalIcon, ChevronDoubleRightIcon } from '@heroicons/vue/outline'
 import { short, sha256 } from '../../utils/crypto.js'
 import request from '../../utils/request'
 
@@ -13,17 +12,16 @@ const route = useRoute(), router = useRouter()
 
 import state from '../../state.js'
 const user = state.user
-
-let loading = $ref(false)
+state.loading = true
 
 if (!user.token || !user.admin?.group) router.push('/')
 else fetch()
 
 async function fetch () {
-  loading = true
+  state.loading = true
   const res = await request.get('/sas/admin', { headers: { token: user.token } })
   state.group = res
-  loading = false
+  state.loading = false
 }
 // UI
 let focus = $ref('NEW'), showPanel = $ref(false)
@@ -41,7 +39,7 @@ let showGroups = $computed(() => {
   for (const k in state.group) {
     if (k.indexOf(choice) !== 0 || k === choice) continue
     const gs = k.split('/')
-    res.add(choice + gs[cot - 1] + '/')
+    res.add(gs[cot - 1])
   }
   return res
 })
@@ -65,7 +63,6 @@ let showUsers = $computed(() => {
 </script>
 
 <template>
-  <overlay-loading :show="loading" />
   <div class="relative flex">
     <!-- Main View -->
     <div class="all-transition p-3 h-screen overflow-y-auto sm:p-6 lg:p-8 relative flex-grow">
@@ -73,18 +70,19 @@ let showUsers = $computed(() => {
       <div>
         <input class="flex border border-gray-200 rounded-full p-2 shadow text-l pl-5" placeholder="搜索用户" v-model="search">
       </div>
-      <code v-if="!search" class="cursor-pointer flex pt-4">
+      <code v-if="!search" class="cursor-pointer flex pt-4 font-bold">
         <chevron-double-right-icon class="w-5 mr-2"/>
-        <span v-for="(subread, index) in bread" @click="setChoice(index)">{{ subread + '/' }}</span>
+        <span v-for="(subread, index) in bread" class="underline m-px" @click="setChoice(index)">{{ subread + '/' }}</span>
       </code>
       <hr>
-      <div v-if="!search" class="gradient-card p-2 m-2 flex items-center font-mono text-gray-500" v-for="v in showGroups" @click="choice = v">
-        <folder-open-icon class="w-6 mr-2"/>
-        {{ v }}
+      <div v-if="choice !== '/'" class="gradient-card p-2 m-2 flex items-center text-gray-500" @click="setChoice(bread.length - 2)">
+        <dots-horizontal-icon class="w-6 mr-2"/>（返回上级）
+      </div>
+      <div v-if="!search" class="gradient-card p-2 m-2 flex items-center font-mono text-gray-500" v-for="v in showGroups" @click="choice += v + '/'">
+        <folder-open-icon class="w-6 mr-2"/>./{{ v }}/
       </div>
       <div class="gradient-card p-2 m-2 flex items-center text-gray-700" v-for="(v, k) in showUsers" @click="focus = k; showPanel = true"> 
-        <user-icon class="w-6 mr-2"/>
-        {{ v }}
+        <user-icon class="w-6 mr-2"/>{{ v }}
       </div>
     </div>
     <!-- User -->

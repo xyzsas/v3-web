@@ -1,7 +1,6 @@
 <script setup>
 import { watchEffect } from 'vue'
 import { ArrowCircleRightIcon } from '@heroicons/vue/solid'
-import OverlayLoading from '../components/OverlayLoading.vue'
 import request from '../utils/request.js'
 import { HS256, sha256, short, salt } from '../utils/crypto.js'
 
@@ -11,7 +10,6 @@ const router = useRouter(), route = useRoute()
 import state from '../state.js'
 const user = state.user
 
-let loading = $ref(false)
 let input = $ref('')
 let random = $ref('')
 
@@ -39,7 +37,7 @@ function success (res) {
 
 async function next () {
   if (!input) return
-  loading = true
+  state.loading = true
   if (!random) { // first
     input = input.toUpperCase()
     user.id = short(await sha256(input))
@@ -55,7 +53,7 @@ async function next () {
     random = ''
   }
   input = ''
-  loading = false
+  state.loading = false
 }
 
 async function aauth (token) {
@@ -63,12 +61,12 @@ async function aauth (token) {
     Swal.fire('会话错误', '手机端进行QQ、钉钉登录时，请使用手机默认浏览器或在对应APP中打开', 'error')
     return
   }
-  loading = true
+  state.loading = true
   const res = await request.post('/sas/link/' + user.id, { aauth: token })
   if (res) {
     await Swal.fire('重置账户成功', '请前往激活您的账户，并设置初始密码', 'success')
     router.push('/security')
-  } else loading = false
+  } else state.loading = false
 }
 
 // aauth redirect
@@ -84,7 +82,6 @@ async function goAauth () {
 </script>
 
 <template>
-  <overlay-loading :show="loading" />
   <div class="h-screen flex justify-center items-center">
     <div class="absolute w-80 h-56 sm:w-96 sm:h-64 bg-white shadow-md flex justify-center items-center flex-col rounded transition-all">
       <h1 class="text-2xl sm:text-3xl font-semibold">学生事务系统</h1>

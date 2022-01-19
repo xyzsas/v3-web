@@ -1,5 +1,4 @@
 <script setup>
-import OverlayLoading from '../components/OverlayLoading.vue'
 import * as faceapi from 'face-api.js'
 import request from '../utils/request.js'
 
@@ -13,7 +12,7 @@ const modelURL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@mast
 const STD = 173.3 // pixel length of face area
 
 let msg = $ref('正在载入人脸检测模块...')
-let ready = $ref(false), ok = $ref(false), src = $ref(''), loading = $ref(true)
+let ready = $ref(false), ok = $ref(false), src = $ref('')
 let canvas = $ref(), selector = $ref()
 let ctx, urls = {}
 
@@ -23,7 +22,7 @@ else request.get('/sas/link/', { headers: { token: user.token } })
     urls.GET = data.GET.replace('http://', 'https://')
     urls.PUT = data.PUT.replace('http://', 'https://')
     src = urls.GET
-    loading = false
+    state.loading = false
   })
 
 async function init () {
@@ -106,7 +105,6 @@ async function submit () {
 
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen">
-    <overlay-loading :show="loading"></overlay-loading>
     <h1 class="text-3xl mb-5">上传照片</h1>
     <img v-show="!ok && src" @error="src = ''" style="max-width: 295px;" :src="src">
     <canvas v-show="ok" ref="canvas" height="413" width="295"></canvas>

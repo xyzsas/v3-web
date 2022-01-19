@@ -1,5 +1,4 @@
 <script setup>
-import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
 import BackHeader from '../../components/BackHeader.vue'
 import { DownloadIcon, MenuIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/outline'
@@ -12,7 +11,7 @@ const route = useRoute(), router = useRouter()
 import state from '../../state.js'
 const user = state.user
 
-let loading = $ref(true), affair = $ref({})
+let affair = $ref({})
 const id = route.params.id
 
 if (!user.token || !user.admin?.affair) router.push('/')
@@ -51,7 +50,7 @@ async function fetch () {
   }
   affair = res
   affair.data = data
-  loading = false
+  state.loading = false
 }
 
 function excel () {
@@ -85,7 +84,6 @@ const item = p => affair.data[p + page * 20 - 21] || {}
 </script>
 
 <template>
-  <overlay-loading :show="loading" />
   <div class="relative flex">
     <side-drawer v-model="showPanel">
       <div class="p-3 md:p-6">

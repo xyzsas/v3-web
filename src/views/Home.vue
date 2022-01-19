@@ -8,6 +8,7 @@ const router = useRouter()
 
 import state from '../state.js'
 const user = state.user
+state.loading = false
 
 let affair = $ref([])
 

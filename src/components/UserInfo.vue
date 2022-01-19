@@ -117,14 +117,14 @@ async function remove () {
     <label>姓名：<input placeholder="用户姓名" v-model="edit.name"></label>
     <label>用户组：<input placeholder="/group/id/" v-model="edit.group"></label>
     <template v-if="userid !== 'NEW'">
-      <label v-if="active"><input class="mr-2" type="checkbox" v-model="edit.password">已激活</label>
+      <label v-if="active"><input class="mr-2" type="checkbox" v-model="edit.password">已激活<span class="text-xs">（取消勾选重置账户）</span></label>
       <label v-else>未激活</label>
     </template>
-    <label v-if="edit.aauth">绑定第三方账户：{{ edit.aauth.substr(10) }}</label>
+    <label v-if="edit.aauth">第三方登录：{{ edit.aauth.substr(10) }}</label>
     <label><input class="mr-2" type="checkbox" v-model="edit.isAdmin">设为管理员</label>
     <wrapper :show="edit.isAdmin" class="ml-3 p-1 border-l-2">
       <label class="block"><input class="mr-2" type="checkbox" v-model="edit.admin.affair">事务管理权限</label>
-      <label class="block">允许管理的用户组：<input class="font-mono my-2 w-full" placeholder="/g1/a/,/g2/b/" v-model="edit.admin.group"></label>
+      <label class="block">允许管理的用户组：<input class="font-mono my-2 w-full" placeholder="输入用户组，逗号隔开" v-model="edit.admin.group"></label>
     </wrapper>
     <div class="flex items-center">
       <button @click="submit" class="text-white font-bold w-32 py-2 my-8 mx-4 rounded shadow flex items-center justify-center all-transition hover:shadow-md" :class="ready ? 'bg-blue-400' : 'bg-gray-400'" :disabled="!ready"><check-icon class="w-6 mr-2" />提交<div class="w-4" /></button>

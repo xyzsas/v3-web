@@ -1,7 +1,6 @@
 <script setup>
 import request from '../../utils/request.js'
 import { PlusIcon } from '@heroicons/vue/solid'
-import OverlayLoading from '../../components/OverlayLoading.vue'
 import BackHeader from '../../components/BackHeader.vue'
 
 import { useRouter } from 'vue-router'
@@ -9,14 +8,15 @@ const router = useRouter()
 
 import state from '../../state.js'
 const user = state.user
+state.loading = true
 
-let loading = $ref(true)
 let list = $ref({})
 
 async function fetch () {
+  state.loading = true
   const res = await request.get('/xyz/admin', { headers: { token: user.token } })
   if (res) list = res
-  loading = false
+  state.loading = false
 }
 
 if (!user.token || !user.admin?.affair) router.push('/')
@@ -24,7 +24,6 @@ else fetch()
 </script>
 
 <template>
-  <overlay-loading :show="loading"></overlay-loading>
   <div class="p-5 sm:p-10 min-h-screen">
     <back-header @back="router.push('/')">事务管理</back-header>
     <p v-if="!Object.keys(list).length">暂无可以管理的事务</p>
