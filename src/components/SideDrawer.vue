@@ -14,7 +14,7 @@ let style = $computed(() => {
   <transition name="fade">
     <div v-if="isMobile && props.modelValue" @click="emits('update:modelValue', false)" class="fixed w-full h-screen bg-black opacity-30 z-10" />
   </transition>
-  <div class="all-transition bg-white w-96 h-screen overflow-y-auto top-0 z-20" :class="isMobile ? 'fixed' : ''" style="max-width: 90vw; min-width: 24rem;" :style="style">
+  <div class="all-transition bg-white w-96 h-screen overflow-y-auto top-0 z-20" :class="isMobile ? 'fixed' : 'min-w-[24rem]'" style="max-width: 90vw;" :style="style">
     <slot></slot>
   </div>
 </template>
