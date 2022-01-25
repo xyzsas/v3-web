@@ -107,7 +107,7 @@ const item = p => affair.data[p + page * 20 - 21] || {}
             <code class="ml-2 text-gray-500">{{ item(p).group }}</code>
           </div>
           <hr class="mb-1">
-          <label class="block my-1" v-for="b in affair.content" :key="b['#']">{{ b[':'].title }}：{{ parseData(b, item(p).data) }}</label>
+          <div class="w-full my-1 break-all" v-for="b in affair.content" :key="b['#']">{{ b[':'].title }}：{{ parseData(b, item(p).data) }}</div>
         </div>
       </div>
       <div v-if="totalPage > 1" class="fixed bottom-2 right-4 bg-blue-100 rounded shadow-md flex items-center p-2 select-none">

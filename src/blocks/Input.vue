@@ -11,8 +11,9 @@ check()
 </script>
 
 <template>
-  <div class="px-3 py-2 flex flex-wrap">
+  <div class="px-3 py-2 flex flex-wrap" :class="value.rows > 1 ? 'flex-col' : ''">
     <label class="font-semibold mr-3 my-1"><span v-if="!value.optional" class="text-red-500">*</span>{{ value.title }}</label>
-    <input class="border py-1 px-2" @input="check" v-model="affair.data[key]" :placeholder="value.placeholder">
+    <textarea class="block border p-2 my-2 resize-none" v-if="value.rows > 1" :rows="value.rows" @input="check" v-model="affair.data[key]" :placeholder="value.placeholder"/>
+    <input v-else class="border py-1 px-2" @input="check" v-model="affair.data[key]" :placeholder="value.placeholder">
   </div>
 </template>
