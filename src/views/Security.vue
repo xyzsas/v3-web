@@ -1,6 +1,5 @@
 <script setup>
 import { ArrowCircleRightIcon, XIcon } from '@heroicons/vue/solid'
-import OverlayLoading from '../components/OverlayLoading.vue'
 import BackHeader from '../components/BackHeader.vue'
 import Wrapper from '../components/Wrapper.vue'
 import request from '../utils/request.js'
@@ -12,8 +11,7 @@ const user = state.user
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
 
-let loading = $ref(false), title = $ref('安全中心')
-let password = $ref(''), newPassword = $ref(''), cfmPassword = $ref('')
+let title = $ref('安全中心'), password = $ref(''), newPassword = $ref(''), cfmPassword = $ref('')
 if (!user.id) router.push('/login')
 if (user.token) title = '修改密码'
 else title = '账户激活'
@@ -40,7 +38,7 @@ let err = $computed(() => {
 
 async function submit () {
   if (err) return
-  loading = true
+  state.loading = true
   const payload = { newPassword: await sha256(newPassword + salt) }
   if (password) {
     const data = await request.get('/sas/auth/' + user.id)
@@ -52,17 +50,17 @@ async function submit () {
     user.token = user.id = undefined
     router.push('/login')
   }
-  loading = false
+  state.loading = false
 }
 
 async function aauth (token) {
-  loading = true
+  state.loading = true
   const res = await request.post('/sas/link/', { aauth: token, sas: user.token })
   if (res) {
     user.aauth = res
     await Swal.fire('绑定成功', '', 'success')
   }
-  loading = false
+  state.loading = false
 }
 
 if (route.query.token && user.token) aauth(route.query.token)
@@ -76,7 +74,6 @@ async function goAauth () {
 </script>
 
 <template>
-  <overlay-loading :show="loading" />
   <div class="h-screen p-10 flex flex-col">
     <back-header @back="router.push('/')">安全中心</back-header>
     <p v-if="user.group" class="ml-4 mb-2 text-gray-400"><strong class="mr-3">{{ user.name }}</strong> 用户组: <code class="font-mono">{{ user.group }}</code></p>

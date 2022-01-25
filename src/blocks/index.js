@@ -25,6 +25,15 @@ const blocks = {
     panel: () => import('./SelectPanel.vue'),
     template: { title: '下拉框标题', options: [{ '#': 1, ':': '选项1' }, { '#': 2, ':': '选项2' }] },
     data: (v, d) => { for (const o of v.options) if (o['#'] == d) return o[':'] }
+  },
+  list: {
+    name: '列表选择',
+    icon: '/blocks/list.svg',
+    block: () => import('./List.vue'),
+    panel: () => import('./ListPanel.vue'),
+    // template: { title: '筛选框列表标题', options: [{ '#': 1, ':': '选项1', '=': fasle }, { '#': 2, ':':  '选项2', '=': fasle }] },
+    template: { title: '列表选择标题', options: [{ '#': 1, ':': '选项1'}, { '#': 2, ':':  '选项2'}] },
+    data: (v, d) => { for (const o of v.options) if (o['#'] == d) return o[':'] }
   }
 }
 

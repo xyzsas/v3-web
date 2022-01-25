@@ -6,6 +6,7 @@ const state = reactive({
   affair: {},
   group: null,
   clock: { delta: 0, server: Date.now() },
+  loading: false,
   rid: '' // random user id for anonymous affair
 })
 

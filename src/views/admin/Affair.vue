@@ -3,7 +3,6 @@ import { reactive, watch } from 'vue'
 import Draggable from 'vuedraggable'
 import { MenuIcon, DatabaseIcon, PencilIcon, PlusIcon, TrashIcon, HandIcon } from '@heroicons/vue/outline'
 import PanelWrapper from '../../components/PanelWrapper.vue'
-import OverlayLoading from '../../components/OverlayLoading.vue'
 import SideDrawer from '../../components/SideDrawer.vue'
 import AccessControl from '../../components/AccessControl.vue'
 import BackHeader from '../../components/BackHeader.vue'
@@ -17,7 +16,7 @@ const route = useRoute(), router = useRouter(), origin = window.location.origin
 import state from '../../state.js'
 const user = state.user, affair = state.affair
 
-let loading = $ref(true), id = $ref(route.params.id == 'NEW' ? '' : route.params.id)
+let id = $ref(route.params.id == 'NEW' ? '' : route.params.id)
 
 if (!user.token || !user.admin?.affair) router.push('/')
 else fetch()
@@ -30,7 +29,7 @@ affair.ok = {}
 affair.access = []
 
 async function fetch () {
-  if (!id) return loading = false
+  if (!id) return state.loading = false
   const res = await request.get('/xyz/admin/' + id, { headers: { token: user.token } })
   if (res) {
     affair.title = res.title
@@ -42,14 +41,14 @@ async function fetch () {
       if (k[0] == '$') affair.variable[k] = res[k]
     }
   }
-  loading = false
+  state.loading = false
 }
 
 async function submit () {
   if (!affair.title.match(/\S/)) return
   const body = { title: affair.title, content: JSON.stringify(affair.content), access: JSON.stringify(affair.access) }
   for (const k in affair.variable) body[k] = affair.variable[k]
-  loading = true
+  state.loading = true
   const res = await request.post('/xyz/admin/' + id, body, { headers: { token: user.token } })
   if (res) {
     await Swal.fire('提交成功', '', 'success')
@@ -58,7 +57,7 @@ async function submit () {
       router.push('/admin/@/' + id)
     }
   }
-  loading = false
+  state.loading = false
 }
 
 async function remove () {
@@ -73,13 +72,13 @@ async function remove () {
     confirmButtonColor: '#aa0000'
   }).then(r => r.isConfirmed)
   if (!isConfirmed) return
-  loading = true
+  state.loading = true
   const res = await request.delete('/xyz/admin/' + id, { headers: { token: user.token } })
   if (res) {
     await Swal.fire('删除成功', '', 'success')
     router.push('/admin/xyz')
   }
-  loading = false
+  state.loading = false
 }
 
 // editor properties and methods
@@ -107,7 +106,6 @@ function preview () {
 </script>
 
 <template>
-  <overlay-loading :show="loading" />
   <div class="relative flex">
     <!-- Panel -->
     <side-drawer v-model="showPanel">
