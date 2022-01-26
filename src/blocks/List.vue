@@ -11,12 +11,12 @@ check()
 </script>
 
 <template>
-  <div class="px-3 py-2 flex flex-wrap">
+  <div class="px-3 py-2">
     <label class="font-semibold mr-3 my-1">{{ value.title }}</label>
-    <div class="mr-3 my-1">
-      <input type="checkbox" v-model="hobby2" value="选择1">选择1
-      <input type="checkbox" v-model="hobby2" value="选择2">选择2
-      <input type="checkbox" v-model="hobby2" value="选择3">选择3
-		</div>
+    <div class="flex flex-col mr-3 my-1" v-for="o in value.options">
+        <label class="flex flex-row">
+          <input type="checkbox" value="o[':']" class="ml-2 my-1 mr-1"> {{ o[':'] }}
+        </label>
+    </div>
   </div>
 </template>

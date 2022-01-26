@@ -9,7 +9,7 @@ const value = affair.content[i][':']
 let edit = $ref('')
 
 function add () {
-  value.options.push({'=': false, ':': edit, '#': random() })
+  value.options.push({':': edit, '#': random() })
   edit = ''
 }
 </script>
