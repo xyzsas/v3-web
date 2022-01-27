@@ -75,7 +75,7 @@ let showUsers = $computed(() => {
         <span v-for="(subread, index) in bread" class="underline m-px" @click="setChoice(index)">{{ subread + '/' }}</span>
       </code>
       <hr>
-      <div v-if="choice !== '/'" class="gradient-card p-2 m-2 flex items-center text-gray-500" @click="setChoice(bread.length - 2)">
+      <div v-if="choice !== '/' && !search" class="gradient-card p-2 m-2 flex items-center text-gray-500" @click="setChoice(bread.length - 2)">
         <dots-horizontal-icon class="w-6 mr-2"/>（返回上级）
       </div>
       <div v-if="!search" class="gradient-card p-2 m-2 flex items-center font-mono text-gray-500" v-for="v in showGroups" @click="choice += v + '/'">
