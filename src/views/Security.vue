@@ -7,6 +7,7 @@ import { HS256, sha256, salt } from '../utils/crypto.js'
 
 import state from '../state.js'
 const user = state.user
+state.loading = false
 
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
