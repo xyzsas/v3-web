@@ -1,9 +1,11 @@
 <script setup>
+import { watchEffect } from 'vue'
 import SideDrawer from '../../components/SideDrawer.vue'
 import BackHeader from '../../components/BackHeader.vue'
 import { DownloadIcon, MenuIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/outline'
 import request from '../../utils/request.js'
 import blocks from '../../blocks/index.js'
+import { short, sha256 } from '../../utils/crypto.js'
 
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute(), router = useRouter()
@@ -76,11 +78,19 @@ function excel () {
 }
 
 // UI
-let showPanel = $ref(false), page = $ref(1)
-let length = $computed(() => affair.data ? affair.data.length : 0)
+let showPanel = $ref(false), page = $ref(1), search = $ref(''), tid = $ref('')
+watchEffect(async () => {
+  if (search) tid = short(await sha256(search.toUpperCase()))
+})
+let showData = $computed(() => {
+  if (!affair.data) return []
+  if (!search) return affair.data
+  return affair.data.filter(x => x.id === search || x.id === tid || x.name.indexOf(search) === 0)
+})
+let length = $computed(() => showData ? showData.length : 0)
 let totalPage = $computed(() => Math.ceil(length / 20))
 let pageLength = $computed(() => Math.min(20, length - page * 20 + 20))
-const item = p => affair.data[p + page * 20 - 21] || {}
+const item = p => showData[p + page * 20 - 21] || {}
 </script>
 
 <template>
@@ -88,6 +98,7 @@ const item = p => affair.data[p + page * 20 - 21] || {}
     <side-drawer v-model="showPanel">
       <div class="p-3 md:p-6">
         <back-header @back="router.go(-1)">事务数据</back-header>
+        <input class="m-4 rounded-full shadow-md px-4 py-2" placeholder="检索用户" v-model="search">
         <button v-if="affair.data" class="block m-4 py-2 px-4 bg-green-700 text-white shadow rounded-full flex items-center" @click="excel"><download-icon class="w-6" />导出到Excel</button>
       </div>
     </side-drawer>

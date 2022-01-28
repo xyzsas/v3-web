@@ -31,8 +31,16 @@ const blocks = {
     icon: '/blocks/list.svg',
     block: () => import('./List.vue'),
     panel: () => import('./ListPanel.vue'),
-    template: { title: '列表选择标题', options: [{ '#': 1, ':': '选项1'}, { '#': 2, ':':  '选项2'}] },
-    data: (v, d) => { for (const o of v.options) if (o['#'] == d) return o[':'] }
+    template: { title: '列表选择标题', options: [{ '#': 2, ':': '选项1'}, { '#': 1, ':':  '选项2'}] },
+    data: (v, d) => {
+      const res = d.split(',')
+      for (const o of v.options) {
+        for (let i = 0; i < res.length; i++) {
+          if (res[i] == o['#']) res[i] = o[':']
+        }
+      }
+      return res.join(', ')
+    }
   }
 }
 
