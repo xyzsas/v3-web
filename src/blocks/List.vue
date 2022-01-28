@@ -20,9 +20,9 @@ function change (cur) {
 <template>
   <div class="px-3 py-2">
     <label class="font-semibold mr-3 my-1">{{ value.title }}</label>
-    <div class="my-3 w-full bg-white rounded-lg shadow-lg lg:w-1/3">
-      <ul class="divide-y-2 divide-gray-100" v-for="o in value.options">
-        <li @click="change(o)" class="p-3 all-transition bg-gradient-to-r to-white border border-gray-200" :class="o.current ? 'from-blue-300' : 'from-white'"> 
+    <div class="my-4 ml-3 w-full bg-white lg:w-1/3">
+      <ul v-for="o in value.options">
+        <li @click="change(o)" class="p-3 pl-5 rounded-full all-transition bg-gradient-to-r to-white border border-gray-200" :class="o.current ? 'from-blue-300' : 'from-white'"> 
           {{ o[':'] }}
         </li>
       </ul>
