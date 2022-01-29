@@ -15,9 +15,9 @@ window.token = state.user.token
 <template>
   <div class="w-5/6 m-auto min-h-screen flex flex-col justify-center items-center">
     <div class="w-screen max-w-2xl relative group flex justify-center items-center mb-6">
-      <img style="transition: all 0.5s ease;" src="/X.svg" class="absolute w-1/3 group-hover:left-0 left-1/3">
-      <img src="/Y.svg" class="w-1/3">
-      <img style="transition: all 0.5s ease;" src="/Z.svg" class="absolute w-1/3 group-hover:left-2/3 left-1/3">
+      <img style="transition: all 0.5s ease;" src="/img/X.svg" class="absolute w-1/3 group-hover:left-0 left-1/3">
+      <img src="/img/Y.svg" class="w-1/3">
+      <img style="transition: all 0.5s ease;" src="/img/Z.svg" class="absolute w-1/3 group-hover:left-2/3 left-1/3">
     </div>
     <wrapper :show="show">
       <h1 class="text-5xl text-center">XYZSAS</h1>

@@ -5,14 +5,14 @@ import errorComponent from './Error.vue'
 const blocks = {
   HTML: {
     name: '段落文本',
-    icon: '/blocks/HTML.svg',
+    icon: '/img/HTML.svg',
     block: () => import('./HTML.vue'),
     editable: () => import('./HTMLEditable.vue'),
     template: { html: '<h1>欢迎使用学生事务系统</h1><p>这是一个段落文本组件，可以用于显示文字等。</p><p>您可以直接修改该组件上的文字，内容会在<b>光标离开该组件时</b>更新和保存。</p><p>该组件支持HTML和Markdown语法。</p>' }
   },
   input: {
     name: '输入框',
-    icon: '/blocks/input.svg',
+    icon: '/img/input.svg',
     block: () => import('./Input.vue'),
     panel: () => import('./InputPanel.vue'),
     template: { title: '输入框标题', placeholder: '提示文本' },
@@ -20,7 +20,7 @@ const blocks = {
   },
   select: {
     name: '下拉框',
-    icon: '/blocks/select.svg',
+    icon: '/img/select.svg',
     block: () => import('./Select.vue'),
     panel: () => import('./SelectPanel.vue'),
     template: { title: '下拉框标题', options: [{ '#': 1, ':': '选项1' }, { '#': 2, ':': '选项2' }] },
@@ -28,7 +28,7 @@ const blocks = {
   },
   list: {
     name: '列表选择',
-    icon: '/blocks/list.svg',
+    icon: '/img/list.svg',
     block: () => import('./List.vue'),
     panel: () => import('./ListPanel.vue'),
     // template: { title: '筛选框列表标题', options: [{ '#': 1, ':': '选项1', '=': fasle }, { '#': 2, ':':  '选项2', '=': fasle }] },
