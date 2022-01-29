@@ -9,7 +9,7 @@ const value = affair.content[i][':']
 let edit = $ref('')
 
 function add () {
-  value.options.push({'=': false, ':': edit, '#': random() })
+  value.options.push({':': edit, '#': random() })
   edit = ''
 }
 </script>
@@ -19,6 +19,12 @@ function add () {
     <div class="mb-2">
       <label class="font-semibold mr-3">标题</label>
       <input class="border py-1 px-2" v-model="value.title">
+    </div>
+    <div class="mb-2">
+      <label class="font-semibold mr-3">允许个数</label>
+      <input class="border pl-2 w-16" type="number" placeholder="0" v-model="value.min">
+      -
+      <input class="border pl-2 w-16" type="number" placeholder="max" v-model="value.max">
     </div>
     <div class="flex justify-between items-center">
       <input class="border rounded px-2 w-full" v-model="edit" placeholder="添加新选项">
