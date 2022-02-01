@@ -10,7 +10,11 @@ import state from '../state.js'
 const user = state.user
 state.loading = false
 
-let affair = $ref([])
+let affair = $ref([{
+  '#': '-fVMqh6UIj',
+  ':': '校园歌手大赛投票',
+  '_': {}
+}])
 
 if (!user.token) router.push('/login')
 else if (!user.aauth) Swal.fire('您尚未绑定第三方账号', '绑定第三方账户可以用于重置密码', 'question').then(r => { if (r.isConfirmed) router.push('/security') })

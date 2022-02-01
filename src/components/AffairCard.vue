@@ -1,4 +1,7 @@
 <script setup>
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
 import state from '../state.js'
 const clock = state.clock
 
@@ -23,7 +26,7 @@ function parseDiff (diff) {
 </script>
 
 <template>
-  <div class="gradient-card py-4 px-6 flex items-center flex-wrap my-3">
+  <div class="gradient-card py-4 px-6 flex items-center flex-wrap my-3" @click="router.push('/@/' + value['#'])">
     <div class="all-transition text-xl sm:text-2xl font-bold text-gray-500 mb-1 flex items-center">
       {{ value[':'] }}
     </div>
