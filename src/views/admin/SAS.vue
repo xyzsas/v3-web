@@ -49,6 +49,7 @@ watchEffect(async () => {
 })
 
 let showUsers = $computed(() => {
+  if (!state.group) return {}
   if (!search) return state.group[choice]
   const res = {}
   for (const g in state.group) {

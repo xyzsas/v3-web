@@ -16,10 +16,6 @@ let active = $ref(false)
 if (userid === 'NEW') edit = { group: props.group || user.group, affair: {}, isAdmin: false, admin: { affair: 0, group: '' } }
 else fetch()
 
-watch(() => edit.group, (n, o) => {
-  if (n.indexOf(user.group) !== 0) edit.group = o
-})
-
 let ready = $computed(() => {
   if (userid === 'NEW') {
     if (!edit.username) return false
@@ -29,9 +25,7 @@ let ready = $computed(() => {
   if (edit.isAdmin && edit.admin.group) {
     const groups = edit.admin.group.replace(/\s/g, '').split(',')
     for (const g of groups) {
-      if (!g) continue
-      if (g.indexOf(user.group) !== 0) return false
-      if (g[g.length - 1] !== '/') return false
+      if (!g || g[0] !== '/' || g[g.length - 1] !== '/') return false
     }
   }
   return true
