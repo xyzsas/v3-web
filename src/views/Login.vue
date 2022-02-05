@@ -9,6 +9,9 @@ const router = useRouter(), route = useRoute()
 
 import state from '../state.js'
 const user = state.user
+state.loading = true
+if (!window.crypto || !window.crypto.subtle) Swal.fire('浏览器不兼容', '您的浏览器缺少某些功能，会导致您的账户存在安全风险。推荐使用最新版的Google Chrome浏览器。', 'error')
+else state.loading = false
 
 let input = $ref('')
 let random = $ref('')
