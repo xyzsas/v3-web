@@ -53,11 +53,11 @@ async function submit () {
 </script>
 
 <template>
-  <div class="min-h-screen p-4 lg:px-20 lg:py-8">
+  <div class="min-h-screen p-4 lg:px-20 lg:py-8 all-transition">
     <h1 class="text-2xl m-2">{{ affair.title }}</h1>
     <p class="ml-2 mb-6 text-gray-400">用户：{{ user.token ? user.name : '未登录' }}</p>
-    <div v-for="(b, i) in affair.content" :key="b['#']" class="m-1">
-      <wrapper :show="1" class="bg-white rounded">
+    <div v-for="(b, i) in affair.content" :key="b['#']" class="m-1 sm:m-2 all-transition">
+      <wrapper :show="1" class="bg-white rounded sm:p-1">
         <component :is="blocks[b._].block" :i="i"></component>
       </wrapper>
     </div>
