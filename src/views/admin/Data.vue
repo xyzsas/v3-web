@@ -91,15 +91,40 @@ let length = $computed(() => showData ? showData.length : 0)
 let totalPage = $computed(() => Math.ceil(length / 20))
 let pageLength = $computed(() => Math.min(20, length - page * 20 + 20))
 const item = p => showData[p + page * 20 - 21] || {}
+
+let countQues = $ref()
+function count (que, id) {
+  let res = 0
+  for (const k in affair.data) {
+    for (const o in affair.data[k].data) {
+      if (o === que && String(affair.data[k].data[o]).includes(id)) res++
+    }
+  }
+  return res
+}
 </script>
 
 <template>
   <div class="relative flex">
-    <side-drawer v-model="showPanel">
+    <side-drawer v-model="showPanel" v-if="affair.content">
       <div class="p-3 md:p-6">
         <back-header @back="router.go(-1)">事务数据</back-header>
         <input class="m-4 rounded-full shadow-md px-4 py-2" placeholder="检索用户" v-model="search">
         <button v-if="affair.data" class="block m-4 py-2 px-4 bg-green-700 text-white shadow rounded-full flex items-center" @click="excel"><download-icon class="w-6" />导出到Excel</button>
+      </div>
+      <div class="p-3 md:p-6">
+        计数
+        <select class="border py-1 px-2" v-model="countQues">
+          <option v-for="o in affair.content.filter(x => x[':'].options)" :key="o['#']" :value="o">
+            {{ o[':'].title }}
+          </option>
+        </select>
+        <table v-if="countQues" class="w-full mt-2">
+          <tr v-for="o in countQues[':'].options" :key="o['#']" class="border border-x-0">
+            <td>{{ o[':'] }}</td>
+            <td>{{ count(countQues['#'], o['#']) }}</td>
+          </tr>
+        </table>
       </div>
     </side-drawer>
     <div class="all-transition p-3 h-screen overflow-y-auto sm:p-6 lg:p-8 overflow-y-auto flex-grow">
