@@ -26,6 +26,9 @@ function add () {
       -
       <input class="border pl-2 w-16" type="number" placeholder="max" v-model="value.max">
     </div>
+    <label class="mb-2 ml-2 font-semibold block">
+      <input type="checkbox" class="mr-2" v-model="value.space">限制名额
+    </label>
     <div class="flex justify-between items-center">
       <input class="border rounded px-2 w-full" v-model="edit" placeholder="添加新选项">
       <plus-icon class="w-7 text-blue-500 cursor-pointer" @click="add" />
@@ -33,6 +36,7 @@ function add () {
     <editable-list :list="value.options" item-key="#" class="from-blue-100">
       <template #item="{ element: el }">
         <label>{{ el[':'] }}</label>
+        <input placeholder="名额" class="w-16 ml-2 bg-transparent font-bold" type="number" v-if="value.space" v-model="affair.variable['$' + el['#']]">
       </template>
     </editable-list>
   </div>
