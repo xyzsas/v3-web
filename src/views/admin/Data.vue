@@ -91,6 +91,21 @@ let length = $computed(() => showData ? showData.length : 0)
 let totalPage = $computed(() => Math.ceil(length / 20))
 let pageLength = $computed(() => Math.min(20, length - page * 20 + 20))
 const item = p => showData[p + page * 20 - 21] || {}
+
+let searchQues = $ref()
+let res = $ref(0)
+function count(que, id) {
+  res = 0
+  for (const k in affair.data) {
+    for (const o in affair.data[k].data) {
+      if (o == que && affair.data[k].data[o] == id) {
+        res = res + 1
+      }
+    }
+  }
+  return res
+}
+
 </script>
 
 <template>
@@ -101,6 +116,28 @@ const item = p => showData[p + page * 20 - 21] || {}
         <input class="m-4 rounded-full shadow-md px-4 py-2" placeholder="检索用户" v-model="search">
         <button v-if="affair.data" class="block m-4 py-2 px-4 bg-green-700 text-white shadow rounded-full flex items-center" @click="excel"><download-icon class="w-6" />导出到Excel</button>
       </div>
+      <div class="p-3 md:p-6">
+        查询
+        <select class="border py-1 px-2" v-model="searchQues">
+          <option v-for="o in affair.content" :key="o['#']" :value="o">
+            {{ o[':']['title'] }}
+          </option>
+        </select>
+        <table v-if="searchQues!=null" class="border-2 ml-9 mt-4">
+          <tr >
+            <th v-for="o in searchQues[':']['options']" :key="o['#']" class="border-2">
+              {{ o[':'] }}
+            </th>
+          </tr>
+          <tr >
+            <td v-for="o in searchQues[':']['options']" :key="o['#']" class="border-2">
+              {{ count(searchQues['#'], o['#']) }}
+            </td>
+          </tr>
+
+        </table>
+      </div>
+
     </side-drawer>
     <div class="all-transition p-3 h-screen overflow-y-auto sm:p-6 lg:p-8 overflow-y-auto flex-grow">
       <!-- header -->
