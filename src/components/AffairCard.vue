@@ -23,10 +23,17 @@ function parseDiff (diff) {
   const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0')
   return (days ? `${days}d ` : '') + `${hours}:${minutes}:${seconds}`
 }
+
+function go () {
+  const time = value['_']
+  if (time.nbf && time.nbf > clock.server) return
+  if (time.exp && time.exp < clock.server) return
+  router.push('/@/' + value['#'])
+}
 </script>
 
 <template>
-  <div class="gradient-card py-4 px-6 flex items-center flex-wrap my-3" @click="router.push('/@/' + value['#'])">
+  <div class="gradient-card py-4 px-6 flex items-center flex-wrap my-3" @click="go">
     <div class="all-transition text-xl sm:text-2xl font-bold text-gray-500 mb-1 flex items-center">
       {{ value[':'] }}
     </div>
