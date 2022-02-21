@@ -121,7 +121,7 @@ function count (que, id) {
         </select>
         <table v-if="countQues" class="w-full mt-2">
           <tr v-for="o in countQues[':'].options" :key="o['#']" class="border border-x-0">
-            <td>{{ o[':'] }}</td>
+            <td class="w-2/3">{{ o[':'] }}</td>
             <td>{{ count(countQues['#'], o['#']) }}</td>
           </tr>
         </table>
