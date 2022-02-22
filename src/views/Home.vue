@@ -11,9 +11,9 @@ const user = state.user
 state.loading = false
 
 let affair = $ref([{
-  '#': 'zmFxPmanB3',
-  ':': '高二拓展性课程选课',
-  '_': { nbf: 1645502400000 }
+  '#': 'B6vyVrqrrY',
+  ':': '高一拓展性课程选课',
+  '_': { nbf: 1645588800000 }
 }, {
   '#': '-fVMqh6UIj',
   ':': '校园歌手大赛投票',

@@ -84,7 +84,7 @@ if (route.query.token) aauth(route.query.token)
 
 async function goAauth () {
   if (route.query.c == 'AAUTH' || !user.id) return
-  const res = await Swal.fire('重置账户', '您可以使用预先绑定的第三方账户重置您的密码', 'question')
+  const res = await Swal.fire('重置账户', '您可以使用预先绑定的第三方账户重置您的密码（建议使用电脑完成此操作）', 'question')
   if (!res.isConfirmed) return
   window.onmessage = e => { if (e.origin == 'https://cn.aauth.link') aauth(e.data.token) }
   window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=50')
