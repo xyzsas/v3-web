@@ -1,14 +1,16 @@
 {
   "name": "v3-web",
   "version": "0.0.0",
+  "main": "main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "electron": "electron .",
+    "pack": "electron-packager . XYZSAS --out build --pruning --overwrite --ignore=node_modules --icon=dist/favicon.ico"
   },
   "dependencies": {
     "@heroicons/vue": "^1.0.5",
-    "face-api.js": "^0.22.2",
     "micromark": "^3.0.10",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12",
@@ -17,6 +19,8 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.2",
     "autoprefixer": "^10.4.2",
+    "electron": "^17.0.1",
+    "electron-packager": "^15.4.0",
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.23",
     "vite": "^2.8.4"
