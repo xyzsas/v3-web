@@ -5,12 +5,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview",
-    "electron": "electron .",
-    "pack": "electron-packager . 学生事务系统 --out build --overwrite --icon=dist/favicon.ico --ignore=public --ignore=node_modules --ignore=src --ignore=\\.git.*"
+    "serve": "vite preview"
   },
   "dependencies": {
     "@heroicons/vue": "^1.0.5",
+    "axios": "^0.26.0",
     "micromark": "^3.0.10",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12",
@@ -19,8 +18,6 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.2",
     "autoprefixer": "^10.4.2",
-    "electron": "^17.0.1",
-    "electron-packager": "^15.4.0",
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.23",
     "vite": "^2.8.4"
