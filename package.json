@@ -7,7 +7,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "electron": "electron .",
-    "pack": "electron-packager . XYZSAS --out build --pruning --overwrite --ignore=node_modules --icon=dist/favicon.ico"
+    "pack": "electron-packager . 学生事务系统 --out build --overwrite --icon=dist/favicon.ico --ignore=public --ignore=node_modules --ignore=src --ignore=\\.git.*"
   },
   "dependencies": {
     "@heroicons/vue": "^1.0.5",
