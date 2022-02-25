@@ -1,19 +1,18 @@
 <script setup>
-import { watch } from 'vue'
+import { watch, nextTick } from 'vue'
 import request from '../utils/request.js'
 import { short, sha256 } from '../utils/crypto.js'
-import { CheckIcon, TrashIcon } from '@heroicons/vue/outline'
+import { CheckIcon, TrashIcon, LoginIcon, LogoutIcon } from '@heroicons/vue/outline'
 import OverlayLoading from './OverlayLoading.vue'
 import Wrapper from '../components/Wrapper.vue'
 
 import state from '../state.js'
-const user = state.user
 
 const props = defineProps(['user', 'group'])
 let edit = $ref({}), loading = $ref(false), userid = $ref(props.user)
 let active = $ref(false)
 
-if (userid === 'NEW') edit = { group: props.group || user.group, affair: {}, isAdmin: false, admin: { affair: 0, group: '' } }
+if (userid === 'NEW') edit = { group: props.group || state.user.group, affair: {}, isAdmin: false, admin: { affair: 0, group: '' } }
 else fetch()
 
 let ready = $computed(() => {
@@ -32,10 +31,9 @@ let ready = $computed(() => {
 })
 
 async function fetch () {
-  const res = await request.get('/sas/admin/' + userid, { headers: { token: user.token } })
+  const res = await request.get('/sas/admin/' + userid, { headers: { token: state.user.token } })
   if (res) {
     if (res.password) active = true
-    res.affair = JSON.parse(res.affair || '{}')
     res.isAdmin = Boolean(res.admin)
     res.admin = JSON.parse(res.admin || '{}')
     if (res.admin.group) res.admin.group = res.admin.group.join()
@@ -60,14 +58,13 @@ async function submit () {
     name: edit.name,
     password: edit.password,
     group: edit.group,
-    aauth: edit.aauth,
-    affair: JSON.stringify(edit.affair)
+    aauth: edit.aauth
   }
   if (edit.isAdmin) body.admin = JSON.stringify({
     affair: edit.admin.affair,
     group: edit.admin.group && edit.admin.group.replace(/\s/g, '').split(',').filter(x => x)
   })
-  const res = await request.post('/sas/admin/' + id + '?debug=1', body, { headers: { token: user.token } })
+  const res = await request.post('/sas/admin/' + id + '?debug=1', body, { headers: { token: state.user.token } })
   if (res) {
     Swal.fire('提交成功', '', 'success')
     if (userid === 'NEW' || !body.password) active = false
@@ -91,14 +88,46 @@ async function remove () {
   }).then(r => r.isConfirmed)
   if (!isConfirmed) return
   loading = true
-  const res = await request.delete('/sas/admin/' + userid, { headers: { token: user.token } })
+  const res = await request.delete('/sas/admin/' + userid, { headers: { token: state.user.token } })
   if (res) {
     await Swal.fire('删除成功', '删除用户 ' + edit.name, 'success')
     removeLocal(userid)
     userid = 'NEW'
-    edit = { group: props.group || user.group, affair: {}, isAdmin: false, admin: { affair: 0, group: '' } }
+    edit = { group: props.group || state.user.group, affair: {}, isAdmin: false, admin: { affair: 0, group: '' } }
   }
   loading = false
+}
+
+let ownUser = $ref(''), win = null
+async function puppet () {
+  const body = {
+    id: userid,
+    name: edit.name,
+    group: edit.group,
+    aauth: edit.aauth,
+    token: edit.token
+  } 
+  if (edit.isAdmin) body.admin = {
+    affair: edit.admin.affair,
+    group: !!edit.admin.group
+  }
+  ownUser = JSON.stringify(state.user)
+  state.user = body
+  await nextTick()
+  await nextTick()
+  win = window.open('/', 'puppet', 'width=400,height=800,top=50,left=50')
+  win.onunload = e => {
+    if (e.target.URL === 'about:blank') return
+    win = null
+    back()
+  }
+}
+
+function back () {
+  if (!ownUser) return
+  state.user = JSON.parse(ownUser)
+  ownUser = ''
+  if (win) win.close()
 }
 </script>
 
@@ -122,7 +151,9 @@ async function remove () {
     </wrapper>
     <div class="flex items-center">
       <button @click="submit" class="text-white font-bold w-32 py-2 my-8 mx-4 rounded shadow flex items-center justify-center all-transition hover:shadow-md" :class="ready ? 'bg-blue-400' : 'bg-gray-400'" :disabled="!ready"><check-icon class="w-6 mr-2" />提交<div class="w-4" /></button>
-      <trash-icon v-if="userid !== 'NEW'" class="w-7 cursor-pointer text-red-500" @click="remove" />
+      <trash-icon v-if="userid !== 'NEW'" class="w-7 mr-2 cursor-pointer text-red-500" @click="remove" />
+      <login-icon v-if="userid !== 'NEW' && edit.token && !ownUser" class="w-7 cursor-pointer text-green-500" @click="puppet" />
+      <logout-icon v-if="userid !== 'NEW' && edit.token && ownUser" class="w-7 cursor-pointer text-yellow-500" @click="back" />
     </div>
   </div>  
 </template>

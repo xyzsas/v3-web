@@ -20,6 +20,7 @@ UEC['XYZSAS-0021'] = '事务不存在' // affair not found
 UEC['XYZSAS-0022'] = '拒绝访问' // access denied
 UEC['XYZSAS-0023'] = '表单错误' // general form error (should not occur if use proper FE)
 UEC['XYZSAS-0024'] = '剩余名额不足' // list space is not enough
+UEC['XYZSAS-0025'] = '正在处理您的请求，请稍后再试！' // In Process
 
 // admin errors
 UEC['XYZSAS-0051'] = '用户授权失败：权限不足'

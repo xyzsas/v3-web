@@ -75,7 +75,7 @@ async function goAauth () {
 </script>
 
 <template>
-  <div class="h-screen p-10 flex flex-col">
+  <div class="h-screen p-4 sm:p-10 flex flex-col">
     <back-header @back="router.push('/')">安全中心</back-header>
     <p v-if="user.group" class="ml-4 mb-2 text-gray-400"><strong class="mr-3">{{ user.name }}</strong> 用户组: <code class="font-mono">{{ user.group }}</code></p>
     <div class="flex flex-grow flex-wrap justify-around items-center">
@@ -92,7 +92,7 @@ async function goAauth () {
       <wrapper v-if="user.token" :show="showAauth" class="mt-2 flex flex-col items-center"><!-- Aauth -->
         <h1 class="text-2xl font-semibold">第三方账号设置</h1>
         <p v-if="!user.aauth" class="m-5">您还未绑定第三方账号</p>
-        <div v-else class="my-5 w-80 flex flex-wrap justify-center">
+        <div v-else class="my-5 w-72 flex flex-wrap justify-center">
           <span class="tag m-3">{{ user.aauth.substr(10) }}</span>
         </div>
         <button class="all-transition flex items-center rounded py-2 px-4 shadow bg-white hover:shadow-md font-bold" @click="goAauth">

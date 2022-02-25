@@ -21,6 +21,8 @@ let ready = $computed(() => {
   return true
 })
 
+let refresh = $ref(0)
+
 async function fetch () {
   state.loading = true
   affair.title = ''
@@ -39,6 +41,7 @@ async function fetch () {
   for (const k in res) {
     if (k[0] === '$') affair.variable[k] = res[k]
   }
+  refresh++
   state.loading = false
 }
 fetch()
@@ -48,12 +51,13 @@ async function submit () {
   state.loading = true
   const res = await request.post(url, affair.data, opt)
   if (res) await Swal.fire('提交成功', '', 'success')
+  else if (window.lastUEC === 'XYZSAS-0024') await fetch()
   state.loading = false
 }
 </script>
 
 <template>
-  <div class="min-h-screen p-4 lg:px-20 lg:py-8 all-transition">
+  <div class="min-h-screen p-4 lg:px-20 lg:py-8 all-transition" :key="refresh">
     <h1 class="text-2xl m-2">{{ affair.title }}</h1>
     <p class="ml-2 mb-6 text-gray-400">用户：{{ user.token ? user.name : '未登录' }}</p>
     <div v-for="(b, i) in affair.content" :key="b['#']" class="m-1 sm:m-2 all-transition">
