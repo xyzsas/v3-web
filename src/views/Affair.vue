@@ -44,7 +44,7 @@ async function fetch () {
 fetch()
 
 async function submit () {
-  if (!ready) return
+  if (!ready || state.loading) return
   state.loading = true
   const res = await request.post(url, affair.data, opt)
   if (res) await Swal.fire('提交成功', '', 'success')

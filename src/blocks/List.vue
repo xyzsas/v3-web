@@ -9,7 +9,11 @@ const value = affair.content[i][':']
 let selected = $ref({})
 if (typeof affair.data[key] === 'string') affair.data[key] = affair.data[key].split(',')
 else affair.data[key] = []
-for (const d of affair.data[key]) selected[d] = 1
+
+for (const o of value.options) {
+  if (affair.data[key].includes(o['#'])) selected[o['#']] = 1
+}
+affair.data[key] = Object.keys(selected)
 
 function check () { // check ok
   const len = affair.data[key].length
