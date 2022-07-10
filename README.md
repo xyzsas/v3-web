@@ -1,11 +1,7 @@
 # xyzsas/v3-web
 
-Please see document <https://github.com/xyzsas/doc>
+Please see document <https://github.com/xyzsas/v3-doc>
 
-## Electron
+## CDN Dependency
 
-```
-npm run build
-npm run electron
-npm run pack
-```
+CDN dependencies are loaded through [aauth-web](https://github.com/yzITI/aauth-web)
