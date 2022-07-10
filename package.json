@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@heroicons/vue": "^1.0.6",
+    "face-api.js": "^0.22.2",
     "micromark": "^3.0.10",
     "vue": "^3.2.37",
     "vue-router": "^4.1.1"
