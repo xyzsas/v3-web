@@ -1,7 +1,6 @@
 <script setup>
 import { greet } from '../utils/greet.js'
 import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon } from '@heroicons/vue/outline'
-import AffairCard from '../components/AffairCard.vue'
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -36,7 +35,6 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       <button class="card" @click="router.push('/admin/sas')" v-if="user.admin?.group"><user-group-icon class="w-6 text-orange-500 mr-2"/>用户管理</button>
     </div>
     <div class="mt-10 md:m-10 relative all-transition" style="min-height: 50vh;">
-      <affair-card v-for="a in affair" :value="a" :key="a['#']"></affair-card>
     </div>
   </div>
 </template>
