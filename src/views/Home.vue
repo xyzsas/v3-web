@@ -1,21 +1,35 @@
 <script setup>
 import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon, FolderOpenIcon } from '@heroicons/vue/outline'
+import { useRouter } from 'vue-router'
 import MsgCard from '../components/MsgCard.vue'
 import state from '../state.js'
 import { greet } from '../utils/greet.js'
-import { useRouter } from 'vue-router'
+import srpc from '../utils/srpc-fc.js'
+
 const router = useRouter()
 const user = state.user
 
+async function get() {
+  state.msgs = await srpc.X.get(state.user.token)
+}
+get()
 state.loading = false
 
 let msgs = $computed(() => {
-  const ids = Object.keys(state.msgs)
-  return ids.sort((a, b) => state.msgs[b].time - state.msgs[a].time)
+  let ids = Object.keys(state.msgs)
+  ids = ids.sort((a, b) => state.msgs[b].time - state.msgs[a].time)
+  return ids.sort((a, b) => !state.msgs[a].read ? -1 : 0)
 })
 
-if (!user.token) router.push('/login')
-
+// if (!user.token) window.open('https://cn.aauth.link/#/launch/xyzsas', 'aauth', 'width=400,height=800,top=50,left=50')
+// window.onmessage = e => {
+//   if (e.origin !== 'https://cn.aauth.link') return
+//   if (!e.data.token) return
+//   state.user.token = e.data.token
+//   state.user.name = e.data.name
+//   console.log(e.data.token)
+//   router.push('/')
+// }
 let trans = $ref('opacity-0')
 setTimeout(() => { trans = 'opacity-100' }, 1000)
 </script>
@@ -31,7 +45,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       <button class="card" @click="router.push('/grade')"><folder-open-icon class="w-6 text-blue-500 mr-2"/>档案管理</button>
       <button class="card" @click="router.push('/admin/xyz')" v-if="user.admin?.affair"><pencil-alt-icon class="w-6 text-purple-500 mr-2"/>事务管理</button>
     </div>
-    <div class="mt-10 md:m-10 relative all-transition" style="min-height: 50vh;">
+    <div class="mt-10 md:m-10 relative all-transition ease-in-out duration-500" style="min-height: 50vh;">
       <msg-card v-for="id in msgs" :_id="id" :key="id"></msg-card>
     </div>
   </div>
