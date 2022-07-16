@@ -1,27 +1,43 @@
 <script setup>
 import { BrowserMultiFormatReader, BarcodeFormat } from '@zxing/library'
+const emits = defineEmits(['result', 'error'])
 const reader = new BrowserMultiFormatReader()
-let device = null, video = $ref()
+let device = $ref(null), video = $ref()
 
 async function init () {
   device = null
-  const devices = await reader.listVideoInputDevices()
-  Swal.fire('Devices', JSON.stringify(devices))
-  if (!devices?.length) return
-  for (const d of devices) {
-    if (d.label.match(/back/i) || d.label.match(/rear/i)) {
-      device = d
-      break
+  try {
+    const devices = await reader.listVideoInputDevices()
+    console.log(devices)
+    if (!devices?.length) return emits('error', '没有摄像头')
+    for (const d of devices) {
+      if (d.label.match(/back/i) || d.label.match(/rear/i)) {
+        device = d
+        break
+      }
     }
-  }
-  if (!device) device = devices[0]
-  const { text } = await reader.decodeFromInputVideoDevice(device.deviceId, video)
-  Swal.fire('Result', text, 'success')
+    if (!device) device = devices[0]
+  } catch {}
+  if (!device) emits('error', '没有摄像头')
 }
-init()
+
+async function decode () {
+  if (!device) return
+  try {
+    const { text } = await reader.decodeFromInputVideoDevice(device.deviceId, video)
+    emits('result', text)
+  } catch {
+    emits('error', '扫码失败')
+  }
+  setTimeout(decode, 1000)
+}
+
+init().then(decode)
 </script>
 
 <template>
-  <h1>This is scanner</h1>
-  <video ref="video"></video>
+  <div>
+    <video ref="video"></video>
+    <p class="text-center" v-if="!device">没有摄像头</p>
+  </div>
 </template>
