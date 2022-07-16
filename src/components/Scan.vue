@@ -16,7 +16,7 @@ async function init () {
         break
       }
     }
-    if (!device) device = devices[0]
+    if (!device) device = devices[devices.length - 1]
   } catch {}
   if (!device) emits('error', '没有摄像头')
 }

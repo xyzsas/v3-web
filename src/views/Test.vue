@@ -1,6 +1,6 @@
 <script setup>
 import ScanInput from '../components/ScanInput.vue'
-let text = $ref('dd')
+let text = $ref('')
 </script>
 
 <template>
