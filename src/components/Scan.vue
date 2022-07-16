@@ -6,6 +6,7 @@ let device = null, video = $ref()
 async function init () {
   device = null
   const devices = await reader.listVideoInputDevices()
+  Swal.fire('Devices', JSON.stringify(devices))
   if (!devices?.length) return
   for (const d of devices) {
     if (d.label.match(/back/i) || d.label.match(/rear/i)) {
