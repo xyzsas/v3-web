@@ -4,6 +4,7 @@ import router from './router.js'
 import './index.css'
 
 createApp(App).use(router).mount('#app')
+moment.locale('zh-cn')
 
 console.clear()
 const logoName = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'logo_white' : 'logo'
