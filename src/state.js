@@ -1,11 +1,10 @@
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
+
+export const SS = window.sessionStorage
 
 export const state = reactive({
   loading: false,
-  user: {
-    token: '',
-    name: 'test'
-  },
+  user: SS.user ? JSON.parse(SS.user) : null,
   msgs: {}
 })
 
