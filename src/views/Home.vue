@@ -8,9 +8,13 @@ import srpc from '../utils/srpc-fc.js'
 
 const router = useRouter()
 const user = state.user
+let loading = $ref(true)
 
 async function get() {
+  NProgress.start()
   state.msgs = await srpc.X.get(state.user.token)
+  NProgress.done()
+  loading = false
 }
 if (user?.token) get()
 else window.location.href = 'https://cn.aauth.link/#/launch/xyzsas'
@@ -37,6 +41,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       <button class="card" @click="router.push('/admin/xyz')" v-if="false"><pencil-alt-icon class="w-6 text-purple-500 mr-2"/>事务管理</button>
     </div>
     <div class="mt-10 md:m-10 relative all-transition ease-in-out duration-500" style="min-height: 50vh;">
+      <p v-if="loading">正在载入消息列表...</p>
       <msg-card v-for="id in msgs" :_id="id" :key="id"></msg-card>
     </div>
   </div>
