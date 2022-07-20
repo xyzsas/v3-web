@@ -4,9 +4,10 @@ const index = {
   '/': () => import('./views/Home.vue'),
   '/about': () => import('./views/About.vue'),
   '/login': () => import('./views/Login.vue'),
-  '/mcreate': () => import('./views/MsgCreation.vue'),
   '/test': () => import('./views/Test.vue'),
   // Y
+  '/y/send': () => import('./views/YSend.vue'),
+  // App
   '/app/photo': () => import('./views/AppPhoto.vue'),
   '/app/scan/:id': () => import('./views/AppScan.vue'),
 }
