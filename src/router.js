@@ -4,6 +4,7 @@ const index = {
   '/': () => import('./views/Home.vue'),
   '/about': () => import('./views/About.vue'),
   '/login': () => import('./views/Login.vue'),
+  '/mcreate': () => import('./views/MsgCreation.vue'),
   '/test': () => import('./views/Test.vue'),
   // Y
   '/Y/photo': () => import('./views/YPhoto.vue'),

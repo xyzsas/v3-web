@@ -1,5 +1,5 @@
 <script setup>
-import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon, FolderOpenIcon } from '@heroicons/vue/outline'
+import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon, FolderOpenIcon, ChatAlt2Icon } from '@heroicons/vue/outline'
 import { useRouter } from 'vue-router'
 import MsgCard from '../components/MsgCard.vue'
 import state from '../state.js'
@@ -38,6 +38,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
     <div class="flex flex-wrap"><!-- function buttons -->
       <button class="card" @click="router.push('/grade')"><trending-up-icon class="w-6 text-blue-500 mr-2"/>成绩查询</button>
       <button class="card" @click="router.push('/grade')"><folder-open-icon class="w-6 text-blue-500 mr-2"/>档案管理</button>
+      <button class="card" @click="router.push('/mcreate')"><chat-alt2-icon class="w-6 text-blue-500 mr-2"/>消息发送</button>
       <button class="card" @click="router.push('/admin/xyz')" v-if="false"><pencil-alt-icon class="w-6 text-purple-500 mr-2"/>事务管理</button>
     </div>
     <div class="mt-10 md:m-10 relative all-transition ease-in-out duration-500" style="min-height: 50vh;">
