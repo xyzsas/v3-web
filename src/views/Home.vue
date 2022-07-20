@@ -10,7 +10,7 @@ const router = useRouter()
 const user = state.user
 
 async function get() {
-  state.msgs = await srpc.X.get(state.user.token)
+  state.msgs = await srpc.Y.get(state.user.token)
 }
 if (user?.token) get()
 else window.location.href = 'https://cn.aauth.link/#/launch/xyzsas'

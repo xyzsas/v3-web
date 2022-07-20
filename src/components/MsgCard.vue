@@ -8,7 +8,7 @@ const short = (s, l = 32) => s.length > l ? (s.substring(0, l - 2) + '...') : s
 const content = JSON.parse(msg.content)
 
 async function read () {
-  if (await srpc.X.set(state.user.token, msg.time, '已读')) state.msgs[_id].status = '已读'
+  if (await srpc.Y.set(state.user.token, msg.time, '已读')) state.msgs[_id].status = '已读'
 }
 </script>
 
