@@ -30,12 +30,12 @@ async function scanError () { // start QR
   showQR = true
   await nextTick()
   const id = random() + random()
-  bwipjs.toCanvas(canvas, { bcid: 'qrcode', text: 'https://sas.yzzx.org/#/y/scan/' + id })
+  bwipjs.toCanvas(canvas, { bcid: 'qrcode', text: 'https://sas.yzzx.org/#/app/scan/' + id })
   await new Promise(r => setTimeout(r, 5000))
   while (1) {
     if (!showQR) return
     await new Promise(r => setTimeout(r, 1000))
-    const res = await srpc.X.sub(id)
+    const res = await srpc.Y.sub(id)
     if (res) {
       input = res.result
       showQR = false

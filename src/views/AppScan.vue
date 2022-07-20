@@ -9,7 +9,7 @@ let got = $ref(''), ready = $ref(false)
 
 async function result (text) {
   got = text
-  ready = await srpc.X.pub(id, { result: text }) // submit data
+  ready = await srpc.Y.pub(id, { result: text }) // submit data
 }
 
 function error (msg) {

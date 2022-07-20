@@ -7,8 +7,8 @@ const index = {
   '/mcreate': () => import('./views/MsgCreation.vue'),
   '/test': () => import('./views/Test.vue'),
   // Y
-  '/Y/photo': () => import('./views/YPhoto.vue'),
-  '/Y/scan/:id': () => import('./views/YScan.vue'),
+  '/app/photo': () => import('./views/AppPhoto.vue'),
+  '/app/scan/:id': () => import('./views/AppScan.vue'),
 }
 
 const routes = []
