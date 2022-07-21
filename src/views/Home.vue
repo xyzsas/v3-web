@@ -8,20 +8,21 @@ import srpc from '../utils/srpc-fc.js'
 
 const router = useRouter()
 const user = state.user
-let loading = $ref(true)
+let msgs = $ref([]), loading = $ref(true)
 
 async function get() {
-  state.msgs = await srpc.Y.get(state.user.token)
+  msgs = await srpc.Y.get(state.user.token)
   loading = false
 }
+
+let msgIds = $computed(() => {
+  let ids = Object.keys(msgs)
+  return ids.sort((a, b) => msgs[b].time - msgs[a].time)
+})
+
 if (user?.token) get()
 else window.location.href = 'https://cn.aauth.link/#/launch/xyzsas'
 state.loading = false
-
-let msgs = $computed(() => {
-  let ids = Object.keys(state.msgs)
-  return ids.sort((a, b) => state.msgs[b].time - state.msgs[a].time)
-})
 
 let trans = $ref('opacity-0')
 setTimeout(() => { trans = 'opacity-100' }, 1000)
@@ -43,7 +44,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       <p v-if="loading" class="flex items-center">
         <img src="logo.svg">正在载入...
       </p>
-      <msg-card v-for="id in msgs" :_id="id" :key="id"></msg-card>
+      <msg-card v-for="id in msgIds" :key="id" :msg="msgs[id]" />
     </div>
   </div>
 </template>
