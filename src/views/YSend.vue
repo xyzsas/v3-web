@@ -9,14 +9,14 @@ const router = useRouter()
 let data = $ref({
   uid: ['用户ID', 'id1, id2, id3', ''],
   title: ['标题', '标题', ''],
-  linkO: ['外链', '系统外部链接', ''],
-  linkI: ['内链', '系统内部链接', '']
+  link: ['外链', '系统外部链接', ''],
+  router: ['内链', '系统内部链接', '']
 })
 let msg = $ref({})
 const user = state.user
 
 async function sendMsg() {
-  if (!data.uid[2]?.length || !data.title[2]?.length || (!data.linkO[2]?.length && !data.linkI[2]?.length)) {
+  if (!data.uid[2]?.length || !data.title[2]?.length || (!data.link[2]?.length && !data.router[2]?.length)) {
     Swal.fire('请填写消息信息', '', 'error')
     return
   }
