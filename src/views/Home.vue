@@ -42,7 +42,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
     </div>
     <div class="mt-10 md:m-10 relative all-transition ease-in-out duration-500" style="min-height: 50vh;">
       <p v-if="loading" class="flex items-center">
-        <img src="logo.svg">正在载入...
+        <img src="/logo.svg">正在载入...
       </p>
       <msg-card v-for="id in msgIds" :key="id" :msg="msgs[id]" />
     </div>
