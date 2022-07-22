@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@heroicons/vue": "^1.0.6",
+    "@vladmandic/face-api": "^1.6.10",
     "@zxing/library": "^0.19.1",
     "bwip-js": "^3.1.0",
-    "face-api.js": "^0.22.2",
     "vue": "^3.2.37",
     "vue-router": "^4.1.2"
   },

@@ -1,10 +1,10 @@
 <script setup>
-import * as faceapi from 'face-api.js'
+import * as faceapi from '@vladmandic/face-api'
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
-const modelURL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights/'
+const modelURL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.6.10/model/'
 const STD = 173.3 // pixel length of face area
 
 let msg = $ref('正在载入人脸检测模块...')
@@ -25,12 +25,11 @@ function select () {
   src = ''
   ok = false
   selector.click()
-  setTimeout(() => { if (msg == '正在载入图片...') msg = '' }, 10000)
 }
 
 async function uploadImage () {
   const imgFile = selector.files[0]
-  if (!imgFile) return
+  if (!imgFile) return msg = ''
   msg = '正在分析人脸与图片尺寸...'
   ok = false
   const img = await faceapi.bufferToImage(imgFile)
@@ -86,9 +85,11 @@ async function submit () {
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen">
     <h1 class="text-3xl mb-5">上传照片</h1>
-    <img v-show="!ok && src" @error="src = ''" style="max-width: 295px;" :src="src">
-    <canvas v-show="ok" ref="canvas" height="413" width="295"></canvas>
-    <div v-if="msg" class="w-96 m-3 text-center">{{ msg }}</div>
+    <p v-if="msg" class="m-3 text-center">{{ msg }}</p>
+    <div class="flex flex-col items-center justify-center" style="min-height: 295px;">
+      <img v-show="!ok && src" @error="src = ''" style="max-width: 295px;" :src="src">
+      <canvas v-show="ok" ref="canvas" height="413" width="295" />
+    </div>
     <input ref="selector" type="file" @change="uploadImage" accept=".jpg, .jpeg, .png" hidden>
     <div class="m-3 flex items-center justify-center">
       <button class="rounded shadow-md bg-blue-500 text-white px-5 py-2" v-if="!msg" @click="select">选择图片</button>
