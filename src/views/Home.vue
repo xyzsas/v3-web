@@ -1,5 +1,5 @@
 <script setup>
-import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon, FolderOpenIcon } from '@heroicons/vue/outline'
+import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon, FolderOpenIcon, ChatAlt2Icon } from '@heroicons/vue/outline'
 import { useRouter } from 'vue-router'
 import MsgCard from '../components/MsgCard.vue'
 import state from '../state.js'
@@ -8,18 +8,21 @@ import srpc from '../utils/srpc-fc.js'
 
 const router = useRouter()
 const user = state.user
+let msgs = $ref([]), loading = $ref(true)
 
 async function get() {
-  state.msgs = await srpc.Y.get(state.user.token)
+  msgs = await srpc.Y.get(state.user.token)
+  loading = false
 }
+
+let msgIds = $computed(() => {
+  let ids = Object.keys(msgs)
+  return ids.sort((a, b) => msgs[b].time - msgs[a].time)
+})
+
 if (user?.token) get()
 else window.location.href = 'https://cn.aauth.link/#/launch/xyzsas'
 state.loading = false
-
-let msgs = $computed(() => {
-  let ids = Object.keys(state.msgs)
-  return ids.sort((a, b) => state.msgs[b].time - state.msgs[a].time)
-})
 
 let trans = $ref('opacity-0')
 setTimeout(() => { trans = 'opacity-100' }, 1000)
@@ -34,10 +37,14 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
     <div class="flex flex-wrap"><!-- function buttons -->
       <button class="card" @click="router.push('/grade')"><trending-up-icon class="w-6 text-blue-500 mr-2"/>成绩查询</button>
       <button class="card" @click="router.push('/grade')"><folder-open-icon class="w-6 text-blue-500 mr-2"/>档案管理</button>
+      <button class="card" @click="router.push('/y/send')"><chat-alt2-icon class="w-6 text-blue-500 mr-2"/>消息发送</button>
       <button class="card" @click="router.push('/admin/xyz')" v-if="false"><pencil-alt-icon class="w-6 text-purple-500 mr-2"/>事务管理</button>
     </div>
     <div class="mt-10 md:m-10 relative all-transition ease-in-out duration-500" style="min-height: 50vh;">
-      <msg-card v-for="id in msgs" :_id="id" :key="id"></msg-card>
+      <p v-if="loading" class="flex items-center">
+        <img src="/logo.svg">正在载入...
+      </p>
+      <msg-card v-for="id in msgIds" :key="id" :msg="msgs[id]" />
     </div>
   </div>
 </template>
