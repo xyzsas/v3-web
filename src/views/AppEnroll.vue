@@ -1,6 +1,7 @@
 <script setup>
 import state from '../state.js'
 import srpc from '../utils/srpc-fc.js'
+import BackHeader from '../components/BackHeader.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
@@ -26,7 +27,8 @@ async function init () {
     data = JSON.parse(res.data[state.user.id] || '[]')
     res.info.options = JSON.parse(res.info.options)
     info = res.info
-    console.log(info)
+    info.min = info.min || 0
+    info.max = info.max || 9e9
     return
   }
   if (res.time) {
@@ -37,6 +39,43 @@ async function init () {
   router.push('/')
 }
 init()
+
+const short = (s, l = 18) => s.length > l ? (s.substring(0, l - 2) + '...') : s
+
+function select (j) {
+  if (data.includes(j)) {
+    for (const d of data) {
+      if (d === j) info['$' + j]++
+    }
+    return data = data.filter(x => x !== j)
+  }
+  if (!info['$' + j]) return
+  data.push(j)
+  info['$' + j]--
+}
+
+function optionClass (j) {
+  if (data.includes(j)) return 'bg-blue-500 text-white cursor-pointer hover:shadow-md'
+  if (!info['$' + j]) return 'bg-white opacity-60'
+  return 'bg-white cursor-pointer hover:shadow-md'
+}
+
+let ready = $computed(() => data.length >= info.min && data.length <= info.max)
+
+async function submit () {
+  if (!ready) return
+  if (state.loading) return
+  state.loading = true
+  const res = await srpc.app.enroll.put(state.user.token, data)
+  state.loading = false
+  if (res.ok) {
+    await Swal.fire('提交成功', '即将返回主页', 'success')
+    if (state.msg?.time) srpc.Y.set(state.user.token, state.msg.time, '已完成')
+    return router.push('/')
+  }
+  await Swal.fire('错误', res.err, 'error')
+  init()
+}
 </script>
 
 <template>
@@ -45,7 +84,20 @@ init()
     <div class="my-4 px-4 font-bold font-mono bg-white" style="font-size: 3.5rem;">{{ displayTime }}</div>
     <p class="text-gray-700 text-xs">倒计时结束页面会自动刷新，手动刷新会变慢噢！</p>
   </div>
-  <div v-if="info" class="w-screen h-screen flex flex-col items-center">
-    Here is info
+  <div v-if="info" class="w-screen h-screen flex flex-col p-2 sm:p-6">
+    <back-header>{{ info.title }}</back-header>
+    <p v-if="info.description" class="mx-6 text-sm text-gray-700">{{ info.description }}</p>
+    <div class="flex flex-wrap items-center p-4">
+      <div v-for="(o, i) in info.options" class="all-transition flex items-center justify-between rounded shadow px-4 py-2 m-2 w-full sm:w-96" :class="optionClass(i + 1)" @click="select(i + 1)">
+        <div class="font-bold">{{ i + 1 }}. {{ short(o) }}</div>
+        <div>({{ info['$' + (i + 1)] }})</div>
+      </div>
+    </div>
+    <p class="text-sm mx-6" :class="ready ? 'text-gray-500' : 'text-red-500'">
+      <span v-if="info.min === info.max">请选择{{ info.min }}项，</span>
+      <span v-else>最少选择{{ info.min }}项，最多选择{{ info.max }}项，</span>
+      您已选择{{ data.length }}项
+    </p>
+    <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md mx-6 my-2 px-4 py-2 w-32" :class="ready ? 'bg-blue-500' : 'bg-gray-500'" @click="submit">确认提交</button>
   </div>
 </template>
