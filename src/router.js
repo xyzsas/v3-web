@@ -10,6 +10,7 @@ const index = {
   // App
   '/app/photo': () => import('./views/AppPhoto.vue'),
   '/app/scan/:id': () => import('./views/AppScan.vue'),
+  '/app/enroll': () => import('./views/AppEnroll.vue')
 }
 
 const routes = []
