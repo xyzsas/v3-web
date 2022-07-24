@@ -1,6 +1,9 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import state from '../state.js'
 import srpc from '../utils/srpc-fc.js'
+
+const router = useRouter()
 const { msg } = defineProps(['msg'])
 const parseDate = t => moment(t).fromNow()
 const short = (s, l = 32) => s.length > l ? (s.substring(0, l - 2) + '...') : s
@@ -12,10 +15,15 @@ let statusColor = $computed(() => {
 })
 
 async function click () {
-  srpc.Y.set(state.user.token, msg.time, '') // non-blocking
-  msg.status = ''
-  state.msg = msg
-  // go to target
+  if (typeof msg.status === 'undefined') {
+    srpc.Y.set(state.user.token, msg.time, '') // non-blocking
+    msg.status = ''
+  }
+  if (content.router) {
+    state.msg = msg
+    return router.push(content.router)
+  }
+  if (content.link) return window.open(content.link)
 }
 </script>
 
