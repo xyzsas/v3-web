@@ -9,6 +9,7 @@ import srpc from '../utils/srpc-fc.js'
 const router = useRouter()
 const user = state.user
 let msgs = $ref([]), loading = $ref(true)
+state.msg = {}
 
 async function get() {
   msgs = await srpc.Y.get(state.user.token)

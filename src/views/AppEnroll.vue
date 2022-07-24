@@ -20,6 +20,7 @@ async function countDown (ms) {
 }
 
 async function init () {
+  if (!state.user?.token) return router.push('/')
   state.loading = true
   const res = await srpc.app.enroll.get(state.user.token)
   state.loading = false
