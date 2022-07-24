@@ -14,8 +14,11 @@ let statusColor = $computed(() => {
 async function click () {
   srpc.Y.set(state.user.token, msg.time, '') // non-blocking
   msg.status = ''
-  state.msg = msg
-  // go to target
+  if (msg.router) {
+    state.msg = msg
+    return router.push(msg.router)
+  }
+  if (msg.link) return window.open(msg.link)
 }
 </script>
 
