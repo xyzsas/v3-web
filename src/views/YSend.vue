@@ -25,8 +25,8 @@ async function sendMsg() {
   const vals = Object.values(data).filter(d => d[0] !== '用户ID').map(d => d[2])
   const content = {}
   for (const d of keys) content[d] = vals.shift()
-  if (await srpc.Y.send(user.token, [data.userId[2]], JSON.stringify(content), Date.now())) Swal('消息发送成功', '', 'success')
-  else Swal('消息发送失败', '', 'error')
+  if (await srpc.Y.send(user.token, [data.uid[2]], JSON.stringify(content), Date.now())) Swal.fire('消息发送成功', '', 'success')
+  else Swal.fire('消息发送失败', '', 'error')
 }
 </script>
 
@@ -40,7 +40,7 @@ async function sendMsg() {
           v-model="d[2]">
       </label>
     </div>
-    <div class="border border-solid mt-10">
+    <div class="px-2 py-1 border border-solid mt-10">
       choose user
     </div>
     <div class="flex flex-wrap ml-16 mt-4">
