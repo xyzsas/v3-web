@@ -36,16 +36,16 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       <p :class="trans" class="mt-1 text-1xl font-serif text-gray-500" style="transition: all 2s ease;">{{ greet.s }}</p>
     </div>
     <div class="flex flex-wrap"><!-- function buttons -->
-      <button class="card" @click="router.push('/grade')"><trending-up-icon class="w-6 text-blue-500 mr-2"/>成绩查询</button>
-      <button class="card" @click="router.push('/grade')"><folder-open-icon class="w-6 text-blue-500 mr-2"/>档案管理</button>
-      <button class="card" @click="router.push('/y/send')"><chat-alt2-icon class="w-6 text-blue-500 mr-2"/>消息发送</button>
-      <button class="card" @click="router.push('/admin/xyz')" v-if="false"><pencil-alt-icon class="w-6 text-purple-500 mr-2"/>事务管理</button>
+      <button class="card" @click="router.push('/grade')"><TrendingUpIcon class="w-6 text-blue-500 mr-2"/>成绩查询</button>
+      <button class="card" @click="router.push('/grade')"><FolderOpenIcon class="w-6 text-blue-500 mr-2"/>档案管理</button>
+      <button class="card" @click="router.push('/y/send')"><ChatAlt2Icon class="w-6 text-blue-500 mr-2"/>消息发送</button>
+      <button class="card" @click="router.push('/admin/xyz')" v-if="false"><PencilAltIcon class="w-6 text-purple-500 mr-2"/>事务管理</button>
     </div>
     <div class="mt-10 md:m-10 relative all-transition ease-in-out duration-500" style="min-height: 50vh;">
       <p v-if="loading" class="flex items-center">
         <img src="/logo.svg">正在载入...
       </p>
-      <msg-card v-for="id in msgIds" :key="id" :msg="msgs[id]" />
+      <MsgCard v-for="id in msgIds" :key="id" :msg="msgs[id]" />
     </div>
   </div>
 </template>

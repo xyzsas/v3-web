@@ -1,5 +1,4 @@
 <script setup>
-import { CheckIcon } from '@heroicons/vue/outline'
 import srpc from '../utils/srpc-fc.js'
 import state from '../state.js'
 import BackHeader from '../components/BackHeader.vue'
@@ -34,7 +33,7 @@ async function sendMsg() {
 
 <template>
   <div class="relative flex flex-col">
-    <back-header @back="router.push('/')">消息发送</back-header>
+    <BackHeader @back="router.push('/')">消息发送</BackHeader>
     <div>
       <div class="my-2 mx-4">
         <label class="block">

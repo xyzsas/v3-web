@@ -58,7 +58,7 @@ function toggle () {
   <div class="relative">
     <div class="flex items-center">
       <input class="w-full bg-transparent" v-model="input" @input="showScan = showQR = false">
-      <camera-icon class="w-6 cursor-pointer text-gray-500 ml-1" @click="toggle" />
+      <CameraIcon class="w-6 cursor-pointer text-gray-500 ml-1" @click="toggle" />
     </div>
     <scan v-if="showScan" @result="scanResult" @error="scanError" class="absolute top-0 right-0 w-4/5" />
     <div v-if="showQR" class="absolute top-0 right-0 flex flex-col items-end bg-white">

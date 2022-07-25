@@ -20,7 +20,7 @@ function error (msg) {
 <template>
   <div class="w-full h-screen flex flex-col items-center justify-center text-white bg-gray-900">
     <h1 class="text-3xl font-bold mb-10">扫描二维码</h1>
-    <scan v-if="!got" @result="result" @error="error" />
+    <Scan v-if="!got" @result="result" @error="error" />
     <p class="my-2" v-else>扫描结果：{{ got }}</p>
     <p class="my-2" v-if="got && !ready">正在提交数据...</p>
     <p class="my-2" v-if="ready">请在原页面继续操作！</p>

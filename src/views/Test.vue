@@ -6,9 +6,9 @@ import spinner from '../assets/spinner.svg'
 </script>
 
 <template>
-  <scan-input v-model="text" class="w-64 px-2 py-1 m-4 bg-white" />
+  <ScanInput v-model="text" class="w-64 px-2 py-1 m-4 bg-white" />
   <img :src="spinner" class="w-6">
   <hr class="my-4">
   <p>{{ region }}</p>
-  <region-selector class="m-4" v-model="region" />
+  <RegionSelector class="m-4" v-model="region" />
 </template>
