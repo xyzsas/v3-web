@@ -4,6 +4,6 @@ import state from './state.js'
 </script>
 
 <template>
-  <router-view></router-view>
-  <overlay-loading :show="state.loading" />
+  <RouterView></RouterView>
+  <OverlayLoading :show="state.loading" />
 </template>
