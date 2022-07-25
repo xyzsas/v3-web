@@ -57,14 +57,13 @@ function toggle () {
 <template>
   <div class="relative">
     <div class="flex items-center">
-      <input class="w-full bg-transparent" v-model="input">
-      <camera-icon class="w-6 cursor-pointer text-gray-500 absolute right-2" @click="toggle" />
+      <input class="w-full bg-transparent" v-model="input" @input="showScan = showQR = false">
+      <camera-icon class="w-6 cursor-pointer text-gray-500 ml-1" @click="toggle" />
     </div>
-    <scan v-if="showScan" @result="scanResult" @error="scanError" class="absolute top-8 right-0 w-11/12" />
-    <div v-if="showQR" class="absolute top-8 right-0 w-40 flex flex-col items-end">
+    <scan v-if="showScan" @result="scanResult" @error="scanError" class="absolute top-0 right-0 w-4/5" />
+    <div v-if="showQR" class="absolute top-0 right-0 flex flex-col items-end bg-white">
       <p class="text-xs text-gray-500">请使用手机扫码完成操作</p>
       <canvas ref="canvas" />
     </div>
-    
   </div>
 </template>

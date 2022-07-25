@@ -2,13 +2,12 @@
 import { BrowserMultiFormatReader, BarcodeFormat } from '@zxing/library'
 const emits = defineEmits(['result', 'error'])
 const reader = new BrowserMultiFormatReader()
-let device = $ref(null), video = $ref()
+let device = $ref(true), video = $ref()
 
 async function init () {
-  device = null
   try {
     const devices = await reader.listVideoInputDevices()
-    console.log(devices)
+    device = null
     if (!devices?.length) return emits('error', '没有摄像头')
     for (const d of devices) {
       if (d.label.match(/back/i) || d.label.match(/rear/i)) {
@@ -17,7 +16,7 @@ async function init () {
       }
     }
     if (!device) device = devices[devices.length - 1]
-  } catch {}
+  } catch { device = null }
   if (!device) emits('error', '没有摄像头')
 }
 
@@ -28,6 +27,7 @@ async function decode () {
     emits('result', text)
   } catch {
     emits('error', '扫码失败')
+    return
   }
   setTimeout(decode, 1000)
 }
