@@ -46,7 +46,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       <button class="card" @click="router.push('/y/send')"><ChatAlt2Icon class="w-6 text-blue-500 mr-2"/>消息发送</button>
       <button class="card" @click="router.push('/admin/xyz')" v-if="false"><PencilAltIcon class="w-6 text-purple-500 mr-2"/>事务管理</button>
     </div>
-    <div class="mt-10 md:m-10 relative all-transition ease-in-out duration-500" style="min-height: 50vh;">
+    <div class="mt-10 md:m-10 relative all-transition ease-in-out duration-500 flex flex-col" style="min-height: 50vh;">
       <p v-if="loading" class="flex items-center">
         <img src="/logo.svg">正在载入...
       </p>
