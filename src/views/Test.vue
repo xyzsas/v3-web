@@ -3,6 +3,8 @@ import ScanInput from '../components/ScanInput.vue'
 let text = $ref(''), region = $ref('江苏省扬州市广陵区')
 import RegionSelector from '../components/RegionSelector.vue'
 import spinner from '../assets/spinner.svg'
+import Toggle from '../components/Toggle.vue'
+let toggle = $ref(false)
 </script>
 
 <template>
@@ -11,4 +13,5 @@ import spinner from '../assets/spinner.svg'
   <hr class="my-4">
   <p>{{ region }}</p>
   <RegionSelector class="m-4" v-model="region" />
+  <toggle v-model="toggle">Test</toggle>
 </template>
