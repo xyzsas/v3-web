@@ -13,5 +13,5 @@ let toggle = $ref(false)
   <hr class="my-4">
   <p>{{ region }}</p>
   <RegionSelector class="m-4" v-model="region" />
-  <toggle v-model="toggle" />
+  <toggle v-model="toggle">Test</toggle>
 </template>

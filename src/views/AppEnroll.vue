@@ -86,7 +86,7 @@ async function submit () {
     <p class="text-gray-700 text-xs">倒计时结束页面会自动刷新，手动刷新会变慢噢！</p>
   </div>
   <div v-if="info" class="w-screen h-screen flex flex-col p-2 sm:p-6">
-    <BackHeader>{{ info.title }}</BackHeader>
+    <BackHeader @back="router.push('/')">{{ info.title }}</BackHeader>
     <p v-if="info.description" class="mx-6 text-sm text-gray-700">{{ info.description }}</p>
     <div class="flex flex-wrap items-center p-4">
       <div v-for="(o, i) in info.options" class="all-transition flex items-center justify-between rounded shadow px-4 py-2 m-2 w-full sm:w-96" :class="optionClass(i + 1)" @click="select(i + 1)">
