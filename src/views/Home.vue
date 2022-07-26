@@ -2,16 +2,21 @@
 import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon, FolderOpenIcon, ChatAlt2Icon } from '@heroicons/vue/outline'
 import { useRouter } from 'vue-router'
 import MsgCard from '../components/MsgCard.vue'
+import scanImg from '../assets/scan.svg'
 import state from '../state.js'
 import { greet } from '../utils/greet.js'
 import srpc from '../utils/srpc-fc.js'
 
 const router = useRouter()
 const user = state.user
-let msgs = $ref([]), loading = $ref(true)
 state.msg = {}
 
+let msgs = $ref([]), loading = $ref(true)
+let showScan = $ref(false)
+
 async function get() {
+  const pub = await srpc.Y.sub(state.user.token)
+  if (pub && pub.scanReq && pub.scanReqTime > Date.now() - 300e3) showScan = pub.scanReq
   msgs = await srpc.Y.get(state.user.token)
   loading = false
 }
@@ -47,6 +52,9 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       </p>
       <MsgCard v-for="id in msgIds" :key="id" :msg="msgs[id]" />
     </div>
+  </div>
+  <div v-if="showScan" @click="router.push('/app/scan?req=' + showScan)" class="rounded-full all-transition shadow hover:shadow-md bg-blue-500 p-3 cursor-pointer fixed right-10 bottom-10">
+    <img :src="scanImg" class="w-8">
   </div>
 </template>
 

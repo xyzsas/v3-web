@@ -1,16 +1,16 @@
 <script setup>
 import { watch, nextTick } from 'vue'
 import Scan from './Scan.vue'
-import bwipjs from 'bwip-js'
 import { random } from '../utils/crypto.js'
+import state from '../state.js'
 import srpc from '../utils/srpc-fc.js'
-import { CameraIcon } from '@heroicons/vue/outline'
-const props = defineProps(['modelValue'])
+import scanImg from '../assets/scan.svg'
+import spinner from '../assets/spinner.svg'
+const props = defineProps(['modelValue', 'placeholder'])
 const emits = defineEmits(['update:modelValue'])
 
 let input = $ref(props.modelValue), canvas = $ref()
-let showScan = $ref(false), showQR = $ref(false)
-let sub = null
+let showScan = $ref(false), showSpinner = $ref(false)
 
 watch($$(input), v => {
   emits('update:modelValue', v)
@@ -20,50 +20,40 @@ watch(() => props.modelValue, v => {
   if (input !== v) input = v
 })
 
-async function scanResult (text) {
+function scanResult (text) {
   showScan = false
   input = text
 }
 
-async function scanError () { // start QR
+function scanError (err) {
   showScan = false
-  showQR = true
-  await nextTick()
-  const id = random() + random()
-  bwipjs.toCanvas(canvas, { bcid: 'qrcode', text: 'https://sas.yzzx.org/#/app/scan/' + id })
-  await new Promise(r => setTimeout(r, 5000))
+  Swal.fire('扫码错误', err, 'error')
+}
+
+async function focus () {
+  if (!state.user?.token) return
+  await srpc.Y.pub(state.user.token, { scanReq: props.placeholder || '输入框', scanReqTime: Date.now() })
+  showSpinner = true
   while (1) {
-    if (!showQR) return
     await new Promise(r => setTimeout(r, 1000))
-    const res = await srpc.Y.sub(id)
-    if (res) {
-      input = res.result
-      showQR = false
+    if (!showSpinner) return
+    const res = await srpc.Y.sub(state.user.token)
+    if (res && res.scanRes) {
+      showSpinner = false
+      input = res.scanRes
       return
     }
   }
-}
-
-function toggle () {
-  if (showScan || showQR) {
-    showScan = false
-    showQR = false
-    return
-  }
-  showScan = true
 }
 </script>
 
 <template>
   <div class="relative">
     <div class="flex items-center">
-      <input class="w-full bg-transparent" v-model="input" @input="showScan = showQR = false">
-      <CameraIcon class="w-6 cursor-pointer text-gray-500 ml-1" @click="toggle" />
+      <input class="w-full bg-transparent" :placeholder="props.placeholder" @focus="focus" @blur="showSpinner = false" v-model="input" @input="showScan = false">
+      <img v-if="showSpinner" class="w-6 ml-1" :src="spinner">
+      <img class="w-6 cursor-pointer text-gray-500 ml-1 invert" :src="scanImg" @click="showScan = true" />
     </div>
     <scan v-if="showScan" @result="scanResult" @error="scanError" class="absolute top-0 right-0 w-4/5" />
-    <div v-if="showQR" class="absolute top-0 right-0 flex flex-col items-end bg-white">
-      <p class="text-xs text-gray-500">请使用手机扫码完成操作</p>
-      <canvas ref="canvas" />
-    </div>
   </div>
 </template>

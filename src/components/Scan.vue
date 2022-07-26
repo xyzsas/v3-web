@@ -36,8 +36,5 @@ init().then(decode)
 </script>
 
 <template>
-  <div>
-    <video ref="video"></video>
-    <p class="text-center" v-if="!device">没有摄像头</p>
-  </div>
+  <video ref="video"></video>
 </template>
