@@ -11,7 +11,7 @@ const index = {
   '/app/photo': () => import('./views/AppPhoto.vue'),
   '/app/scan': () => import('./views/AppScan.vue'),
   '/app/enroll': () => import('./views/AppEnroll.vue'),
-  '/x/general': () => import('./views/XGeneral.vue')
+  '/x/user': () => import('./views/XUser.vue')
 }
 
 const routes = []
