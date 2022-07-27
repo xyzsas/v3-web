@@ -11,7 +11,6 @@ watch($$(input), v => {
 watch(() => props.modelValue, v => {
   if (input !== v) input = v
 })
-
 </script>
 
 <template>
