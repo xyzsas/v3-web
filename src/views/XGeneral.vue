@@ -1,13 +1,30 @@
 <script setup>
-import Toggle from '../components/Toggle.vue';
-const content = ['通用选课管理', '通用消息管理']
+import srpc from '../utils/srpc-fc.js'
+import state from '../state.js'
+import spinner from '../assets/spinner.svg'
+import Toggle from '../components/Toggle.vue'
+import router from '../router.js'
+
+if (!state.user?.token) router.push('/')
+
+const general = [ // on: true/false, loading: true/false
+  { label: '消息管理', perm: 'YAdmin' },
+  { label: '选课管理', perm: 'AppEnrollAdmin' }
+]
+
+async function updateGeneral (g) {
+  console.log(g, g.on) // todo: submit perm
+}
 </script>
 
 <template>
-  <div class="flex flex-wrap m-4 py-4 bg-white rounded-lg shadow-lg items-center justify-around">
-    <div v-for="i in 6" class="flex pl-6 py-4 px-2 justify-between w-full sm:w-72">
-      <div>{{ content[0] }}</div>
-      <Toggle></Toggle>
+  <div class="m-4 p-4 bg-white rounded shadow-md ">
+    <h2 class="text-2xl font-bold m-4">通用权限管理</h2>
+    <div class="flex flex-wrap items-center justify-start">
+      <div v-for="g in general" class="py-2 mx-2 w-full sm:w-64 flex items-center">
+        <Toggle v-model="g.on" @update:modelValue="updateGeneral(g)">{{ g.label }}</Toggle>
+        <img v-if="g.loading" :src="spinner" class="w-5 ml-1">
+      </div>
     </div>
   </div>
 </template>
