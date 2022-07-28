@@ -62,7 +62,7 @@ init()
 <template>
   <div v-if="state.loading" class="text-2xl m-8 font-mono">Loading...</div>
   <div v-else class="w-screen">
-    <div class="w-full md:w-96 bg-white min-h-screen p-6 flex flex-col">
+    <div class="w-full md:w-96 bg-white min-h-screen p-8 flex flex-col">
       <back-header @click="router.push('/')">enroll管理</back-header>
       <span class="flex items-center my-2 w-full font-bold">
         标题
@@ -94,11 +94,11 @@ init()
       </span>
       <span class="flex my-2">
         批量导入
-        <textarea class="font-mono resize-none rounded border border-2 py-1 px-2 w-52 all-transition focus:border-blue-400 mx-2 max-h-64" placeholder="每行以逗号分隔选项名称和容量" v-model="option"/>
+        <textarea class="font-mono resize-none rounded border border-2 py-1 px-2 w-52 all-transition focus:border-blue-400 mx-1 max-h-64" placeholder="每行以逗号分隔选项名称和容量" v-model="option"/>
         <download-icon class="w-10 h-10 p-2 rounded bg-blue-100 text-blue-400 cursor-pointer" @click="addOption()"/>
       </span>
-      <div class="flex flex-col items-center">
-        <div v-for="(o, i) in info.options" class="w-full m-2 flex justify-between items-center rounded border border-2 border-blue-400 px-4 py-2">
+      <div class="flex flex-col md:items-center">
+        <div v-for="(o, i) in info.options" class="w-80 md:w-full my-2 flex justify-between items-center rounded border border-2 border-blue-400 px-4 py-2">
           <input class="rounded border all-transition focus:border-blue-400 border-2 py-1 px-2 mx-2" v-model="info.options[i]">
           -
           <input class="w-16 rounded border all-transition focus:border-blue-400 border-2 py-1 px-2 ml-2" type="number" v-model="info[`$${i + 1}`]">
