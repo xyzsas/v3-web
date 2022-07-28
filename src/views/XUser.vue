@@ -12,6 +12,7 @@ if (!state.user?.token) router.push('/')
 let userId = $ref(''), got = $ref(false)
 
 const general = { // on: true/false
+  XAdmin: { label: '用户授权' },
   YAdmin: { label: '消息管理' },
   AppEnrollAdmin: { label: '选课管理' }
 }
