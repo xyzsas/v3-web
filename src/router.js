@@ -11,6 +11,7 @@ const index = {
   '/app/photo': () => import('./views/AppPhoto.vue'),
   '/app/scan': () => import('./views/AppScan.vue'),
   '/app/enroll': () => import('./views/AppEnroll.vue'),
+  '/app/enrollAdmin': () => import('./views/AppEnrollAdmin.vue'),
   '/x/user': () => import('./views/XUser.vue')
 }
 
