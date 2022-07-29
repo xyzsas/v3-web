@@ -4,18 +4,24 @@ import { useRouter } from 'vue-router'
 import RegionSelector from '../components/RegionSelector.vue'
 const router = useRouter()
 
-let personalInfo = $ref({
-  identity: ['个人标识码（全国系统学籍号）', '12345678'],
-  idcheck: ['与全国系统对接状态', false],
-  name: ['姓名', ''],
-  pinyin: ['姓名拼音', ''],
-  formerName: ['曾用名', '可填无', ''],
-  gender: ['性别', ''],
-  id: ['身份证号码', '340503xxxx'],
-  hometown: ['籍贯', ''],
-  national: ['国籍', ''],
-  isGAT: ['是否为港澳台侨胞', '']
-})
+let D = $ref([
+  [
+    ['个人标识码（全国系统学籍号）', '12345678'],
+    ['与全国系统对接状态', false],
+    ['姓名', ''],
+    ['姓名拼音', ''],
+    ['曾用名', '可填无', ''],
+    ['性别', ''],
+    ['身份证号码', '340503xxxx'],
+    ['籍贯', ''],
+    ['国籍', ''],
+    ['是否为港澳台侨胞', '']
+  ],
+  [
+  ],
+  [
+  ]
+])
 
 let addressInfo = $ref({
 })
@@ -66,8 +72,8 @@ let current = $ref(0) // index of field
       </div>
     </div>
   </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-    <div v-if="current === 0">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center">
+    <template v-if="current === 0">
       <p class="text-md font-bold my-2 mx-4">{{ personalInfo['identity'][0] }}: {{ personalInfo['identity'][1] }}</p>
       <label class="flex my-2 mx-4">
         <p class="text-md font-bold">{{ personalInfo['idcheck'][0] }}:</p>
@@ -82,10 +88,7 @@ let current = $ref(0) // index of field
       </label>
       <label class="block my-2 mx-4">
         <p class="text-md font-bold">{{ personalInfo['pinyin'][0] }}:</p>
-        <input class="p-2 shadow appearance-none border rounded block w-full" type="text"
-          onkeyup="this.value=this.value.toLowerCase()" onkeypress="return /[a-z]/i.test(event.key)"
-          v-model="personalInfo['pinyin'][1]">
-        {{ personalInfo['pinyin'][1] }}
+        <input v-model="personalInfo['pinyin'][1]" class="p-2 shadow appearance-none border rounded block w-full" type="text" @input="personalInfo['pinyin'][1] = personalInfo['pinyin'][1].toLowerCase().replace(/[^a-z]/g, '')">
       </label>
       <label class="block my-2 mx-4">
         <p class="text-md font-bold">{{ personalInfo['formerName'][0] }}:</p>
@@ -115,8 +118,8 @@ let current = $ref(0) // index of field
         <label for="checkbox" class="ml-2 text-lg">{{ personalInfo['isGAT'][1] }}</label>
       </label>
 
-    </div>
-    <div v-if="current === 3">
+    </template>
+    <template v-if="current === 3">
       <label class="flex my-2 mx-4">
         <p class="text-md font-bold">{{ specialInfo['health'][0] }}: </p>
         <select v-model="specialInfo['health'][1]" class="ml-2">
@@ -133,7 +136,7 @@ let current = $ref(0) // index of field
           <option value=false>非随班就读</option>
         </select>
       </label>
-      <div v-if="specialInfo['health'][1] === 'false'">
+      <template v-if="specialInfo['health'][1] === 'false'">
         <label class="block my-2 mx-4">
           <p class="text-md font-bold">{{ specialInfo['htype'][0] }}:</p>
           <input class="p-2 shadow appearance-none border rounded block w-full" type="text"
@@ -159,18 +162,16 @@ let current = $ref(0) // index of field
           <input class="p-2 shadow appearance-none border rounded block w-full" type="text"
             v-model="specialInfo['stype'][1]">
         </label>
-      </div>
-    </div>
+      </template>
+    </template>
 
-    <div v-if="current === 4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        <div v-for="d in fields[current].data" class="my-2 mx-4">
-          <label class="block">
-            <p class="text-md font-bold">{{ d[0] }}:</p>
-            <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="d[1]">
-          </label>
-        </div>
+    <template v-if="current === 4">
+      <div v-for="d in fields[current].data" class="my-2 mx-4">
+        <label class="block">
+          <p class="text-md font-bold">{{ d[0] }}:</p>
+          <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="d[1]">
+        </label>
       </div>
-    </div>
+    </template>
   </div>
 </template>
