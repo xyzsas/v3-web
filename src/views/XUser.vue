@@ -4,6 +4,8 @@ import state from '../state.js'
 import spinner from '../assets/spinner.svg'
 import Toggle from '../components/Toggle.vue'
 import BackHeader from '../components/BackHeader.vue'
+import UserInput from '../components/UserInput.vue'
+import { SearchIcon } from '@heroicons/vue/outline'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
@@ -13,8 +15,9 @@ let userId = $ref(''), got = $ref(false)
 
 const general = { // on: true/false
   XAdmin: { label: '用户授权' },
+  XQuery: { label: '用户检索' },
   YAdmin: { label: '消息管理' },
-  AppEnrollAdmin: { label: '选课管理' }
+  AppEnrollAdmin: { label: '选课管理' },
 }
 
 async function getUser () {
@@ -38,8 +41,9 @@ function updateGeneral (perm) {
 <template>
   <div class="w-full min-h-screen p-4">
     <BackHeader @back="router.push('/')">用户权限管理</BackHeader>
-    <div class="mx-4 flex items-center">
-      <input v-model="userId" placeholder="user id" @change="got = false" @keyup.enter="getUser">
+    <div class="mx-4 flex items-start">
+      <UserInput v-model="userId" class="w-64" @update:modelValue="got = false" @keyup.enter="getUser" />
+      <SearchIcon @click="getUser" class="w-8 rounded-full p-1 mx-1 text-blue-500 cursor-pointer" />
     </div>
     <div v-if="got" class="m-4 p-2 bg-white rounded shadow-md ">
       <h2 class="text-xl font-bold mx-2">通用权限管理</h2>
