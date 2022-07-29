@@ -18,40 +18,37 @@ let personalInfo = $ref({
 })
 
 let addressInfo = $ref({
-  name: ['姓名', '学生姓名', ''],
-  pinyin: ['姓名拼音', '学生姓名拼音', ''],
-  formerName: ['曾用名', '学生曾用名，可填无', ''],
-  gender: ['性别', '男/女', ''],
-  id: ['证件号码', '例如：身份证号码', ''],
-  hometown: ['籍贯', '']
 })
 
 let additionInfo = $ref({
-  name: ['姓名', '学生姓名', ''],
-  pinyin: ['姓名拼音', '学生姓名拼音', ''],
-  formerName: ['曾用名', '学生曾用名，可填无', ''],
-  gender: ['性别', '男/女', ''],
-  id: ['证件号码', '例如：身份证号码', ''],
-  hometown: ['籍贯', '']
 })
 
 let specialInfo = $ref({
-  name: ['姓名', '学生姓名', ''],
-  pinyin: ['姓名拼音', '学生姓名拼音', ''],
-  formerName: ['曾用名', '学生曾用名，可填无', ''],
-  gender: ['性别', '男/女', ''],
-  id: ['证件号码', '例如：身份证号码', ''],
-  hometown: ['籍贯', '']
+  health: ['健康状况', ''],
+  htype: ['残疾类型', ''],
+  hptype: ['残疾证明类型', ''],
+  hlevel: ['残疾程度', ''],
+  hexplain: ['残疾情况说明', ''],
+  stype: ['特教就读类型', ''],
+  follow: ['随班就读', '']
+})
+
+let guardian = $ref({
+  grelation: ['第一监护人称谓', ''],
+  gname: ['第一监护人姓名', ''],
+  gtele: ['第一监护人联系方式', ''],
+  gage: ['第一监护人年龄', ''],
+  gnational: ['第一监护人国籍', ''],
+  gnationality: ['第一监护人民族', '']
 })
 
 const fields = [
   { title: '个人信息', data: personalInfo, done: false },
   { title: '个人地址', data: addressInfo, done: false },
   { title: '辅助信息', data: additionInfo, done: false },
-  { title: '特教信息', data: specialInfo, done: false }
+  { title: '特教信息', data: specialInfo, done: false },
+  { title: '监护人信息', data: guardian, done: false },
 ]
-
-
 
 let current = $ref(0) // index of field
 </script>
@@ -118,6 +115,62 @@ let current = $ref(0) // index of field
         <label for="checkbox" class="ml-2 text-lg">{{ personalInfo['isGAT'][1] }}</label>
       </label>
 
+    </div>
+    <div v-if="current === 3">
+      <label class="flex my-2 mx-4">
+        <p class="text-md font-bold">{{ specialInfo['health'][0] }}: </p>
+        <select v-model="specialInfo['health'][1]" class="ml-2">
+          <option disabled value="">请选择</option>
+          <option value=true>健康</option>
+          <option value=false>残疾</option>
+        </select>
+      </label>
+      <label class="flex my-2 mx-4">
+        <p class="text-md font-bold">{{ specialInfo['follow'][0] }}: </p>
+        <select v-model="specialInfo['follow'][1]" class="ml-2">
+          <option disabled value="">请选择</option>
+          <option value=true>随班就读</option>
+          <option value=false>非随班就读</option>
+        </select>
+      </label>
+      <div v-if="specialInfo['health'][1] === 'false'">
+        <label class="block my-2 mx-4">
+          <p class="text-md font-bold">{{ specialInfo['htype'][0] }}:</p>
+          <input class="p-2 shadow appearance-none border rounded block w-full" type="text"
+            v-model="specialInfo['htype'][1]">
+        </label>
+        <label class="block my-2 mx-4">
+          <p class="text-md font-bold">{{ specialInfo['hptype'][0] }}:</p>
+          <input class="p-2 shadow appearance-none border rounded block w-full" type="text"
+            v-model="specialInfo['hptype'][1]">
+        </label>
+        <label class="block my-2 mx-4">
+          <p class="text-md font-bold">{{ specialInfo['hlevel'][0] }}:</p>
+          <input class="p-2 shadow appearance-none border rounded block w-full" type="text"
+            v-model="specialInfo['hlevel'][1]">
+        </label>
+        <label class="block my-2 mx-4">
+          <p class="text-md font-bold">{{ specialInfo['hexplain'][0] }}:</p>
+          <input class="p-2 shadow appearance-none border rounded block w-full" type="text"
+            v-model="specialInfo['hexplain'][1]">
+        </label>
+        <label class="block my-2 mx-4">
+          <p class="text-md font-bold">{{ specialInfo['stype'][0] }}:</p>
+          <input class="p-2 shadow appearance-none border rounded block w-full" type="text"
+            v-model="specialInfo['stype'][1]">
+        </label>
+      </div>
+    </div>
+
+    <div v-if="current === 4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div v-for="d in fields[current].data" class="my-2 mx-4">
+          <label class="block">
+            <p class="text-md font-bold">{{ d[0] }}:</p>
+            <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="d[1]">
+          </label>
+        </div>
+      </div>
     </div>
   </div>
 </template>
