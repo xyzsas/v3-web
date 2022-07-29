@@ -17,7 +17,7 @@ let showScan = $ref(false)
 async function get () {
   const res = await srpc.home(state.user.token)
   loading = false
-  if (res.pub && res.pub.scanReq && res.pub.scanReqTime > Date.now() - 300e3) showScan = pub.scanReq
+  if (res.pub && res.pub.scanReq && res.pub.scanReqTime > Date.now() - 300e3) showScan = res.pub.scanReq
   msgs = res.msgs
   perms = {}
   for (const p of res.perms) perms[p.perm] = 1
