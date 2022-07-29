@@ -1,10 +1,7 @@
-export const debounce = (fn, delay = 0) => {
-  let timeout
+export function debounce (func, timeout = 300) {
+  let timer
   return (...args) => {
-    if (!timeout) fn(...args)
-    clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      fn(...args)
-    }, delay)
+    clearTimeout(timer)
+    timer = setTimeout(() => { func.apply(this, args) }, timeout)
   }
 }
