@@ -5,22 +5,24 @@ import srpc from '../utils/srpc-fc.js'
 import BackHeader from '../components/BackHeader.vue'
 import { useRouter } from 'vue-router'
 import { PlusCircleIcon, DownloadIcon } from '@heroicons/vue/solid'
+import EditableList from '../components/EditableList.vue'
 import 'v-calendar/dist/style.css'
 const token = state.user.token
 const router = useRouter()
 
 state.loading = true
 let info = $ref(null), data = $ref(null), option = $ref('')
-
+let list = $ref([])
 function addOption () {
   const opt = option.split('\n')
   const tmp = info
-  info.options = []
+  list = []
   try {
-    for (const i in opt) {
-      const s = opt[i].split(',')
-      info.options.push(s[0])
-      info[`$${Number(i) + 1}`] = Number(s[1])
+    for (let i = 0; i < opt.length; i++) {
+      if (!opt[i].match(/\S/)) continue
+      const s = opt[i].split('\t')
+      list.push(s[0])
+      info[`$${i + 1}`] = Number(s[1])
     }
   } catch {
     info = tmp
@@ -35,7 +37,7 @@ async function init () {
   info = res.info
   info.min = info.min || 0
   info.max = info.max || 9e9
-  info.options = JSON.parse(info.options)
+  list = JSON.parse(info.options).map((x, i) => ({ title: x, space: info[`$${i + 1}`], key: Math.random() }))
   data = res.data
   delete info.id
   delete data.id
@@ -44,8 +46,16 @@ async function init () {
 }
 
 async function submit () {
-  const doc = info
-  doc.options = JSON.stringify(doc.options)
+  const doc = {
+    title: info.title,
+    description: info.description,
+    min: info.min,
+    max: info.max,
+    start: info.start,
+    options: JSON.stringify(list.map(x => x.title))
+  }
+  for (let i = 0; i < list.length; i++) doc[`$${i + 1}`] = list[i].space
+  console.log(doc)
   const res = await srpc.app.enroll.putInfo(token, doc)
   if (!res.ok) {
     await Swal.fire('失败', res.err, 'error')
@@ -61,28 +71,24 @@ init()
 
 <template>
   <div v-if="state.loading" class="text-2xl m-8 font-mono">Loading...</div>
-  <div v-else class="w-screen">
+  <div v-else class="w-screen flex">
     <div class="w-full md:w-96 bg-white min-h-screen p-8 flex flex-col">
-      <back-header @click="router.push('/')">enroll管理</back-header>
-      <span class="flex items-center my-2 w-full font-bold">
-        标题
-        <input class="rounded border border-2 py-1 px-2 all-transition focus:border-blue-400 mx-2 px-2" v-model="info.title">
-      </span>
-      <span class="flex my-2">
-        描述
-        <textarea class="resize-none rounded border border-2 py-1 px-2 all-transition focus:border-blue-400 mx-2 max-h-64" v-model="info.description" />
-      </span>
-      <span class="flex items-center my-2">
+      <BackHeader @click="router.push('/')">选课管理</BackHeader>
+      <div class="my-2">标题</div>
+      <input class="block rounded border py-1 px-2 all-transition focus:border-blue-400 px-2" v-model="info.title">
+      <div class="my-2">描述</div>
+      <textarea class="resize-none rounded border py-1 px-2 all-transition focus:border-blue-400" rows="3" v-model="info.description" />
+      <div class="flex items-center my-2">
         最少选择数量
-        <input class="w-16 rounded border border-2 py-1 px-2 all-transition focus:border-blue-400 mx-2" type="number" v-model="info.min">
-      </span>
-      <span class="flex items-center my-2">
+        <input class="ml-2 w-16 rounded border py-1 px-2 all-transition focus:border-blue-400" type="number" v-model="info.min">
+      </div>
+      <div class="flex items-center my-2">
         最大选择数量
-        <input class="w-16 rounded border border-2 py-1 px-2 all-transition focus:border-blue-400 mx-2" type="number" v-model="info.max">
-      </span>
-      <span class="flex items-center my-2">
+        <input class="ml-2 w-16 rounded border py-1 px-2 all-transition focus:border-blue-400" type="number" v-model="info.max">
+      </div>
+      <div class="flex items-center my-2">
         开始时间
-        <date-picker class="ml-2" v-model="info.start" mode="dateTime" is24hr :model-config="{ type: 'number' }">
+        <DatePicker class="ml-2" v-model="info.start" mode="dateTime" is24hr :model-config="{ type: 'number' }">
           <template v-slot="{ inputValue, inputEvents }">
             <input
               class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300"
@@ -90,20 +96,20 @@ init()
               v-on="inputEvents"
             />
           </template>
-        </date-picker>
-      </span>
-      <span class="flex my-2">
-        批量导入
-        <textarea class="font-mono resize-none rounded border border-2 py-1 px-2 w-52 all-transition focus:border-blue-400 mx-1 max-h-64" placeholder="每行以逗号分隔选项名称和容量" v-model="option"/>
-        <download-icon class="w-10 h-10 p-2 rounded bg-blue-100 text-blue-400 cursor-pointer" @click="addOption()"/>
-      </span>
-      <div class="flex flex-col md:items-center">
-        <div v-for="(o, i) in info.options" class="w-80 md:w-full my-2 flex justify-between items-center rounded border border-2 border-blue-400 px-4 py-2">
-          <input class="rounded border all-transition focus:border-blue-400 border-2 py-1 px-2 mx-2" v-model="info.options[i]">
-          -
-          <input class="w-16 rounded border all-transition focus:border-blue-400 border-2 py-1 px-2 ml-2" type="number" v-model="info[`$${i + 1}`]">
-        </div>
+        </DatePicker>
       </div>
+      <div class="my-2">批量导入</div>
+      <textarea class="font-mono resize-none rounded border py-1 px-2 all-transition focus:border-blue-400" rows="3" :placeholder="`每行以制表符分隔选项名称和容量\n第一个选项\t10\n第二个选项\t15`" v-model="option"/>
+      <div class="flex items-center my-2">
+        <button class="text-white text-sm font-bold rounded bg-amber-500 shadow py-1 px-2 mr-2" @click="addOption">导入选项</button>
+        <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2 mr-2" @click="list.push({ key: Math.random() })">新增选项</button>
+      </div>
+      <EditableList :list="list" item-key="key" item-class="bg-white py-1 px-2 border my-2 rounded">
+        <template #item="{ elment: el, index: i }">
+          <input class="flex-grow" v-model="list[i].title" placeholder="点击编辑选项内容">
+          <input type="number" v-model="list[i].space" class="border ml-2 w-12 px-1">
+        </template>
+      </EditableList>
       <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md mx-6 my-2 px-4 py-2 w-32" @click="submit">提交</button>
     </div>
   </div>
