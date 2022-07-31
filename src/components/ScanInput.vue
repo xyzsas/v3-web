@@ -30,6 +30,7 @@ function scanError (err) {
 }
 
 async function focus () {
+  showScan = false
   if (!state.user?.token) return
   await srpc.Y.pub(state.user.token, { scanReq: props.placeholder || '输入框', scanReqTime: Date.now() })
   subClass = 'ring'
@@ -37,6 +38,7 @@ async function focus () {
     if (!subClass) return
     subClass = (subClass === 'ring') ? 'ring-1' : 'ring'
     await new Promise(r => setTimeout(r, 1000))
+    if (subClass === 'ring-1') continue
     const res = await srpc.Y.sub(state.user.token)
     if (res && res.scanRes) {
       subClass = false
@@ -50,7 +52,7 @@ async function focus () {
 <template>
   <div class="relative all-transition rounded" :class="subClass">
     <div class="flex items-center">
-      <input class="w-full bg-transparent" :placeholder="props.placeholder" @focus="focus" @blur="subClass = false" v-model="input" @input="showScan = false">
+      <input class="w-full bg-transparent" :placeholder="props.placeholder" @focus="focus" @blur="subClass = false" v-model="input">
       <img class="w-6 cursor-pointer text-gray-500 ml-1 invert" :src="scanImg" @click="showScan = true" />
     </div>
     <scan v-if="showScan" @result="scanResult" @error="scanError" class="absolute top-0 right-0 w-4/5" />
