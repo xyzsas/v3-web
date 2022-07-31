@@ -1,6 +1,7 @@
 <script setup>
 import BackHeader from '../components/BackHeader.vue'
 import { useRouter } from 'vue-router'
+import Toggle from '../components/Toggle.vue'
 import RegionSelector from '../components/RegionSelector.vue'
 const router = useRouter()
 
@@ -9,7 +10,7 @@ let D = $ref([
     ['身份证号码', '', '340503xxxx'],
     ['姓名', '', ''],
     ['姓名拼音', '', ''],
-    ['曾用名', '可填无', ''],
+    ['曾用名', '可留空', ''],
     ['性别', '', ''],
     ['籍贯', '', ''],
     ['国籍', '', ''],
@@ -73,6 +74,7 @@ let current = $ref(0) // index of field
 
 <template>
   <BackHeader @back="router.push('/')">个人资料</BackHeader>
+  <!-- fields selector -->
   <div class="overflow-x-auto bg-white border border-x-0 mb-4">
     <div class="flex">
       <div v-for="(v, i) in fields" class="my-4">
@@ -84,45 +86,40 @@ let current = $ref(0) // index of field
       </div>
     </div>
   </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center">
+  <div class="flex flex-col items-start p-4 sm:p-10">
     <template v-if="current === 0">
-      <p class="p-2 text-md mx-4">{{ D[0][0][0] }}: {{ D[0][0][2] }}</p>
-      <label class="block my-2 mx-4">
-        <p class="p-2 text-md">{{ D[0][1][0] }}:</p>
-        <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="D[0][1][2]">
+      <p class="text-md">{{ D[0][0][0] }}: {{ D[0][0][2] }}</p>
+      <label class="label-item">
+        <p class="label-text">{{ D[0][1][0] }}:</p>
+        <input class="label-input" type="text" v-model="D[0][1][2]">
       </label>
-      <label class="block my-2 mx-4">
-        <p class="p-2 text-md">{{ D[0][2][0] }}:</p>
-        <input v-model="D[0][2][2]" class="p-2 shadow appearance-none border rounded block w-full" type="text"
-          @input="D[0][2][2] = D[0][2][2].toLowerCase().replace(/[^a-z]/g, '')">
+      <label class="label-item">
+        <p class="label-text">{{ D[0][2][0] }}:</p>
+        <input v-model="D[0][2][2]" class="label-input" type="text" @input="D[0][2][2] = D[0][2][2].toLowerCase().replace(/[^a-z]/g, '')">
       </label>
-      <label class="block my-2 mx-4">
-        <p class="p-2 text-md">{{ D[0][3][0] }}:</p>
-        <input class="p-2 shadow appearance-none border rounded block w-full" type="text" :placeholder="D[0][3][1]"
-          v-model="D[0][3][2]">
+      <label class="label-item">
+        <p class="label-text">{{ D[0][3][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[0][3][1]" v-model="D[0][3][2]">
       </label>
-      <label class="flex my-2 mx-4">
-        <p class="p-2 text-md">{{ D[0][4][0] }}: </p>
-        <select v-model="D[0][4][2]" class="ml-2">
+      <label class="inline-item">
+        <p>{{ D[0][4][0] }}: </p>
+        <select v-model="D[0][4][2]" class="inline-input">
           <option disabled value="">请选择</option>
           <option value="male">男</option>
           <option value="female">女</option>
         </select>
       </label>
-      <label class="block my-2 mx-4">
-        <p class="p-2 text-md"> {{ D[0][5][0] }}: </p>
-        <RegionSelector class="ml-2" v-model="D[0][5][2]" />
+      <label class="label-item">
+        <p class="label-text"> {{ D[0][5][0] }}: </p>
+        <RegionSelector v-model="D[0][5][2]" />
       </label>
-      <label class="block my-2 mx-4">
-        <p class="p-2 text-md">{{ D[0][6][0] }}:</p>
-        <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="D[0][6][2]">
+      <label class="label-item">
+        <p class="label-text">{{ D[0][6][0] }}:</p>
+        <input class="label-input" type="text" v-model="D[0][6][2]">
       </label>
-      <label class="flex my-2 mx-4">
-        <p class="p-2 text-md">{{ D[0][7][0] }}: </p>
-        <input type="checkbox" v-model="D[0][7][2]" class="ml-2" />
-        <label for="checkbox" class="p-2 ml-2 text-lg">{{ D[0][7][2] }}</label>
+      <label class="inline-item">
+        <Toggle v-model="D[0][7][2]">{{ D[0][7][0] }}</Toggle>
       </label>
-
     </template>
     <template v-if="current === 1">
       <label class="block my-2 mx-4">
@@ -205,3 +202,24 @@ let current = $ref(0) // index of field
     </template>
   </div>
 </template>
+
+<style scoped>
+.label-item {
+  max-width: 640px;
+  @apply block my-2 w-full;
+}
+.label-text {
+  @apply my-1;
+}
+.label-input {
+  transition: all 0.3s ease;
+  @apply block w-full px-2 py-1 bg-white border focus:ring-2;
+}
+.inline-item {
+  @apply block my-2 w-full flex items-center;
+}
+.inline-input {
+  transition: all 0.3s ease;
+  @apply mx-2 px-2 py-1 bg-white border focus:ring-2;
+}
+</style>
