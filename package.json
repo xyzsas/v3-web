@@ -12,8 +12,10 @@
     "@vladmandic/face-api": "^1.6.10",
     "@zxing/library": "^0.19.1",
     "bwip-js": "^3.1.0",
+    "v-calendar": "^3.0.0-alpha.8",
     "vue": "^3.2.37",
-    "vue-router": "^4.1.2"
+    "vue-router": "^4.1.2",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.0",

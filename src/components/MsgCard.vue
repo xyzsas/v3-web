@@ -28,7 +28,7 @@ async function click () {
 </script>
 
 <template>
-  <div class="w-full bg-white rounded-lg m-2 cursor-pointer p-2 all-transition shadow hover:shadow-md flex justify-between items-center" :class="typeof msg.status === 'undefined' && 'ring font-bold bg-blue-50'" @click="click">
+  <div class="bg-white rounded-lg m-2 cursor-pointer p-2 all-transition shadow hover:shadow-md flex justify-between items-center" :class="typeof msg.status === 'undefined' && 'ring font-bold bg-blue-50'" @click="click">
     <div>
       <h1 class="mx-2">{{ short(content.title) }}
         <span class="px-1 ml-2 bg-blue-100 rounded text-xs" v-for="t in content.tags" :key="t">{{ t }}</span>

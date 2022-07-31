@@ -5,6 +5,8 @@ const index = {
   '/about': () => import('./views/About.vue'),
   '/login': () => import('./views/Login.vue'),
   '/test': () => import('./views/Test.vue'),
+
+  '/x/user': () => import('./views/XUser.vue'),
   // Y
   '/y/send': () => import('./views/YSend.vue'),
   // App
