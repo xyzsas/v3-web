@@ -110,7 +110,7 @@ init()
 
 <template>
   <div v-if="state.loading" class="text-2xl m-8 font-mono">Loading...</div>
-  <div v-else class="w-screen flex">
+  <div v-else class="w-screen md:flex">
     <div class="w-full md:w-96 bg-white min-h-screen p-8 flex flex-col">
       <BackHeader @click="router.push('/')">选课管理</BackHeader>
       <div class="my-2">标题</div>
@@ -126,7 +126,7 @@ init()
         <input class="ml-2 w-16 rounded border py-1 px-2 all-transition focus:border-blue-400" type="number" v-model="info.max">
       </div>
       <div class="flex items-center my-2">
-        开始时间
+        <div class="w-16">开始时间</div>
         <DatePicker class="ml-2" v-model="info.start" mode="dateTime" is24hr :model-config="{ type: 'number' }">
           <template v-slot="{ inputValue, inputEvents }">
             <input
@@ -138,26 +138,26 @@ init()
         </DatePicker>
       </div>
       <div class="my-2">批量导入</div>
-      <textarea class="font-mono resize-none rounded border py-1 px-2 all-transition focus:border-blue-400" rows="3" :placeholder="`每行以制表符分隔选项名称和容量\n第一个选项\t10\n第二个选项\t15`" v-model="option"/>
+      <textarea class="font-mono resize-none rounded border py-1 px-2 all-transition focus:border-blue-400" rows="4" :placeholder="`每行以制表符分隔选项名称和容量\n第一个选项\t10\n第二个选项\t15`" v-model="option"/>
       <div class="flex items-center my-2">
         <button class="text-white text-sm font-bold rounded bg-amber-500 shadow py-1 px-2 mr-2" @click="addOption">导入选项</button>
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2 mr-2" @click="list.push({ key: Math.random() })">新增选项</button>
       </div>
-      <EditableList :list="list" item-key="key" item-class="bg-white py-1 px-2 border my-2 rounded">
+      <EditableList :list="list" item-key="key" item-class="bg-white py-1 px-2 border my-2 rounded flex-nowrap">
         <template #item="{ elment: el, index: i }">
-          <input class="flex-grow" v-model="list[i].title" placeholder="点击编辑选项内容">
+          <input class="grow" v-model="list[i].title" placeholder="点击编辑选项内容">
           <input type="number" v-model="list[i].space" class="border ml-2 w-12 px-1">
         </template>
       </EditableList>
       <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitInfo">提交</button>
     </div>
-    <div class="py-10 px-8 grow">
+    <div class="py-10 px-8 grow min-h-screen">
       <div class="flex items-center">
         <input class="grow rounded border py-1 px-2 all-transition focus:border-blue-400 px-2" placeholder="输入以逗号分隔的用户id" v-model="datalist">
         <button class="text-white text-sm font-bold rounded bg-amber-500 shadow py-1 px-2 mx-2" @click="putData">覆盖导入</button>
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2" @click="updateData">添加导入</button>
       </div>
-      <div class="flex my-4">
+      <div class="flex flex-wrap my-4">
         <div v-for="(v, k) in data" class="rounded bg-white py-2 px-4 shadow mr-8 my-2">
           <div class="font-mono">{{ k }}</div>
           <div v-if="!v.length" class="flex">
