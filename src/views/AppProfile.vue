@@ -8,17 +8,17 @@ const router = useRouter()
 let D = $ref([
   [
     ['身份证号码', '', '340503xxxx'],
-    ['姓名', '', ''],
-    ['姓名拼音', '', ''],
+    ['姓名', '请填写学生姓名', ''],
+    ['姓名拼音', '姓和名中间有空格 eg: zhang san', ''],
     ['曾用名', '可留空', ''],
     ['性别', '', ''],
-    ['籍贯', '', ''],
-    ['国籍', '', ''],
+    ['籍贯', '学生的籍贯', ''],
+    ['国籍', '学生的国籍', ''],
     ['是否为港澳台侨胞', '', '']
   ],
   [
-    ['现居地', '', ''],
-    ['出生地', '', ''],
+    ['现居地', '学生的现居地', ''],
+    ['出生地', '学生的出生地', ''],
     ['户籍详细地址', '', ''],
     ['户口所在地', '', ''],
     ['户口性质', '', '']
@@ -45,7 +45,7 @@ let D = $ref([
     ['特教就读类型', '', ''],
   ],
   [
-    ['第一监护人称谓', '', ''],
+    ['第一监护人称谓', '第一监护人与学生的关系', ''],
     ['第一监护人姓名', '', ''],
     ['第一监护人联系方式', '', ''],
     ['第一监护人年龄', '', ''],
@@ -54,8 +54,8 @@ let D = $ref([
   ],
   [
     ['是否乘坐校车', '', ''],
-    ['上下学方式', '', ''],
-    ['上下学距离', '', ''],
+    ['上下学方式', '学生上下学的交通方式', ''],
+    ['上下学距离', '学生上下学的距离', ''],
   ]
 ])
 
@@ -91,11 +91,11 @@ let current = $ref(0) // index of field
       <p class="text-md">{{ D[0][0][0] }}: {{ D[0][0][2] }}</p>
       <label class="label-item">
         <p class="label-text">{{ D[0][1][0] }}:</p>
-        <input class="label-input" type="text" v-model="D[0][1][2]">
+        <input class="label-input" type="text" :placeholder="D[0][1][1]" v-model="D[0][1][2]">
       </label>
       <label class="label-item">
         <p class="label-text">{{ D[0][2][0] }}:</p>
-        <input v-model="D[0][2][2]" class="label-input" type="text" @input="D[0][2][2] = D[0][2][2].toLowerCase().replace(/[^a-z]/g, '')">
+        <input v-model="D[0][2][2]" class="label-input" type="text" :placeholder="D[0][2][1]" @input="D[0][2][2] = D[0][2][2].toLowerCase().replace(/[^a-z]/g, '')">
       </label>
       <label class="label-item">
         <p class="label-text">{{ D[0][3][0] }}:</p>
@@ -115,55 +115,55 @@ let current = $ref(0) // index of field
       </label>
       <label class="label-item">
         <p class="label-text">{{ D[0][6][0] }}:</p>
-        <input class="label-input" type="text" v-model="D[0][6][2]">
+        <input class="label-input" type="text" :placeholder="D[0][6][1]" v-model="D[0][6][2]">
       </label>
       <label class="inline-item">
         <Toggle v-model="D[0][7][2]">{{ D[0][7][0] }}</Toggle>
       </label>
     </template>
     <template v-if="current === 1">
-      <label class="block my-2 mx-4">
-        <p class="p-2 text-md">{{ D[1][0][0] }}:</p>
-        <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="D[1][0][2]">
+      <label class="label-item">
+        <p class="label-text">{{ D[1][0][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[1][0][1]" v-model="D[1][0][2]">
       </label>
       <div v-for="i in 2">
-        <label class="block my-2 mx-4" v-if="i > 0">
+        <label class="label-item" v-if="i > 0">
           <template class="flex">
-            <p class="p-2 text-md">{{ D[1][i][0] }}:</p>
+            <p class="label-text">{{ D[1][i][0] }}:</p>
             <button class="ml-2 text-sm" @click="D[1][i][2] = D[1][0][2]">复制现居地</button>
           </template>
-          <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="D[1][i][2]">
+          <input class="label-input" type="text" :placeholder="D[1][i][1]" v-model="D[1][i][2]">
         </label>
       </div>
-      <label class="block my-2 mx-4">
-        <p class="p-2 text-md"> {{ D[1][3][0] }}: </p>
+      <label class="label-item">
+        <p class="label-text"> {{ D[1][3][0] }}: </p>
         <RegionSelector class="ml-2" v-model="D[1][3][2]" />
       </label>
-      <label class="block my-2 mx-4">
-        <p class="p-2 text-md">{{ D[1][4][0] }}:</p>
-        <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="D[1][4][2]">
+      <label class="label-item">
+        <p class="label-text">{{ D[1][4][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[1][4][1]" v-model="D[1][4][2]">
       </label>
     </template>
     <template v-if="current === 2">
       <div v-for="i in 9">
-        <label class="flex my-2 mx-4">
-          <p class="p-2 text-md">{{ D[2][i][0] }}: </p>
-          <input type="checkbox" v-model="D[2][i][2]" class="ml-2" />
+        <label class="inline-item">
+          <p class="label-text">{{ D[2][i][0] }}: </p>
+          <input type="checkbox" :placeholder="D[2][i][1]" v-model="D[2][i][2]" class="ml-2" />
           <label for="checkbox" class="p-2 ml-2 text-lg">{{ D[2][i][2] }}</label>
         </label>
       </div>
     </template>
     <template v-if="current === 3">
-      <label class="flex my-2 mx-4">
-        <p class="p-2 text-md">{{ D[3][0][0] }}: </p>
+      <label class="inline-item">
+        <p class="label-text">{{ D[3][0][0] }}: </p>
         <select v-model="D[3][0][2]" class="ml-2">
           <option disabled value="">请选择</option>
           <option value=true>健康</option>
           <option value=false>残疾</option>
         </select>
       </label>
-      <label class="flex my-2 mx-4">
-        <p class="p-2 text-md">{{ D[3][1][0] }}: </p>
+      <label class="inline-item">
+        <p class="label-text">{{ D[3][1][0] }}: </p>
         <select v-model="D[3][1][2]" class="ml-2">
           <option disabled value="">请选择</option>
           <option value=true>随班就读</option>
@@ -172,31 +172,31 @@ let current = $ref(0) // index of field
       </label>
       <template v-if="D[3][0][2] === 'false'">
         <div v-for="i in 6">
-          <label class="block my-2 mx-4" v-if="i > 1">
-            <p class="p-2 text-md">{{ D[3][i][0] }}:</p>
-            <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="D[3][i][2]">
+          <label class="label-item" v-if="i > 1">
+            <p class="label-text">{{ D[3][i][0] }}:</p>
+            <input class="label-input" type="text" :placeholder="D[3][i][1]" v-model="D[3][i][2]">
           </label>
         </div>
       </template>
     </template>
     <template v-if="current === 4">
-      <div v-for="d in D[4]" class="my-2 mx-4">
-        <label class="block">
-          <p class="p-2 text-md">{{ d[0] }}:</p>
-          <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="d[2]">
+      <div v-for="d in D[4]">
+        <label class="block p-2">
+          <p class="label-text">{{ d[0] }}:</p>
+          <input class="label-input" type="text" :placeholder="d[1]" v-model="d[2]">
         </label>
       </div>
     </template>
     <template v-if="current === 5">
-      <label class="flex my-2 mx-4">
-        <p class="p-2 text-md">{{ D[5][0][0] }}: </p>
-        <input type="checkbox" v-model="D[5][0][2]" class="ml-2" />
+      <label class="inline-item">
+        <p class="label-text">{{ D[5][0][0] }}: </p>
+        <input type="checkbox" :placeholder="D[5][0][1]" v-model="D[5][0][2]" class="ml-2" />
         <label for="checkbox" class="p-2 ml-2 text-lg">{{ D[5][0][2] }}</label>
       </label>
       <div v-for="i in 2">
-        <label class="block my-2 mx-4" v-if="i > 0">
-          <p class="p-2 text-md">{{ D[5][i][0] }}:</p>
-          <input class="p-2 shadow appearance-none border rounded block w-full" type="text" v-model="D[5][i][2]">
+        <label class="label-item" v-if="i > 0">
+          <p class="label-text">{{ D[5][i][0] }}:</p>
+          <input class="label-input" type="text" :placeholder="D[5][i][1]" v-model="D[5][i][2]">
         </label>
       </div>
     </template>
