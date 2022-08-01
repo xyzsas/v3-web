@@ -23,7 +23,7 @@ let list = $ref([
   <Toggle v-model="toggle">Test</Toggle>
   <hr class="my-4">
   <EditableList :list="list" item-key="k" class="w-64 m-4" item-class="bg-white my-1 p-1 shadow">
-    <template #item="{ element: el }">
+    <template #item="{ element: el, index: i }">
       <div class="mx-2">
         <label>{{ el.value }}</label>
         <input type="number" v-model="el.cot" class="border ml-2 w-20">

@@ -50,7 +50,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
     <div v-if="Object.keys(perms).length > 0" class="flex flex-wrap items-center m-2 py-1 px-2 rounded bg-white border text-sm"><!-- admin entry -->
       <button v-if="perms.XAdmin" class="round" @click="router.push('/x/user')">用户授权</button>
       <button v-if="perms.YAdmin" class="round" @click="router.push('/y/send')">消息发送</button>
-      <button v-if="perms.AppEnrollAdmin" class="round">选课管理</button>
+      <button v-if="perms.AppEnrollAdmin" class="round" @click="router.push('/app/enroll/admin')">选课管理</button>
     </div>
     <!-- msgs -->
     <div class="mt-10 md:m-10 relative all-transition ease-in-out duration-500 flex flex-col" style="min-height: 50vh;">
