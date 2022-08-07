@@ -5,6 +5,7 @@ import srpc from '../utils/srpc-fc.js'
 import BackHeader from '../components/BackHeader.vue'
 import { useRouter } from 'vue-router'
 import { PlusCircleIcon, DownloadIcon } from '@heroicons/vue/solid'
+import { TrashIcon } from '@heroicons/vue/outline'
 import EditableList from '../components/EditableList.vue'
 import 'v-calendar/dist/style.css'
 const router = useRouter()
@@ -30,27 +31,19 @@ function addOption () {
   }
 }
 
-async function putData () {
+async function updateData () {
   const res = datalist.split(',')
-  const tmp = {}
-  for (const k of res) tmp[k] = []
-  data = tmp
-  await Swal.fire('成功', `成功导入${res.length}条数据`, 'success')
+  for (const k of res) {
+    const id = k.replace(/\s/g, '')
+    if (data[id]) continue
+    data[id] = []
+  }
   datalist = ''
 }
 
-async function updateData () {
-  const res = datalist.split(',')
-  let cnt = 0
-  for (const k of res) {
-    if (data[k]) {
-      cnt++
-      continue
-    }
-    data[k] = []
-  }
-  await Swal.fire('成功', `${cnt}条数据已存在，成功导入${res.length - cnt}条数据`, 'success')
-  datalist = ''
+function editCell (k, i, e) {
+  data[k][i - 1] = e.srcElement.innerHTML.replace(/\D/g, '')
+  if (!data[k][i - 1]) data[k].splice(i - 1, 1)
 }
 
 async function init () {
@@ -79,15 +72,13 @@ async function submitInfo () {
     options: JSON.stringify(list.map(x => x.title))
   }
   for (let i = 0; i < list.length; i++) doc[`$${i + 1}`] = list[i].space
-  console.log(doc)
   const res = await srpc.app.enroll.putInfo(state.user.token, doc)
+  state.loading = false
   if (!res.ok) {
     await Swal.fire('失败', res.err, 'error')
-    state.loading = false
     return
   }
-  await Swal.fire('成功', '发布成功', 'success')
-  init()
+  await Swal.fire('提交成功', '', 'success')
 }
 
 async function submitData () {
@@ -95,28 +86,25 @@ async function submitData () {
   const doc = {}
   for (const k in data) doc[k] = JSON.stringify(data[k])
   const res = await srpc.app.enroll.putData(state.user.token, doc)
+  state.loading = false
   if (!res.ok) {
     await Swal.fire('失败', res.err, 'error')
-    state.loading = false
     return
   }
-  await Swal.fire('成功', '提交成功', 'success')
-  init()
+  await Swal.fire('提交成功', '', 'success')
 }
 
 init()
-
 </script>
 
 <template>
-  <div v-if="state.loading" class="text-2xl m-8 font-mono">Loading...</div>
-  <div v-else class="w-screen md:flex">
-    <div class="w-full md:w-96 bg-white min-h-screen p-8 flex flex-col">
+  <div class="w-screen md:flex" v-if="info && data">
+    <div class="w-full md:w-96 bg-white h-screen p-5 overflow-y-auto">
       <BackHeader @click="router.push('/')">选课管理</BackHeader>
-      <div class="my-2">标题</div>
+      <div class="mt-2">标题</div>
       <input class="block rounded border py-1 px-2 all-transition focus:border-blue-400 px-2" v-model="info.title">
-      <div class="my-2">描述</div>
-      <textarea class="resize-none rounded border py-1 px-2 all-transition focus:border-blue-400" rows="3" v-model="info.description" />
+      <div class="mt-2">描述</div>
+      <textarea class="resize-none w-full rounded border py-1 px-2 all-transition focus:border-blue-400" rows="3" v-model="info.description" />
       <div class="flex items-center my-2">
         最少选择数量
         <input class="ml-2 w-16 rounded border py-1 px-2 all-transition focus:border-blue-400" type="number" v-model="info.min">
@@ -137,8 +125,8 @@ init()
           </template>
         </DatePicker>
       </div>
-      <div class="my-2">批量导入</div>
-      <textarea class="font-mono resize-none rounded border py-1 px-2 all-transition focus:border-blue-400" rows="4" :placeholder="`每行以制表符分隔选项名称和容量\n第一个选项\t10\n第二个选项\t15`" v-model="option"/>
+      <div class="mt-2">批量导入</div>
+      <textarea class="font-mono resize-none w-full rounded border py-1 px-2 all-transition focus:border-blue-400" rows="4" :placeholder="`每行以制表符分隔选项名称和容量\n第一个选项\t10\n第二个选项\t15`" v-model="option"/>
       <div class="flex items-center my-2">
         <button class="text-white text-sm font-bold rounded bg-amber-500 shadow py-1 px-2 mr-2" @click="addOption">导入选项</button>
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2 mr-2" @click="list.push({ key: Math.random() })">新增选项</button>
@@ -146,29 +134,28 @@ init()
       <EditableList :list="list" item-key="key" item-class="bg-white py-1 px-2 border my-2 rounded flex-nowrap">
         <template #item="{ elment: el, index: i }">
           <input class="grow" v-model="list[i].title" placeholder="点击编辑选项内容">
-          <input type="number" v-model="list[i].space" class="border ml-2 w-12 px-1">
+          <input type="number" v-model="list[i].space" class="border ml-2 w-12 pl-1">
         </template>
       </EditableList>
-      <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitInfo">提交</button>
+      <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitInfo">提交信息</button>
     </div>
-    <div class="py-10 px-8 grow min-h-screen">
+    <div class="p-5 grow h-screen overflow-y-auto">
+      <h2 class="text-2xl font-bold my-4">数据管理</h2>
       <div class="flex items-center">
         <input class="grow rounded border py-1 px-2 all-transition focus:border-blue-400 px-2" placeholder="输入以逗号分隔的用户id" v-model="datalist">
-        <button class="text-white text-sm font-bold rounded bg-amber-500 shadow py-1 px-2 mx-2" @click="putData">覆盖导入</button>
-        <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2" @click="updateData">添加导入</button>
+        <button class="text-white text-sm font-bold rounded bg-green-500 shadow ml-2 py-1 px-2" @click="updateData">导入</button>
+        <button class="text-white text-sm font-bold rounded bg-red-500 shadow ml-2 py-1 px-2" @click="data = {}">清除</button>
       </div>
-      <div class="flex flex-wrap my-4">
-        <div v-for="(v, k) in data" class="rounded bg-white py-2 px-4 shadow mr-8 my-2">
-          <div class="font-mono">{{ k }}</div>
-          <div v-if="!v.length" class="flex">
-            <div class="bg-yellow-100 border border-amber-500 px-1 rounded text-amber-500 my-1 mr-1">未选择</div>
-          </div>
-          <div v-else class="flex">
-            <div v-for="i in v" class="bg-sky-100 border border-sky-500 px-1 rounded text-sky-500 my-1 mr-1">{{ list[i - 1].title }}</div>
-          </div>
-        </div>
+      <div class="my-4 w-full bg-white overflow-auto">
+        <table class="min-w-full whitespace-nowrap text-sm">
+          <tr v-for="(v, k) in data" class="border">
+            <td class="py-1 px-2 font-mono">{{ k }}</td>
+            <td class="border px-1" style="min-width: 2rem;" contenteditable v-for="i in info.max" @input="editCell(k, i, $event)" :class="v[i - 1] ? 'bg-green-100' : 'bg-gray-100'">{{ v[i - 1] }}</td>
+            <td><trash-icon class="w-4 mx-2 cursor-pointer text-red-500" @click="delete data[k]" /></td>
+          </tr>
+        </table>
       </div>
-      <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitData">提交</button>
+      <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitData">提交数据</button>
     </div>
   </div>
 </template>
