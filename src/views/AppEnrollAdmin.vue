@@ -5,6 +5,7 @@ import srpc from '../utils/srpc-fc.js'
 import BackHeader from '../components/BackHeader.vue'
 import { useRouter } from 'vue-router'
 import { PlusCircleIcon, DownloadIcon } from '@heroicons/vue/solid'
+import { TrashIcon } from '@heroicons/vue/outline'
 import EditableList from '../components/EditableList.vue'
 import 'v-calendar/dist/style.css'
 const router = useRouter()
@@ -30,24 +31,16 @@ function addOption () {
   }
 }
 
-async function putData () {
-  const res = datalist.split(',')
-  const tmp = {}
-  for (const k of res) tmp[k] = []
-  data = tmp
-  await Swal.fire('成功', `成功导入${res.length}条数据`, 'success')
-  datalist = ''
-}
-
 async function updateData () {
   const res = datalist.split(',')
   let cnt = 0
   for (const k of res) {
-    if (data[k]) {
+    const id = k.replace(/\S/, '')
+    if (data[id]) {
       cnt++
       continue
     }
-    data[k] = []
+    data[id] = []
   }
   await Swal.fire('成功', `${cnt}条数据已存在，成功导入${res.length - cnt}条数据`, 'success')
   datalist = ''
@@ -62,6 +55,7 @@ async function init () {
   info.max = info.max || 9e9
   list = JSON.parse(info.options).map((x, i) => ({ title: x, space: info[`$${i + 1}`], key: Math.random() }))
   data = res.data
+  console.log(info, list)
   delete info.id
   delete data.id
   for (const u in data) data[u] = JSON.parse(data[u])
@@ -154,21 +148,25 @@ init()
     <div class="py-10 px-8 grow min-h-screen">
       <div class="flex items-center">
         <input class="grow rounded border py-1 px-2 all-transition focus:border-blue-400 px-2" placeholder="输入以逗号分隔的用户id" v-model="datalist">
-        <button class="text-white text-sm font-bold rounded bg-amber-500 shadow py-1 px-2 mx-2" @click="putData">覆盖导入</button>
-        <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2" @click="updateData">添加导入</button>
+        <button class="text-white text-sm font-bold rounded bg-green-500 shadow ml-2 py-1 px-2" @click="updateData">导入</button>
+        <button class="text-white text-sm font-bold rounded bg-red-500 shadow ml-2 py-1 px-2" @click="data = {}">清除</button>
       </div>
-      <div class="flex flex-wrap my-4">
-        <div v-for="(v, k) in data" class="rounded bg-white py-2 px-4 shadow mr-8 my-2">
-          <div class="font-mono">{{ k }}</div>
-          <div v-if="!v.length" class="flex">
-            <div class="bg-yellow-100 border border-amber-500 px-1 rounded text-amber-500 my-1 mr-1">未选择</div>
-          </div>
-          <div v-else class="flex">
-            <div v-for="i in v" class="bg-sky-100 border border-sky-500 px-1 rounded text-sky-500 my-1 mr-1">{{ list[i - 1].title }}</div>
-          </div>
-        </div>
+      <div class="my-4 w-full bg-white overflow-scroll">
+        <table class="min-w-full">
+          <tbody>
+            <tr v-for="(v, k) in data" class="border">
+              <td class="py-1 px-2">{{ k }}</td>
+              <td class="py-1 px-2" v-for="i in v">{{ list[i - 1].title }}</td>
+              <td class="py-1 px-2" v-for="i in info.max - v.length">-</td>
+              <td><trash-icon class="w-4 mx-2 cursor-pointer text-red-500" @click="delete data[k]"/></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitData">提交</button>
+    </div>
+  </div>
+</template>nded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitData">提交</button>
     </div>
   </div>
 </template>
