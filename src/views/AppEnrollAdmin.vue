@@ -166,7 +166,4 @@ init()
       <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitData">提交</button>
     </div>
   </div>
-</template>nded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitData">提交</button>
-    </div>
-  </div>
 </template>
