@@ -18,7 +18,7 @@ async function get () {
   const res = await srpc.home(state.user.token)
   loading = false
   // check scan
-  if (res.pub && res.pub.scanReq && res.pub.scanReqTime > Date.now() - 300e3) showScan = res.pub.scanReq
+  if (res.pub && res.pub.scanReq && res.pub.scanReqTime > Date.now() - 60e3) showScan = res.pub.scanReq
   msgs = res.msgs
   perms = res.perms
 }

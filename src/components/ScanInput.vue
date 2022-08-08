@@ -29,9 +29,18 @@ function scanError (err) {
   Swal.fire('扫码错误', err, 'error')
 }
 
+async function getScanRes (checkTime) {
+  const res = await srpc.Y.sub(state.user.token)
+  if (!res || !res.scanRes) return false
+  srpc.Y.pub(state.user.token, {})
+  return (!checkTime || Date.now() - res.scanResTime < 30e3) && res.scanRes
+}
+
 async function focus () {
   showScan = false
   if (!state.user?.token) return
+  let res = await getScanRes(true)
+  if (res) return input = res
   await srpc.Y.pub(state.user.token, { scanReq: props.placeholder || '输入框', scanReqTime: Date.now() })
   subClass = 'ring'
   while (1) {
@@ -39,10 +48,10 @@ async function focus () {
     subClass = (subClass === 'ring') ? 'ring-1' : 'ring'
     await new Promise(r => setTimeout(r, 1000))
     if (subClass === 'ring-1') continue
-    const res = await srpc.Y.sub(state.user.token)
-    if (res && res.scanRes) {
+    res = await getScanRes()
+    if (res) {
       subClass = false
-      input = res.scanRes
+      input = res
       return
     }
   }
