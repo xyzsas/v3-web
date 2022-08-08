@@ -4,6 +4,7 @@ import RegionSelector from '../components/RegionSelector.vue'
 import spinner from '../assets/spinner.svg'
 import Toggle from '../components/Toggle.vue'
 import EditableList from '../components/EditableList.vue'
+import ProgressBar from '../components/ProgressBar.vue'
 
 let toggle = $ref(false)
 let region = $ref('江苏省扬州市广陵区')
@@ -30,4 +31,6 @@ let list = $ref([
       </div>
     </template>
   </EditableList>
+  
+  <ProgressBar :ratio="0.35" class="w-72 px-2"></ProgressBar>
 </template>
