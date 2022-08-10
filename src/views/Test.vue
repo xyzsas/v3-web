@@ -31,6 +31,5 @@ let list = $ref([
       </div>
     </template>
   </EditableList>
-  
-  <ProgressBar :ratio="0.35" class="w-72 px-2"></ProgressBar>
+  <ProgressBar :ratio="0.15" class="w-72"></ProgressBar>
 </template>

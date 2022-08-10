@@ -3,6 +3,7 @@ import { Calendar, DatePicker } from 'v-calendar'
 import state from '../state.js'
 import srpc from '../utils/srpc-fc.js'
 import BackHeader from '../components/BackHeader.vue'
+import ProgressBar from '../components/ProgressBar.vue'
 import { useRouter } from 'vue-router'
 import { PlusCircleIcon, DownloadIcon } from '@heroicons/vue/solid'
 import { TrashIcon } from '@heroicons/vue/outline'
@@ -13,6 +14,9 @@ const router = useRouter()
 state.loading = true
 let info = $ref(null), data = $ref(null), option = $ref(''), datalist = $ref('')
 let list = $ref([])
+
+let dataCnt = $computed(() => Object.keys(data || {}).filter(x => data[x]?.length).length)
+let dataTot = $computed(() => Object.keys(data || {}).length)
 
 function addOption () {
   const opt = option.split('\n')
@@ -98,7 +102,7 @@ init()
 </script>
 
 <template>
-  <div class="w-screen md:flex" v-if="info && data">
+  <div class="max-w-screen md:flex overflow-x-auto" v-if="info && data">
     <div class="w-full md:w-96 bg-white h-screen p-5 overflow-y-auto">
       <BackHeader @click="router.push('/')">选课管理</BackHeader>
       <div class="mt-2">标题</div>
@@ -141,6 +145,10 @@ init()
     </div>
     <div class="p-5 grow h-screen overflow-y-auto">
       <h2 class="text-2xl font-bold my-4">数据管理</h2>
+      <div class="flex items-center my-4">
+        <ProgressBar class="grow" :ratio="dataCnt / dataTot" />
+        <div class="mx-4">{{ dataCnt }} / {{ dataTot }}</div>
+      </div>
       <div class="flex items-center">
         <input class="grow rounded border py-1 px-2 all-transition focus:border-blue-400 px-2" placeholder="输入以逗号分隔的用户id" v-model="datalist">
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow ml-2 py-1 px-2" @click="updateData">导入</button>
