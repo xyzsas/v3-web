@@ -2,9 +2,7 @@
 import { watch } from 'vue'
 import spinner from '../assets/spinner.svg'
 import { debounce } from '../utils/utils.js'
-import { sha256 } from '../utils/crypto.js'
-import srpc from '../utils/srpc-fc.js'
-import state from '../state.js'
+import { _id, query } from '../utils/user.js'
 import ScanInput from './ScanInput.vue'
 
 let text = $ref(''), id = $ref(''), tip = $ref(' ')
@@ -17,9 +15,9 @@ const parseDate = t => moment(t).fromNow()
 async function fetchInfo () {
   if (!id) return
   tip = '' // loading
-  const res = await srpc.X.queryUser(state.user.token, id)
-  if (res && res[id]) tip = `${res[id].name} (${res[id].uid}) ${parseDate(res[id].time)}`
-  else tip = '用户不存在'
+  const res = await query([id])
+  if (res[id].id) tip = `${res[id].name} (${res[id].uid}) ${parseDate(res[id].time)}`
+  else tip = '未找到用户'
 }
 const fetchUser = debounce(fetchInfo, 1000)
 
@@ -36,11 +34,7 @@ watch(() => props.modelValue, v => {
 // update id by text
 watch($$(text), async v => {
   if (!v) return id = ''
-  if (Number.isInteger(Number(v))) {
-    const res = await sha256(v + 'CHAOXING')
-    return id = res.substring(0, 16).replaceAll('/', '_').replaceAll('+', '-')
-  }
-  id = v
+  id = await _id(v)
 })
 </script>
 
