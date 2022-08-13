@@ -3,44 +3,54 @@ import BackHeader from '../components/BackHeader.vue'
 import { useRouter } from 'vue-router'
 import Toggle from '../components/Toggle.vue'
 import RegionSelector from '../components/RegionSelector.vue'
+import { Calendar, DatePicker } from 'v-calendar'
+import 'v-calendar/dist/style.css'
 const router = useRouter()
 
 let D = $ref([
   [
     ['*身份证号码', '港澳台学生填写港澳台通行证号码，外籍学生填写护照号码', ''],
+    ['身份证件有效期', '', ''],
     ['*姓名', '请填写学生姓名', ''],
     ['姓名拼音', '姓和名中间有空格 eg: zhang san', ''],
     ['英文姓名', '可留空', ''],
     ['性别', '', ''],
-    ['籍贯', '学生的籍贯', ''],
+    ['*籍贯', '学生的籍贯', ''],
     ['*国籍', '学生的国籍', ''],
-    ['是否为港澳台侨胞', '', '']
+    ['*港澳台侨胞', '', ''],
+    ['*出生日期', '', ''],
+    ['*联系电话', '', ''],
+    ['*邮政编码', '', ''],
+    ['*户口性质', '', ''],
+    ['*健康状况', '', ''],
+    ['婚姻状况', '', ''],
+    ['电子邮箱', '', ''],
+    ['主页地址', '', ''],
+    ['血型', '', '']
   ],
   [
-    ['现居地', '学生的现居地', ''],
-    ['出生地', '学生的出生地', ''],
-    ['户籍详细地址', '', ''],
-    ['户口所在地', '', ''],
-    ['户口性质', '', '']
+    ['现住址', '填写详细地址', ''],
+    ['出生地', '填写完整的地区行政区划名称', ''],
+    ['通讯地址', '填写详细地址', ''],
+    ['户籍详细地址', '街道小区门牌号等详细地址', ''],
+    ['家庭常住地区', '填写完整的地区行政区划名称', ''],
+    ['家庭常住地详细地址', '街道小区门牌号等详细地址', '']
   ],
   [
-    ['是否独生子女', '', ''],
-    ['是否受过学前教育', '', ''],
-    ['是否留守儿童', '', ''],
-    ['是否孤儿', '', ''],
-    ['是否烈士或优抚子女', '', ''],
+    ['*是否独生子女', '', ''],
+    ['*是否烈士或优抚子女', '', ''],
+    ['*是否择校生', '', ''],
+    ['*是否需要申请资助', '', ''],
+    ['是否外来务工子女', '', ''],
     ['是否由政府购买学位', '', ''],
-    ['是否需要申请资助', '', ''],
-    ['是否择校生', '', ''],
-    ['是否寄宿', '', ''],
-    ['是否流动生', '', '']
+    ['是否在校', '', ''],
+    ['是否提交真实材料', '', '']
   ],
   [
     ['*是否报道', '', ''],
     ['*是否孤儿', '', ''],
     ['*残疾类型', '', ''],
     ['*是否寄宿', '', ''],
-    ['*出生日期', 'eg: 2008-01-01', ''],
     ['*残疾证明类型', '', ''],
     ['*残疾证书号', '', ''],
     ['*残疾程度', '', ''],
@@ -60,9 +70,9 @@ let D = $ref([
     ['第一监护人民族', '', ''],
     ['第一监护人证件类型', '', ''],
     ['第一监护人证件号码', '', ''],
-    ['第一监护人出生日期', 'eg: 2008-01-01', ''],
     ['第一监护人关系说明', '', ''],
-    ['第一监护人职务', '', '']
+    ['第一监护人职务', '', ''],
+    ['第一监护人出生日期', '', '']
   ],
   [
     ['*第二监护人称谓', '第一监护人与学生的关系', ''],
@@ -77,19 +87,32 @@ let D = $ref([
     ['第二监护人民族', '', ''],
     ['第二监护人证件类型', '', ''],
     ['第二监护人证件号码', '', ''],
-    ['第二监护人出生日期', 'eg: 2008-01-01', ''],
     ['第二监护人关系说明', '', ''],
-    ['第二监护人职务', '', '']
+    ['第二监护人职务', '', ''],
+    ['第二监护人出生日期', 'eg: 2008-01-01', '']
   ],
   [
-    ['是否乘坐校车', '', ''],
-    ['上下学方式', '学生上下学的交通方式', ''],
-    ['上下学距离', '学生上下学的距离', ''],
+    ['*是否乘坐校车', '', ''],
+    ['*上下学方式', '', ''],
+    ['*上下学距离(公里)', '填写数字', ''],
+  ],
+  [
+    ['*学籍辅号', '江苏省学籍辅号,共18位,详细编码规则请参考江苏省学籍系统帮助文档', ''],
+    ['*班级', '填写所在班级编号,四位数字,eg:1801', ''],
+    ['班内学号', '', ''],
+    ['学习简历', '', ''],
+    ['就读方式', '', ''],
+    ['学生类别', '', ''],
+    ['政治面貌', '', ''],
+    ['宗教信仰', '', ''],
+    ['学生来源', '', ''],
+    ['特长', '', '']
   ]
 ])
 
 const fields = [
   { title: '个人信息', data: D[0], done: false },
+  { title: '学籍信息', data: D[7], done: false },
   { title: '个人地址', data: D[1], done: false },
   { title: '辅助信息', data: D[2], done: false },
   { title: '特教信息', data: D[3], done: false },
@@ -124,36 +147,45 @@ let current = $ref(0) // index of field
       </label>
       <label class="label-item">
         <p class="label-text">{{ D[0][1][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[0][1][1]" v-model="D[0][1][2]">
+        <DatePicker v-model="D[0][1][2]" mode="dateTime" is24hr :model-config="{ type: 'number' }">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300" :value="inputValue"
+              v-on="inputEvents" />
+          </template>
+        </DatePicker>
       </label>
       <label class="label-item">
         <p class="label-text">{{ D[0][2][0] }}:</p>
-        <input v-model="D[0][2][2]" class="label-input" type="text" :placeholder="D[0][2][1]"
-          @input="D[0][2][2] = D[0][2][2].toLowerCase().replace(/[^a-z]/g, '')">
+        <input class="label-input" type="text" :placeholder="D[0][2][1]" v-model="D[0][2][2]">
       </label>
       <label class="label-item">
         <p class="label-text">{{ D[0][3][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[0][3][1]" v-model="D[0][3][2]">
+        <input v-model="D[0][3][2]" class="label-input" type="text" :placeholder="D[0][3][1]"
+          @input="D[0][3][2] = D[0][3][2].toLowerCase().replace(/[^a-z]/g, '')">
+      </label>
+      <label class="label-item">
+        <p class="label-text">{{ D[0][4][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[0][4][1]" v-model="D[0][4][2]">
       </label>
       <label class="inline-item">
-        <p>{{ D[0][4][0] }}: </p>
-        <select v-model="D[0][4][2]" class="inline-input">
+        <p>{{ D[0][5][0] }}: </p>
+        <select v-model="D[0][5][2]" class="inline-input">
           <option disabled value="">请选择</option>
           <option value="male">男</option>
           <option value="female">女</option>
         </select>
       </label>
       <label class="label-item">
-        <p class="label-text"> {{ D[0][5][0] }}: </p>
-        <RegionSelector v-model="D[0][5][2]" />
+        <p class="label-text"> {{ D[0][6][0] }}: </p>
+        <RegionSelector v-model="D[0][6][2]" />
       </label>
       <label class="label-item">
-        <p class="label-text">{{ D[0][6][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[0][6][1]" v-model="D[0][6][2]">
+        <p class="label-text">{{ D[0][7][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[0][7][1]" v-model="D[0][7][2]">
       </label>
       <label class="inline-item">
-        <p>{{ D[0][7][0] }}: </p>
-        <select v-model="D[0][7][2]" class="inline-input">
+        <p>{{ D[0][8][0] }}: </p>
+        <select v-model="D[0][8][2]" class="inline-input">
           <option disabled value="">请选择</option>
           <option value="无">无</option>
           <option value="香港">香港</option>
@@ -173,40 +205,94 @@ let current = $ref(0) // index of field
           <option value="其他">其他</option>
         </select>
       </label>
+      <label class="label-item">
+        <p class="label-text">{{ D[0][9][0] }}:</p>
+        <DatePicker v-model="D[0][9][2]" mode="dateTime" is24hr :model-config="{ type: 'number' }">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300" :value="inputValue"
+              v-on="inputEvents" />
+          </template>
+        </DatePicker>
+      </label>
+      <template v-for="i in 11">
+        <label class="label-item" v-if="i > 9">
+          <p class="label-text">{{ D[0][i][0] }}:</p>
+          <input class="label-input" type="text" :placeholder="D[0][i][1]" v-model="D[0][i][2]">
+        </label>
+      </template>
+      <label class="inline-item">
+        <p>{{ D[0][12][0] }}: </p>
+        <select v-model="D[0][12][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="农业户口">农业户口</option>
+          <option value="非农业户口">非农业户口</option>
+        </select>
+      </label>
+      <label class="inline-item">
+        <p>{{ D[0][13][0] }}: </p>
+        <select v-model="D[0][13][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="健康/良好">健康/良好</option>
+          <option value="一般/较弱">一般/较弱</option>
+          <option value="有慢性病">有慢性病</option>
+          <option value="有生理缺陷">有生理缺陷</option>
+          <option value="残疾">残疾</option>
+        </select>
+      </label>
+      <label class="inline-item">
+        <p>{{ D[0][14][0] }}: </p>
+        <select v-model="D[0][14][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="未婚">未婚</option>
+          <option value="已婚">已婚</option>
+          <option value="丧偶">丧偶</option>
+          <option value="离婚">离婚</option>
+          <option value="未说明的婚姻状况">未说明的婚姻状况</option>
+        </select>
+      </label>
+      <template v-for="i in 16">
+        <label class="label-item" v-if="i > 14">
+          <p class="label-text">{{ D[0][i][0] }}:</p>
+          <input class="label-input" type="text" :placeholder="D[0][i][1]" v-model="D[0][i][2]">
+        </label>
+      </template>
+      <label class="inline-item">
+        <p>{{ D[0][17][0] }}: </p>
+        <select v-model="D[0][17][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="未知血型">未知血型</option>
+          <option value="A血型">A血型</option>
+          <option value="B血型">B血型</option>
+          <option value="AB血型">AB血型</option>
+          <option value="O血型">O血型</option>
+          <option value="RH阳性血型">RH阳性血型</option>
+          <option value="RH阴性血型">RH阴性血型</option>
+          <option value="HLA血型">HLA血型</option>
+          <option value="未定血型">未定血型</option>
+          <option value="其他血型">其他血型</option>
+        </select>
+      </label>
     </template>
-    <template v-if="current === 1">
+    <template v-if="current === 2">
       <label class="label-item">
         <p class="label-text">{{ D[1][0][0] }}:</p>
         <input class="label-input" type="text" :placeholder="D[1][0][1]" v-model="D[1][0][2]">
       </label>
-      <div v-for="i in 2">
-        <label class="label-item">
-          <template class="flex">
-            <p class="label-text">{{ D[1][i][0] }}:</p>
-            <button class="ml-2 text-sm" @click="D[1][i][2] = D[1][0][2]">复制现居地</button>
-          </template>
-          <input class="label-input" type="text" :placeholder="D[1][i][1]" v-model="D[1][i][2]">
-        </label>
-      </div>
-      <label class="label-item">
-        <p class="label-text"> {{ D[1][3][0] }}: </p>
-        <RegionSelector class="ml-2" v-model="D[1][3][2]" />
+      <label v-for="i in 5" class="label-item">
+        <template class="flex">
+          <p class="label-text">{{ D[1][i][0] }}:</p>
+          <button class="ml-2 text-sm" @click="D[1][i][2] = D[1][0][2]">复制现住址</button>
+        </template>
+        <input class="label-input" type="text" :placeholder="D[1][i][1]" v-model="D[1][i][2]">
       </label>
-      <label class="label-item">
-        <p class="label-text">{{ D[1][4][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[1][4][1]" v-model="D[1][4][2]">
-      </label>
-    </template>
-    <template v-if="current === 2">
-      <div v-for="i in 10">
-        <label class="inline-item">
-          <p class="label-text">{{ D[2][i - 1][0] }}: </p>
-          <input type="checkbox" :placeholder="D[2][i - 1][1]" v-model="D[2][i - 1][2]" class="ml-2" />
-          <label for="checkbox" class="p-2 ml-2 text-lg">{{ D[2][i - 1][2] }}</label>
-        </label>
-      </div>
     </template>
     <template v-if="current === 3">
+      <label v-for="i in 8" class="inline-item">
+        <Toggle v-model="D[2][i - 1][2]" class="my-2">{{ D[2][i - 1][0] }}</Toggle>
+      </label>
+
+    </template>
+    <template v-if="current === 4">
       <Toggle v-model="D[3][0][2]" class="my-2">{{ D[3][0][0] }}</Toggle>
       <Toggle v-model="D[3][1][2]" class="my-2">{{ D[3][1][0] }}</Toggle>
       <label class="inline-item">
@@ -225,25 +311,21 @@ let current = $ref(0) // index of field
         </select>
       </label>
       <Toggle v-model="D[3][3][2]">{{ D[3][3][0] }}</Toggle>
-      <label class="label-item">
-        <p class="label-text">{{ D[3][4][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[3][4][1]" v-model="D[3][4][2]">
-      </label>
       <label class="inline-item" v-if="D[3][2][2] !== '无'">
-        <p>{{ D[3][5][0] }}: </p>
-        <select v-model="D[3][5][2]" class="inline-input">
+        <p>{{ D[3][4][0] }}: </p>
+        <select v-model="D[3][4][2]" class="inline-input">
           <option disabled value="">请选择</option>
           <option value="残疾证">残疾证</option>
           <option value="医学诊断证明">医学诊断证明</option>
         </select>
       </label>
-      <label class="label-item" v-if="D[3][5][2] === '残疾证'">
-        <p class="label-text">{{ D[3][6][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[3][6][1]" v-model="D[3][6][2]">
+      <label class="label-item" v-if="D[3][4][2] === '残疾证'">
+        <p class="label-text">{{ D[3][5][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[3][5][1]" v-model="D[3][5][2]">
       </label>
-      <label class="inline-item" v-if="D[3][5][2] === '残疾证'">
-        <p>{{ D[3][7][0] }}: </p>
-        <select v-model="D[3][7][2]" class="inline-input">
+      <label class="inline-item" v-if="D[3][4][2] === '残疾证'">
+        <p>{{ D[3][6][0] }}: </p>
+        <select v-model="D[3][6][2]" class="inline-input">
           <option disabled value="">请选择</option>
           <option value="1级">1级</option>
           <option value="2级">2级</option>
@@ -251,9 +333,9 @@ let current = $ref(0) // index of field
           <option value="4级">4级</option>
         </select>
       </label>
-       <label class="inline-item" v-if="D[3][2][2] !== '无'">
-        <p>{{ D[3][8][0] }}: </p>
-        <select v-model="D[3][8][2]" class="inline-input">
+      <label class="inline-item" v-if="D[3][2][2] !== '无'">
+        <p>{{ D[3][7][0] }}: </p>
+        <select v-model="D[3][7][2]" class="inline-input">
           <option disabled value="">请选择</option>
           <option value="普通学校特教班就读">普通学校特教班就读</option>
           <option value="普通学校随班就读">普通学校随班就读</option>
@@ -263,29 +345,29 @@ let current = $ref(0) // index of field
           <option value="福利机构特教办学点就读">福利机构特教办学点就读</option>
         </select>
       </label>
-      <label class="label-item" v-if="D[3][5][2] === '医学诊断证明'">
-        <p class="label-text">{{ D[3][9][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[3][9][1]" v-model="D[3][9][2]">
+      <label class="label-item" v-if="D[3][4][2] === '医学诊断证明'">
+        <p class="label-text">{{ D[3][8][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[3][8][1]" v-model="D[3][8][2]">
       </label>
     </template>
-    <template v-if="current === 4">
-      <div v-for="i in 5">
-        <label class="label-item">
-          <p class="label-text">{{ D[4][i - 1][0] }}:</p>
-          <input class="label-input" type="text" :placeholder="D[4][i - 1][1]" v-model="D[4][i - 1][2]">
-        </label>
-      </div>
+    <template v-if="current === 5">
+      <label v-for="i in 5" class="label-item">
+        <p class="label-text">{{ D[4][i - 1][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[4][i - 1][1]" v-model="D[4][i - 1][2]">
+      </label>
+
       <Toggle v-model="D[4][5][2]" class="my-2">{{ D[4][5][0] }}</Toggle>
       <label class="label-item">
         <p class="label-text"> {{ D[4][6][0] }}: </p>
         <RegionSelector v-model="D[4][6][2]" />
       </label>
-      <div v-for="i in 9">
+      <template v-for="i in 9">
         <label class="label-item" v-if="i > 6">
           <p class="label-text">{{ D[4][i][0] }}:</p>
           <input class="label-input" type="text" :placeholder="D[4][i][1]" v-model="D[4][i][2]">
         </label>
-      </div>
+      </template>
+
       <label class="inline-item">
         <p>{{ D[4][10][0] }}: </p>
         <select v-model="D[4][10][2]" class="inline-input">
@@ -300,31 +382,38 @@ let current = $ref(0) // index of field
           <option value="其他">其他</option>
         </select>
       </label>
-      <div v-for="i in 14">
+      <template v-for="i in 13">
         <label class="label-item" v-if="i > 10">
           <p class="label-text">{{ D[4][i][0] }}:</p>
           <input class="label-input" type="text" :placeholder="D[4][i][1]" v-model="D[4][i][2]">
         </label>
-      </div>
+      </template>
+      <label class="label-item">
+        <p class="label-text">{{ D[4][14][0] }}:</p>
+        <DatePicker v-model="D[4][14][2]" mode="dateTime" is24hr :model-config="{ type: 'number' }">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300" :value="inputValue"
+              v-on="inputEvents" />
+          </template>
+        </DatePicker>
+      </label>
     </template>
-    <template v-if="current === 5">
-      <div v-for="i in 5">
-        <label class="label-item">
-          <p class="label-text">{{ D[5][i - 1][0] }}:</p>
-          <input class="label-input" type="text" :placeholder="D[5][i - 1][1]" v-model="D[5][i - 1][2]">
-        </label>
-      </div>
+    <template v-if="current === 6">
+      <label v-for="i in 5" class="label-item">
+        <p class="label-text">{{ D[5][i - 1][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[5][i - 1][1]" v-model="D[5][i - 1][2]">
+      </label>
       <Toggle v-model="D[5][5][2]" class="my-2">{{ D[5][5][0] }}</Toggle>
       <label class="label-item">
         <p class="label-text"> {{ D[5][6][0] }}: </p>
         <RegionSelector v-model="D[5][6][2]" />
       </label>
-      <div v-for="i in 9">
+      <template v-for="i in 9">
         <label class="label-item" v-if="i > 6">
           <p class="label-text">{{ D[5][i][0] }}:</p>
           <input class="label-input" type="text" :placeholder="D[5][i][1]" v-model="D[5][i][2]">
         </label>
-      </div>
+      </template>
       <label class="inline-item">
         <p>{{ D[5][10][0] }}: </p>
         <select v-model="D[5][10][2]" class="inline-input">
@@ -339,25 +428,121 @@ let current = $ref(0) // index of field
           <option value="其他">其他</option>
         </select>
       </label>
-      <div v-for="i in 14">
+      <template v-for="i in 13">
         <label class="label-item" v-if="i > 10">
           <p class="label-text">{{ D[5][i][0] }}:</p>
           <input class="label-input" type="text" :placeholder="D[5][i][1]" v-model="D[5][i][2]">
         </label>
-      </div>
-    </template>
-    <template v-if="current === 6">
-      <label class="inline-item">
-        <p class="label-text">{{ D[6][0][0] }}: </p>
-        <input type="checkbox" :placeholder="D[6][0][1]" v-model="D[6][0][2]" class="ml-2" />
-        <label for="checkbox" class="p-2 ml-2 text-lg">{{ D[6][0][2] }}</label>
+      </template>
+      <label class="label-item">
+        <p class="label-text">{{ D[5][14][0] }}:</p>
+        <DatePicker v-model="D[5][14][2]" mode="dateTime" is24hr :model-config="{ type: 'number' }">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300" :value="inputValue"
+              v-on="inputEvents" />
+          </template>
+        </DatePicker>
       </label>
-      <div v-for="i in 2">
-        <label class="label-item">
-          <p class="label-text">{{ D[6][i][0] }}:</p>
-          <input class="label-input" type="text" :placeholder="D[6][i][1]" v-model="D[6][i][2]">
-        </label>
-      </div>
+
+    </template>
+    <template v-if="current === 7">
+      <Toggle v-model="D[6][0][2]" class="my-2">{{ D[6][0][0] }}</Toggle>
+      <label class="inline-item">
+        <p>{{ D[6][1][0] }}: </p>
+        <select v-model="D[6][1][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="步行">步行</option>
+          <option value="自行车(含摩托车、电动自行车)">自行车(含摩托车、电动自行车)</option>
+          <option value="公共交通(含城市公交、农村客运、地铁)">公共交通(含城市公交、农村客运、地铁)</option>
+          <option value="家长自行接送">家长自行接送</option>
+          <option value="校车">校车</option>
+        </select>
+      </label>
+      <label class="label-item">
+        <p class="label-text">{{ D[6][2][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[6][2][1]" v-model="D[6][2][2]">
+      </label>
+    </template>
+    <template v-if="current === 1">
+      <label v-for="i in 4" class="label-item">
+        <p class="label-text">{{ D[7][i - 1][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[7][i - 1][1]" v-model="D[7][i - 1][2]">
+      </label>
+      <label class="inline-item">
+        <p>{{ D[7][4][0] }}: </p>
+        <select v-model="D[7][4][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="走读">走读</option>
+          <option value="住校">住校</option>
+          <option value="送教上门">送教上门</option>
+        </select>
+      </label>
+      <label class="inline-item">
+        <p>{{ D[7][5][0] }}: </p>
+        <select v-model="D[7][5][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="普通小学生">普通小学生</option>
+          <option value="成人小学生">成人小学生</option>
+          <option value="普通初中学生">普通初中学生</option>
+          <option value="职业初中学生">职业初中学生</option>
+          <option value="成人初中学生">成人初中学生</option>
+          <option value="普通高中学生">普通高中学生</option>
+          <option value="成人高中学生">成人高中学生</option>
+          <option value="工读学生">工读学生</option>
+          <option value="视力残疾学生">视力残疾学生</option>
+          <option value="听力残疾学生">听力残疾学生</option>
+          <option value="智力残疾学生">智力残疾学生</option>
+          <option value="其他残疾学生">其他残疾学生</option>
+          <option value="其他">其他</option>
+        </select>
+      </label>
+      <label class="inline-item">
+        <p>{{ D[7][6][0] }}: </p>
+        <select v-model="D[7][6][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="普通小学生">普通小学生</option>
+          <option value="成人小学生">成人小学生</option>
+          <option value="普通初中学生">普通初中学生</option>
+          <option value="职业初中学生">职业初中学生</option>
+          <option value="成人初中学生">成人初中学生</option>
+          <option value="普通高中学生">普通高中学生</option>
+          <option value="成人高中学生">成人高中学生</option>
+          <option value="工读学生">工读学生</option>
+          <option value="视力残疾学生">视力残疾学生</option>
+          <option value="听力残疾学生">听力残疾学生</option>
+          <option value="智力残疾学生">智力残疾学生</option>
+          <option value="其他残疾学生">其他残疾学生</option>
+          <option value="其他">其他</option>
+        </select>
+      </label>
+      <label class="inline-item">
+        <p>{{ D[7][7][0] }}: </p>
+        <select v-model="D[7][7][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="无宗教信仰">无宗教信仰</option>
+          <option value="佛教">佛教</option>
+          <option value="喇嘛教">喇嘛教</option>
+          <option value="道教">道教</option>
+          <option value="天主教">天主教</option>
+          <option value="基督教">基督教</option>
+          <option value="东正教">东正教</option>
+          <option value="伊斯兰教">伊斯兰教</option>
+          <option value="其他">其他</option>
+        </select>
+      </label>
+      <label class="inline-item">
+        <p>{{ D[7][8][0] }}: </p>
+        <select v-model="D[7][8][2]" class="inline-input">
+          <option disabled value="">请选择</option>
+          <option value="正常入学">正常入学</option>
+          <option value="借读">借读</option>
+          <option value="其他">其他</option>
+        </select>
+      </label>
+      <label class="label-item">
+        <p class="label-text">{{ D[7][9][0] }}:</p>
+        <input class="label-input" type="text" :placeholder="D[7][9][1]" v-model="D[7][9][2]">
+      </label>
     </template>
   </div>
 </template>
