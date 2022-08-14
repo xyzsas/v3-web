@@ -57,6 +57,7 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       <p v-if="loading" class="flex items-center">
         <img src="/logo.svg">正在载入...
       </p>
+      <p v-if="!loading && !msgIds.length">暂时没有消息</p>
       <MsgCard v-for="id in msgIds" :key="id" :msg="msgs[id]" />
     </div>
   </div>
