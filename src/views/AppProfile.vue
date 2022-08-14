@@ -147,9 +147,9 @@ let current = $ref(0) // index of field
       </label>
       <label class="label-item">
         <p class="label-text">{{ D[0][1][0] }}:</p>
-        <DatePicker v-model="D[0][1][2]" mode="dateTime" is24hr :model-config="{ type: 'number' }">
+        <DatePicker v-model="D[0][1][2]" :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }">
           <template v-slot="{ inputValue, inputEvents }">
-            <input class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300" :value="inputValue"
+            <input class="label-input" :value="inputValue"
               v-on="inputEvents" />
           </template>
         </DatePicker>
