@@ -15,8 +15,9 @@ let userId = $ref(''), got = $ref(false)
 
 const general = { // on: true/false
   XAdmin: { label: '授权管理' },
-  UserQuery: { label: '用户检索' },
   YAdmin: { label: '消息管理' },
+  ZAdmin: { label: '学生档案管理' },
+  UserQuery: { label: '用户检索' },
   AppEnrollAdmin: { label: '选课管理' },
 }
 
