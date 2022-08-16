@@ -9,10 +9,10 @@ const router = useRouter()
 
 let D = $ref([
   [
-    ['身份证号码', '港澳台学生填写港澳台通行证号码，外籍学生填写护照号码', ''],
+    ['身份证号码', '无身份证请填写其它证件号', ''],
     ['身份证件有效期', '', ''],
     ['姓名', '请填写学生姓名', ''],
-    ['姓名拼音', '姓和名中间有空格 eg: zhang san', ''],
+    ['姓名拼音', '姓名中间有空格 例:zhang san', ''],
     ['英文姓名', '可留空', ''],
     ['性别', '', ''],
     ['籍贯', '学生的籍贯', ''],
@@ -163,7 +163,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][5][0] }}: </p>
         <select v-model="D[0][5][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="male">男</option>
           <option value="female">女</option>
         </select>
@@ -179,7 +179,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][8][0] }}: </p>
         <select v-model="D[0][8][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="无">无</option>
           <option value="香港">香港</option>
           <option value="香港同胞亲属">香港同胞亲属</option>
@@ -215,7 +215,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][12][0] }}: </p>
         <select v-model="D[0][12][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="农业户口">农业户口</option>
           <option value="非农业户口">非农业户口</option>
         </select>
@@ -223,7 +223,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][13][0] }}: </p>
         <select v-model="D[0][13][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="健康/良好">健康/良好</option>
           <option value="一般/较弱">一般/较弱</option>
           <option value="有慢性病">有慢性病</option>
@@ -234,7 +234,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][14][0] }}: </p>
         <select v-model="D[0][14][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="未婚">未婚</option>
           <option value="已婚">已婚</option>
           <option value="丧偶">丧偶</option>
@@ -251,7 +251,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][17][0] }}: </p>
         <select v-model="D[0][17][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="未知血型">未知血型</option>
           <option value="A血型">A血型</option>
           <option value="B血型">B血型</option>
@@ -267,7 +267,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][18][0] }}: </p>
         <select v-model="D[0][18][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="走读">走读</option>
           <option value="住校">住校</option>
           <option value="送教上门">送教上门</option>
@@ -276,7 +276,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][19][0] }}: </p>
         <select v-model="D[0][19][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="中国共产党党员">中国共产党党员</option>
           <option value="中国共产党预备党员">中国共产党预备党员</option>
           <option value="中国共产主义青年团团员">中国共产主义青年团团员</option>
@@ -303,7 +303,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][20][0] }}: </p>
         <select v-model="D[0][20][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="无宗教信仰">无宗教信仰</option>
           <option value="佛教">佛教</option>
           <option value="喇嘛教">喇嘛教</option>
@@ -318,7 +318,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[0][21][0] }}: </p>
         <select v-model="D[0][21][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="正常入学">正常入学</option>
           <option value="借读">借读</option>
           <option value="其他">其他</option>
@@ -361,7 +361,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p class="label-text">{{ D[3][0][0] }}: </p>
         <select v-model="D[3][0][2]" class="ml-2">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value=无>无</option>
           <option value=肢体障碍>肢体障碍</option>
           <option value=听力障碍>听力障碍</option>
@@ -376,7 +376,7 @@ let current = $ref(0) // index of field
       <label class="inline-item" v-if="D[3][0][2] !== '无'">
         <p>{{ D[3][1][0] }}: </p>
         <select v-model="D[3][1][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="残疾证">残疾证</option>
           <option value="医学诊断证明">医学诊断证明</option>
         </select>
@@ -388,7 +388,7 @@ let current = $ref(0) // index of field
       <label class="inline-item" v-if="D[3][1][2] === '残疾证'">
         <p>{{ D[3][3][0] }}: </p>
         <select v-model="D[3][3][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="1级">1级</option>
           <option value="2级">2级</option>
           <option value="3级">3级</option>
@@ -398,7 +398,7 @@ let current = $ref(0) // index of field
       <label class="inline-item" v-if="D[3][0][2] !== '无'">
         <p>{{ D[3][4][0] }}: </p>
         <select v-model="D[3][4][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="普通学校特教班就读">普通学校特教班就读</option>
           <option value="普通学校随班就读">普通学校随班就读</option>
           <option value="特教学校就读">特教学校就读</option>
@@ -431,7 +431,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[4][9][0] }}: </p>
         <select v-model="D[4][9][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="无户籍">无户籍</option>
           <option value="居民身份证">居民身份证</option>
           <option value="香港特区护照/身份证明">香港特区护照/身份证明</option>
@@ -476,7 +476,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[5][9][0] }}: </p>
         <select v-model="D[5][9][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="无户籍">无户籍</option>
           <option value="居民身份证">居民身份证</option>
           <option value="香港特区护照/身份证明">香港特区护照/身份证明</option>
@@ -507,7 +507,7 @@ let current = $ref(0) // index of field
       <label class="inline-item">
         <p>{{ D[6][1][0] }}: </p>
         <select v-model="D[6][1][2]" class="inline-input">
-          <option disabled value="">请选择</option>
+          <option value="">请选择</option>
           <option value="步行">步行</option>
           <option value="自行车(含摩托车、电动自行车)">自行车(含摩托车、电动自行车)</option>
           <option value="公共交通(含城市公交、农村客运、地铁)">公共交通(含城市公交、农村客运、地铁)</option>
