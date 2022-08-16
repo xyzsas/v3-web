@@ -1,4 +1,4 @@
-let url = 'https://s.yzzx.org/srpc'
+let url = 'http://localhost:11111/'
 
 const getFunction = name => ((...args) => fetch(url, {
   method: 'POST', mode: 'cors', cache: 'no-cache',
