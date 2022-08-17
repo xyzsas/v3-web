@@ -158,8 +158,8 @@ init()
         <table class="min-w-full whitespace-nowrap text-sm">
           <tr v-for="(v, k) in data" class="border">
             <td class="py-1 px-2 font-mono">{{ k }}</td>
+            <td class="w-4"><trash-icon class="w-4 mx-2 cursor-pointer text-red-500" @click="delete data[k]" /></td>
             <td class="border px-1" style="min-width: 2rem;" contenteditable v-for="i in info.max" @input="editCell(k, i, $event)" :class="v[i - 1] ? 'bg-green-100' : 'bg-gray-100'">{{ v[i - 1] }}</td>
-            <td><trash-icon class="w-4 mx-2 cursor-pointer text-red-500" @click="delete data[k]" /></td>
           </tr>
         </table>
       </div>

@@ -5,6 +5,7 @@ import spinner from '../assets/spinner.svg'
 import Toggle from '../components/Toggle.vue'
 import EditableList from '../components/EditableList.vue'
 import ProgressBar from '../components/ProgressBar.vue'
+import UserSelector from '../components/UserSelector.vue'
 
 let toggle = $ref(false)
 let region = $ref('江苏省扬州市广陵区')
@@ -14,6 +15,8 @@ let list = $ref([
   { k: 'b', value: 'B' },
   { k: 'c', value: 'C' }
 ])
+
+let model = $ref({ show: false, list: '' })
 </script>
 
 <template>
@@ -32,4 +35,6 @@ let list = $ref([
     </template>
   </EditableList>
   <ProgressBar :ratio="0.15" class="w-72"></ProgressBar>
+  <button @click="model.show = true">click{{ model }}</button>
+  <UserSelector v-model="model"/>
 </template>
