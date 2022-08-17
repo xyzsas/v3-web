@@ -45,6 +45,7 @@ export async function search (filter) {
   const res = {}
   const ZRes = await local.Z.search(state.user.token, filter)
   for (const k in ZRes) {
+    res[k] = {}
     res[k].id = k
     res[k].uid = ZRes[k].uid
     res[k].姓名 = ZRes[k].姓名
