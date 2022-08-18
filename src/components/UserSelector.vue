@@ -9,7 +9,7 @@ let model = $ref(props.modelValue)
 let keyword = $ref(''), mode = $ref(0)
 let selected = $ref({}), result = $ref({})
 
-let showResult = $ref(false), showSelected = $ref(false)
+let showResult = $ref(false), showSelected = $ref(false), allSelected = $ref(false)
 
 const placeholder = ['输入用户id', '输入以逗号分隔的用户id列表', '输入JSON对象或使用下方选择器']
 const filter = $ref({})
@@ -75,8 +75,30 @@ async function modeSearch () {
 }
 
 function select (id) {
-  if (selected[id]) delete selected[id]
-  else selected[id] = result[id]
+  if (selected[id]) {
+    delete selected[id]
+    if (result[id]) allSelected = false
+  }
+  else {
+    selected[id] = result[id]
+    if (!allSelected) {
+      for (const id in result) {
+        if (!selected[id]) return
+      }
+      allSelected = true
+    }
+  }
+}
+
+function selectAll () {
+  if (allSelected) {
+    for (const id in result) delete selected[id]
+    allSelected = false
+  }
+  else {
+    for (const id in result) selected[id] = result[id]
+    allSelected = true
+  }
 }
 
 function submit () {
@@ -120,6 +142,11 @@ function submit () {
     <div class="rounded bg-gray-100 py-1 px-2 my-2">
       <div class="m-1 flex items-center">
         搜索结果
+        <div class="text-sm flex items-center all-transition font-mono shadow rounded px-1 mx-1 cursor-pointer" @click="selectAll" :class="allSelected ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'">
+          <PlusSmIcon v-if="!allSelected" class="w-6 text-blue-500" />
+          <CheckIcon v-else class="w-6 text-white" />
+          全选
+        </div>
         <div class="grow"></div>
         <ChevronLeftIcon class="all-transition w-8 cursor-pointer" :class="showResult ? '-rotate-90' : 'rotate-0'" @click="showResult = !showResult"/>
       </div>
