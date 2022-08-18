@@ -16,7 +16,7 @@ let list = $ref([
   { k: 'c', value: 'C' }
 ])
 
-let model = $ref({ show: false, list: '' })
+let model = $ref({ show: false, list: ['qoEjThuHpBERCsxB'] })
 </script>
 
 <template>
