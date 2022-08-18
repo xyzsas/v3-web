@@ -14,7 +14,9 @@ const index = {
   '/app/scan': () => import('./views/AppScan.vue'),
   '/app/profile': () => import('./views/AppProfile.vue'),
   '/app/enroll': () => import('./views/AppEnroll.vue'),
-  '/app/enroll/admin': () => import('./views/AppEnrollAdmin.vue')
+  '/app/enroll/admin': () => import('./views/AppEnrollAdmin.vue'),
+  // Z
+  '/z/import': () => import('./views/ZImport.vue')
 }
 
 const routes = []
