@@ -73,6 +73,13 @@ async function modeSearch () {
     Swal.fire('错误', '格式错误，请重试！', 'error')
   }
   showResult = true
+  for (const id in result) {
+    if (!selected[id]) {
+      allSelected = false
+      return
+    }
+  }
+  allSelected = true
 }
 
 function select (id) {
