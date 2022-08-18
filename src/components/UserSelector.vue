@@ -24,6 +24,7 @@ async function refresh () {
   showResult = false
   showSelected = false
   mode = 0
+  result = {}
   selected = await query(model.list)
 }
 
@@ -142,7 +143,7 @@ function submit () {
     <div class="rounded bg-gray-100 py-1 px-2 my-2">
       <div class="m-1 flex items-center">
         搜索结果
-        <div class="text-sm flex items-center all-transition font-mono shadow rounded px-1 mx-1 cursor-pointer" @click="selectAll" :class="allSelected ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'">
+        <div v-if="JSON.stringify(result) != '{}'" class="text-sm flex items-center all-transition font-mono shadow rounded px-1 mx-1 cursor-pointer" @click="selectAll" :class="allSelected ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'">
           <PlusSmIcon v-if="!allSelected" class="w-6 text-blue-500" />
           <CheckIcon v-else class="w-6 text-white" />
           全选
