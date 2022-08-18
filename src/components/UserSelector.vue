@@ -83,6 +83,8 @@ function submit () {
   const list = []
   for (const k in selected) list.push(k)
   model.list = list
+  Swal.fire('成功', '提交成功', 'success')
+  refresh()
 }
 
 </script>
