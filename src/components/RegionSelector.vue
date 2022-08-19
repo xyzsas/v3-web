@@ -44,7 +44,7 @@ watch(() => props.modelValue, parseValue, { immediate: true })
 </script>
 
 <template>
-  <div class="flex items-center flex-wrap" v-if="data">
+  <template v-if="data">
     <select v-model="selected[0]" @change="selected[1] = selected[2] = ''">
       <option value="">省</option>
       <option v-for="(v, k) in data">{{ k }}</option>
@@ -57,7 +57,7 @@ watch(() => props.modelValue, parseValue, { immediate: true })
       <option value="">区</option>
       <option v-for="v in data[selected[0]][selected[1]]">{{ v }}</option>
     </select>
-  </div>
+  </template>
 </template>
 
 <style scoped>
