@@ -33,7 +33,7 @@ async function submit () {
   <div class="min-h-screen p-10">
     <BackHeader @back="router.push('/')">学生账户信息导入</BackHeader>
     <p class="mb-2">若学生账户信息已存在，导入信息将覆盖旧的账户信息。</p>
-    <textarea v-model="input" rows="20" :placeholder="'无表头，导入超星uid、姓名、8为学号\n123456789\t张三\t20180102'" class="w-full p-2 font-mono" />
+    <textarea v-model="input" rows="20" :placeholder="'无表头，导入超星uid、姓名、8位学号。示例：\n123456789\t张三\t20180102'" class="w-full p-2 font-mono" />
     <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md m-4 py-2 w-24" @click="submit">提交</button>
   </div>
 </template>
