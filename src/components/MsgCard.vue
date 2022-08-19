@@ -21,6 +21,7 @@ async function click () {
   }
   if (content.router) {
     state.msg = msg
+    state.loading = true
     return router.push(content.router)
   }
   if (content.link) return window.open(content.link)
