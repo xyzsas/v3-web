@@ -1,6 +1,6 @@
 <script setup>
 import { watch } from 'vue'
-import { XIcon, CheckIcon, PlusSmIcon, ChevronLeftIcon, TrashIcon } from '@heroicons/vue/solid'
+import { XIcon, CheckIcon, PlusIcon, ChevronLeftIcon, TrashIcon } from '@heroicons/vue/solid'
 import { _id, query, search } from '../utils/user.js'
 import Wrapper from '../components/Wrapper.vue'
 const props = defineProps(['modelValue'])
@@ -150,9 +150,9 @@ function submit () {
     <div v-if="true" class="rounded bg-gray-100 py-1 px-2 my-2">
       <div class="m-1 flex items-center">
         搜索结果
-        <div class="text-sm flex items-center all-transition font-mono shadow rounded px-1 mx-1 cursor-pointer" @click="selectAll" :class="allSelected ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'">
-          <PlusSmIcon v-if="!allSelected" class="w-6 text-blue-500" />
-          <CheckIcon v-else class="w-6 text-white" />
+        <div v-if="Object.keys(result).length" class="text-sm flex items-center all-transition font-mono shadow rounded p-1 mx-1 cursor-pointer" @click="selectAll" :class="allSelected ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'">
+          <PlusIcon v-if="!allSelected" class="w-4 text-blue-500" />
+          <CheckIcon v-else class="w-4 text-white" />
           全选
         </div>
         <div class="grow"></div>

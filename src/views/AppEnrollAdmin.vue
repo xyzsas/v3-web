@@ -1,5 +1,6 @@
 <script setup>
 import { Calendar, DatePicker } from 'v-calendar'
+import { watch } from 'vue'
 import state from '../state.js'
 import srpc from '../utils/srpc-fc.js'
 import BackHeader from '../components/BackHeader.vue'
@@ -8,15 +9,22 @@ import { useRouter } from 'vue-router'
 import { PlusCircleIcon, DownloadIcon } from '@heroicons/vue/solid'
 import { TrashIcon } from '@heroicons/vue/outline'
 import EditableList from '../components/EditableList.vue'
+import UserSelector from '../components/UserSelector.vue'
 import 'v-calendar/dist/style.css'
 const router = useRouter()
 
 state.loading = true
 let info = $ref(null), data = $ref(null), option = $ref(''), datalist = $ref('')
 let list = $ref([])
-
+let userSelector = $ref({ show: false, list: [] })
 let dataCnt = $computed(() => Object.keys(data || {}).filter(x => data[x]?.length).length)
 let dataTot = $computed(() => Object.keys(data || {}).length)
+watch(() => userSelector.list, () => {
+  for (const id of userSelector.list) {
+    console.log(id)
+    data[id] = data[id] || []
+  }
+})
 
 function addOption () {
   const opt = option.split('\n')
@@ -61,7 +69,10 @@ async function init () {
   data = res.data
   delete info.id
   delete data.id
-  for (const u in data) data[u] = JSON.parse(data[u])
+  for (const u in data) {
+    data[u] = JSON.parse(data[u])
+    userSelector.list.push(u)
+  }
   state.loading = false
 }
 
@@ -151,9 +162,11 @@ init()
       </div>
       <div class="flex items-center">
         <input class="grow rounded border py-1 px-2 all-transition focus:border-blue-400 px-2" placeholder="输入以逗号分隔的用户id" v-model="datalist">
+        <button class="text-white text-sm font-bold rounded bg-yellow-500 shadow ml-2 py-1 px-2" @click="userSelector.show = true">选择</button>
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow ml-2 py-1 px-2" @click="updateData">导入</button>
         <button class="text-white text-sm font-bold rounded bg-red-500 shadow ml-2 py-1 px-2" @click="data = {}">清除</button>
       </div>
+      <UserSelector v-model="userSelector"/>
       <div class="my-4 w-full bg-white overflow-auto">
         <table class="min-w-full whitespace-nowrap text-sm">
           <tr v-for="(v, k) in data" class="border">
