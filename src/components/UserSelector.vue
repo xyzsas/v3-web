@@ -1,6 +1,6 @@
 <script setup>
 import { watch } from 'vue'
-import { XIcon, CheckIcon, PlusSmIcon, ChevronLeftIcon } from '@heroicons/vue/solid'
+import { XIcon, CheckIcon, PlusSmIcon, ChevronLeftIcon, TrashIcon } from '@heroicons/vue/solid'
 import { _id, query, search } from '../utils/user.js'
 import Wrapper from '../components/Wrapper.vue'
 const props = defineProps(['modelValue'])
@@ -147,10 +147,10 @@ function submit () {
       </div>
     </div>
     <button class="all-transition font-bold text-white rounded-full shadow hover:shadow-md my-2 px-2 py-1 w-16" :class="parseBg(mode)" @click="modeSearch">搜索</button>
-    <div class="rounded bg-gray-100 py-1 px-2 my-2">
+    <div v-if="true" class="rounded bg-gray-100 py-1 px-2 my-2">
       <div class="m-1 flex items-center">
         搜索结果
-        <div v-if="JSON.stringify(result) != '{}'" class="text-sm flex items-center all-transition font-mono shadow rounded px-1 mx-1 cursor-pointer" @click="selectAll" :class="allSelected ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'">
+        <div class="text-sm flex items-center all-transition font-mono shadow rounded px-1 mx-1 cursor-pointer" @click="selectAll" :class="allSelected ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'">
           <PlusSmIcon v-if="!allSelected" class="w-6 text-blue-500" />
           <CheckIcon v-else class="w-6 text-white" />
           全选
@@ -171,24 +171,12 @@ function submit () {
         </div>
       </Wrapper>
     </div>
-    <div class="rounded bg-gray-100 py-1 px-2 my-2">
-      <div class="m-1 flex items-center">
-        已选择
-        <div class="grow"></div>
-        <ChevronLeftIcon class="all-transition w-8 cursor-pointer" :class="showSelected ? '-rotate-90' : 'rotate-0'" @click="showSelected = !showSelected"/>
-      </div>
-      <Wrapper :show="showSelected">
-        <div class="px-2 py-1">
-          <div v-for="(v, k) in selected" class="flex items-center all-transition font-mono shadow rounded px-1 my-1 cursor-pointer" @click="select(k)" :class="selected[k] ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'">
-            <PlusSmIcon v-if="!selected[k]" class="w-6 text-blue-500" />
-            <CheckIcon v-else class="w-6 text-white" />
-            <div class="m-1">{{ v['姓名'] }}</div>
-            <div class="m-1">{{ v['年级'] }}</div>
-            <div class="m-1">{{ v['班级'] }}</div>
-            <div class="m-1">{{ v['学号'] }}</div>
-          </div>
+    <div class="rounded bg-gray-100 py-3 px-3 my-2 flex items-center">
+      已选择 {{ Object.keys(selected).length }} 名用户
+      <div class="text-sm flex items-center all-transition font-mono shadow rounded p-1 mx-1" @click="selected = {}" :class="Object.keys(selected).length ? 'bg-red-500 text-white cursor-pointer' : 'bg-white text-gray-600 cursor-default'">
+          <TrashIcon class="w-4" :class="Object.keys(selected).length ? 'text-white' : 'text-red-500'"/>
+          清空
         </div>
-      </Wrapper>
     </div>
     <button class="all-transition font-bold text-white bg-blue-500 rounded-full shadow hover:shadow-md my-2 px-2 py-1 w-16" @click="submit">提交</button>
   </div>
