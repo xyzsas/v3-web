@@ -16,7 +16,7 @@ let list = $ref([
   { k: 'c', value: 'C' }
 ])
 
-let model = $ref({ show: false, list: ['qoEjThuHpBERCsxB'] })
+let showSelect = $ref(false)
 </script>
 
 <template>
@@ -35,6 +35,6 @@ let model = $ref({ show: false, list: ['qoEjThuHpBERCsxB'] })
     </template>
   </EditableList>
   <ProgressBar :ratio="0.15" class="w-72"></ProgressBar>
-  <button @click="model.show = true">click{{ model }}</button>
-  <UserSelector v-model="model"/>
+  <button @click="showSelect = !showSelect">click</button>
+  <UserSelector v-model="showSelect"/>
 </template>
