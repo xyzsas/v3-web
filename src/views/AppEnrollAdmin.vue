@@ -1,6 +1,9 @@
 <script setup>
+import { watch } from 'vue'
 import { Calendar, DatePicker } from 'v-calendar'
+import 'v-calendar/dist/style.css'
 import state from '../state.js'
+import { query } from '../utils/user.js'
 import srpc from '../utils/srpc-fc.js'
 import BackHeader from '../components/BackHeader.vue'
 import ProgressBar from '../components/ProgressBar.vue'
@@ -8,13 +11,13 @@ import { useRouter } from 'vue-router'
 import { PlusCircleIcon, DownloadIcon } from '@heroicons/vue/solid'
 import { TrashIcon } from '@heroicons/vue/outline'
 import EditableList from '../components/EditableList.vue'
-import 'v-calendar/dist/style.css'
+import UserSelector from '../components/UserSelector.vue'
 const router = useRouter()
 
 state.loading = true
-let info = $ref(null), data = $ref(null), option = $ref(''), datalist = $ref('')
-let list = $ref([])
-
+let info = $ref(null), data = $ref(null)
+let list = $ref([]), option = $ref('')
+let showUserSelector = $ref(false), userMap = $ref({})
 let dataCnt = $computed(() => Object.keys(data || {}).filter(x => data[x]?.length).length)
 let dataTot = $computed(() => Object.keys(data || {}).length)
 
@@ -35,16 +38,6 @@ function addOption () {
   }
 }
 
-async function updateData () {
-  const res = datalist.split(',')
-  for (const k of res) {
-    const id = k.replace(/\s/g, '')
-    if (data[id]) continue
-    data[id] = []
-  }
-  datalist = ''
-}
-
 function editCell (k, i, e) {
   data[k][i - 1] = e.srcElement.innerHTML.replace(/\D/g, '')
   if (!data[k][i - 1]) data[k].splice(i - 1, 1)
@@ -62,8 +55,10 @@ async function init () {
   delete info.id
   delete data.id
   for (const u in data) data[u] = JSON.parse(data[u])
+  userMap = await query(Object.keys(data))
   state.loading = false
 }
+init()
 
 async function submitInfo () {
   state.loading = true
@@ -98,7 +93,13 @@ async function submitData () {
   await Swal.fire('提交成功', '', 'success')
 }
 
-init()
+function addUser (obj) {
+  for (const id in obj) {
+    userMap[id] = obj[id]
+    if (data[id]) continue
+    data[id] = []
+  }
+}
 </script>
 
 <template>
@@ -150,14 +151,16 @@ init()
         <div class="mx-4">{{ dataCnt }} / {{ dataTot }}</div>
       </div>
       <div class="flex items-center">
-        <input class="grow rounded border py-1 px-2 all-transition focus:border-blue-400 px-2" placeholder="输入以逗号分隔的用户id" v-model="datalist">
-        <button class="text-white text-sm font-bold rounded bg-green-500 shadow ml-2 py-1 px-2" @click="updateData">导入</button>
-        <button class="text-white text-sm font-bold rounded bg-red-500 shadow ml-2 py-1 px-2" @click="data = {}">清除</button>
+        <button class="text-white text-sm font-bold rounded bg-green-500 shadow ml-2 py-1 px-2" @click="showUserSelector = true">添加用户</button>
+        <button class="text-white text-sm font-bold rounded bg-red-500 shadow ml-2 py-1 px-2" @click="data = {}">清除全部</button>
       </div>
-      <div class="my-4 w-full bg-white overflow-auto">
-        <table class="min-w-full whitespace-nowrap text-sm">
+      <UserSelector v-model="showUserSelector" @select="addUser" />
+      <div class="my-4 w-full overflow-auto">
+        <p class="text-xs my-1">结果为选项列表中的位置</p>
+        <table class="min-w-full whitespace-nowrap text-sm bg-white">
           <tr v-for="(v, k) in data" class="border">
-            <td class="py-1 px-2 font-mono">{{ k }}</td>
+            <td class="py-1 px-2">{{ userMap[k].name || userMap[k].姓名 || '未知用户' + (userMap[k].uid || k) }}</td>
+            <td class="py-1 px-2 font-mono">{{ (userMap[k].年级 + userMap[k].班级 + userMap[k].学号) || '' }}</td>
             <td class="w-4"><trash-icon class="w-4 mx-2 cursor-pointer text-red-500" @click="delete data[k]" /></td>
             <td class="border px-1" style="min-width: 2rem;" contenteditable v-for="i in info.max" @input="editCell(k, i, $event)" :class="v[i - 1] ? 'bg-green-100' : 'bg-gray-100'">{{ v[i - 1] }}</td>
           </tr>
