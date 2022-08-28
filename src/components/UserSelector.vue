@@ -11,17 +11,21 @@ const emits = defineEmits(['update:modelValue', 'select'])
 let mode = $ref(0), filter = $ref({}), queryInput = $ref(''), filterInput = $ref('')
 
 watch($$(mode), v => {
-  if (v === 2 && !filterInput) filterInput = JSON.stringify({ 账户: { 姓名: '张三', 年级: '2018', 班级: '10' } }, null, 2)
+  if (v === 2 && !filterInput) filterInput = JSON.stringify({ '账户.姓名': '张三', '账户.年级': '2018', '账户.班级': '10' }, null, 2)
 })
 
-let searching = $ref(false), showResult = $ref(false), allSelected = $ref(false)
-
-let keyword = $ref(0)
-let selected = $ref({}), result = $ref({})
+let searching = $ref(false)
+let result = $ref({})
+let count = $computed(() => {
+  let cot = 0
+  for (const k in result) {
+    if (result[k].selected) cot++
+  }
+  return cot
+})
 
 async function modeSearch () {
   searching = true
-  showResult = false
   if (mode === 0) {
     const f = {}
     for (const k in filter) {
@@ -31,54 +35,34 @@ async function modeSearch () {
     result = await search(f)
   }
   if (mode === 1) {
-    const list = keyword.split('\n').map(x => x.trim())
+    const list = queryInput.split('\n').map(x => x.trim())
     result = await query(list)
   }
   if (mode === 2) {
+    let f = {}
     try {
-      const f = JSON.parse(filterInput)
+      f = JSON.parse(filterInput)
     } catch {
       Swal.fire('格式错误', '查询对象格式错误', 'error')
       return
     }
-    result = await query(list)
+    result = await search(f)
   }
-  console.log(result)
-  // todo
-}
-
-function select (id) {
-  if (selected[id]) {
-    delete selected[id]
-    if (result[id]) allSelected = false
-  }
-  else {
-    selected[id] = result[id]
-    if (!allSelected) {
-      for (const id in result) {
-        if (!selected[id]) return
-      }
-      allSelected = true
-    }
-  }
+  searching = false
 }
 
 function selectAll () {
-  if (allSelected) {
-    for (const id in result) delete selected[id]
-    allSelected = false
-  }
-  else {
-    for (const id in result) selected[id] = result[id]
-    allSelected = true
-  }
+  let isAll = (count === Object.keys(result).length)
+  for (const k in result) result[k].selected = !isAll
 }
 
 function submit () {
-  const list = []
-  for (const k in selected) list.push(k)
-  // todo
-  Swal.fire('成功', '提交成功', 'success')
+  const res = {}
+  for (const k in result) {
+    if (result[k].selected) res[k] = result[k]
+  }
+  emits('select', res)
+  emits('update:modelValue', false)
 }
 </script>
 
@@ -86,13 +70,13 @@ function submit () {
   <Transition name="fade">
     <div class="fixed top-0 left-0 w-screen h-screen bg-black opacity-50" v-if="props.modelValue" @click="emits('update:modelValue', false)" />
   </Transition>
-  <div class="fixed top-0 w-11/12 sm:w-96 bg-white min-h-screen all-transition pb-4" :class="props.modelValue ? 'right-0' : '-right-96'">
+  <div class="fixed top-0 w-11/12 sm:w-96 bg-white min-h-screen all-transition pb-4 overflow-y-auto" :class="props.modelValue ? 'right-0' : '-right-96'">
     <div class="flex items-center whitespace-nowrap w-full shadow">
       <button class="grow p-2 font-bold all-transition" :class="mode === 0 && 'bg-blue-500 text-white'" @click="mode = 0">搜索用户</button>
       <button class="grow p-2 font-bold all-transition border-l" :class="mode === 1 && 'bg-blue-500 text-white'" @click="mode = 1">批量查询</button>
       <button class="grow p-2 font-bold all-transition border-l" :class="mode === 2 && 'bg-blue-500 text-white'" @click="mode = 2">高级检索</button>
     </div>
-    <div class="p-4">
+    <div class="p-3">
       <Transition name="fade" mode="out-in">
         <div v-if="mode === 0">
           <label class="flex items-center my-1">uid: <input class="border bg-gray-100 rounded px-1 ml-2" v-model="filter.uid"></label>
@@ -110,40 +94,25 @@ function submit () {
       </Transition>
     </div>
     <Transition name="fade" mode="out-in">
-      <p class="mb-2 mx-4" v-if="searching">正在搜索...</p>
-      <button v-else class="all-transition block font-bold text-white rounded shadow hover:shadow-md mb-2 mx-4 px-2 py-1 w-16 bg-blue-500" @click="modeSearch">搜索</button>
+      <p class="mb-4 mx-4 h-8" v-if="searching">正在搜索...</p>
+      <button v-else class="all-transition block font-bold text-white rounded shadow hover:shadow-md mb-4 mx-4 px-2 w-16 bg-blue-500 h-8" @click="modeSearch">搜索</button>
     </Transition>
-    <Transition name="fade">
-      <div v-if="!searching" class="rounded bg-gray-100 py-1 px-2 my-2">
-        <div class="m-1 flex items-center">
-          搜索结果
-          <div v-if="Object.keys(result).length" class="text-sm flex items-center font-mono cursor-pointer" @click="selectAll">
-            <PlusIcon v-if="!allSelected" class="w-4 text-gray-400 rounded bg-white border-2 m-1" />
-            <CheckIcon v-else class="w-4 text-white rounded bg-blue-500 m-1" />
-            全选({{ Object.keys(result).length }}项)
-          </div>
-          <div class="grow"></div>
-          <ChevronLeftIcon class="all-transition w-8 cursor-pointer" :class="showResult ? '-rotate-90' : 'rotate-0'" @click="showResult = !showResult"/>
+    <hr>
+    <Transition name="fade" mode="out-in">
+      <p class="p-4" v-if="!searching && !Object.keys(result).length">未找到用户</p>
+      <div v-else-if="!searching && Object.keys(result).length" class="p-4">
+        <label class="flex items-center mb-2"><input type="checkbox" :value="count === Object.keys(result).length" @change="selectAll">&nbsp;全选</label>
+        <div v-for="(v, k) in result" class="flex items-center px-1 cursor-pointer all-transition" :class="v.selected ? 'bg-blue-100' : 'bg-gray-100'" @click="v.selected = !v.selected">
+          <CheckIcon v-if="v.selected" class="w-4 text-blue-500" />
+          <PlusIcon v-else class="w-4 text-gray-400" />
+          <div class="mx-1 font-bold">{{ v.姓名 || v.name }}</div>
+          <div class="font-mono text-sm">{{ v.年级 }}</div>
+          <div class="font-mono text-sm">{{ v.班级 }}</div>
+          <div class="font-mono text-sm">{{ v.学号 }}</div>
         </div>
-        <Wrapper :show="showResult">
-          <div class="px-2 py-1 max-h-96 overflow-y-scroll">
-            <div v-for="(v, k) in result" class="flex items-center text-gray-600 font-mono px-1 border-b border-l cursor-pointer" @click="select(k)">
-              <PlusIcon v-if="!selected[k]" class="w-4 text-gray-400 rounded bg-white border-2" />
-              <CheckIcon v-else class="w-4 text-white rounded bg-blue-500" />
-              <div class="mx-1">{{ v['姓名'] }}</div>
-              <div class="mx-1">{{ v['年级'] }}</div>
-              <div class="mx-1">{{ v['班级'] }}</div>
-              <div class="mx-1">{{ v['学号'] }}</div>
-            </div>
-          </div>
-        </Wrapper>
-        <div class="flex items-center">
-          <button class="all-transition font-bold text-white bg-blue-500 rounded-full shadow hover:shadow-md m-2 px-2 py-1 w-16" @click="submit">提交</button>
-          <button class="all-transition font-bold text-white bg-red-500 rounded-full shadow hover:shadow-md m-2 px-2 py-1 w-16" @click="selected = {}">清空</button>
-          <div class="text-sm font-mono">已选中 {{ Object.keys(selected).length }} 名用户</div>
-        </div>
+        <div class="text-sm mt-2">已选中 <code>{{ count }}</code> 名用户</div>
+        <button class="all-transition font-bold text-white bg-blue-500 rounded-full shadow hover:shadow-md my-2 px-4 py-1" @click="submit">确认选择</button>
       </div>
-    
     </Transition>
   </div>
 </template>

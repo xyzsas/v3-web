@@ -17,6 +17,9 @@ let list = $ref([
 ])
 
 let showSelect = $ref(false)
+function select (obj) {
+  console.log(obj)
+}
 </script>
 
 <template>
@@ -36,5 +39,5 @@ let showSelect = $ref(false)
   </EditableList>
   <ProgressBar :ratio="0.15" class="w-72"></ProgressBar>
   <button @click="showSelect = !showSelect">click</button>
-  <UserSelector v-model="showSelect"/>
+  <UserSelector v-model="showSelect" @select="select" />
 </template>
