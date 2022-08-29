@@ -70,7 +70,7 @@ function submit () {
   <Transition name="fade">
     <div class="fixed top-0 left-0 w-screen h-screen bg-black opacity-50" v-if="props.modelValue" @click="emits('update:modelValue', false)" />
   </Transition>
-  <div class="fixed top-0 w-11/12 sm:w-96 bg-white min-h-screen all-transition pb-4 overflow-y-auto" :class="props.modelValue ? 'right-0' : '-right-96'">
+  <div class="print:hidden fixed top-0 w-11/12 sm:w-96 bg-white min-h-screen all-transition pb-4 overflow-y-auto" :class="props.modelValue ? 'right-0' : '-right-96'">
     <div class="flex items-center whitespace-nowrap w-full shadow">
       <button class="grow p-2 font-bold all-transition" :class="mode === 0 && 'bg-blue-500 text-white'" @click="mode = 0">搜索用户</button>
       <button class="grow p-2 font-bold all-transition border-l" :class="mode === 1 && 'bg-blue-500 text-white'" @click="mode = 1">批量查询</button>
@@ -86,10 +86,10 @@ function submit () {
           <label class="flex items-center my-1">学号: <input class="border bg-gray-100 rounded px-1 ml-2" v-model="filter.学号"></label>
         </div>
         <div v-else-if="mode === 1">
-          <textarea v-model="queryInput" class="rounded border w-full p-2 font-mono bg-gray-100" rows="8" :placeholder="'每行一个用户id或超星uid\n例如：\nabcdABCD1234-_aA\n123456789'" />
+          <textarea v-model="queryInput" class="rounded border w-full p-2 font-mono bg-gray-100" rows="6" :placeholder="'每行一个用户id或超星uid\n例如：\nabcdABCD1234-_aA\n123456789'" />
         </div>
         <div v-else-if="mode === 2">
-          <textarea v-model="filterInput" class="rounded border w-full p-2 font-mono bg-gray-100" rows="8" placeholder="数据库查询对象" />
+          <textarea v-model="filterInput" class="rounded border w-full p-2 font-mono bg-gray-100" rows="6" placeholder="数据库查询对象" />
         </div>
       </Transition>
     </div>
