@@ -100,6 +100,28 @@ function addUser (obj) {
     data[id] = []
   }
 }
+
+function excel () {
+  // header
+  let csv = '\uFEFF"超星uid","姓名","学号",'
+  for (let i = 0; i < info.max; i++) csv += '"_",'
+  csv += '\n'
+  // body
+  for (const k in data) {
+    csv += `"${userMap[k]?.uid || '未知用户' + k}","${userMap[k]?.name || userMap[k]?.姓名 || '未知用户'}","${(userMap[k]?.年级 + userMap[k]?.班级 + userMap[k]?.学号) || ''}",`
+    for (const r of data[k]) csv += `"${r}",`
+    csv += '\n'
+  }
+  // download
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.style = 'visibility: hidden;'
+  link.download = info.title + '.csv'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 </script>
 
 <template>
@@ -153,14 +175,15 @@ function addUser (obj) {
       <div class="flex items-center">
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow ml-2 py-1 px-2" @click="showUserSelector = true">添加用户</button>
         <button class="text-white text-sm font-bold rounded bg-red-500 shadow ml-2 py-1 px-2" @click="data = {}">清除全部</button>
+        <button class="text-white text-sm font-bold rounded bg-blue-500 shadow ml-2 py-1 px-2" @click="excel">导出数据</button>
       </div>
       <UserSelector v-model="showUserSelector" @select="addUser" />
       <div class="my-4 w-full overflow-auto">
-        <p class="text-xs my-1">结果为选项列表中的位置</p>
+        <p class="text-xs my-1">列表中的用户具有访问权限，选课结果为选项序号。</p>
         <table class="min-w-full whitespace-nowrap text-sm bg-white">
           <tr v-for="(v, k) in data" class="border">
-            <td class="py-1 px-2">{{ userMap[k].name || userMap[k].姓名 || '未知用户' + (userMap[k].uid || k) }}</td>
-            <td class="py-1 px-2 font-mono">{{ (userMap[k].年级 + userMap[k].班级 + userMap[k].学号) || '' }}</td>
+            <td class="py-1 px-2">{{ userMap[k]?.name || userMap[k]?.姓名 || '未知用户' + (userMap[k]?.uid || k) }}</td>
+            <td class="py-1 px-2 font-mono">{{ (userMap[k]?.年级 + userMap[k]?.班级 + userMap[k]?.学号) || '' }}</td>
             <td class="w-4"><trash-icon class="w-4 mx-2 cursor-pointer text-red-500" @click="delete data[k]" /></td>
             <td class="border px-1" style="min-width: 2rem;" contenteditable v-for="i in info.max" @input="editCell(k, i, $event)" :class="v[i - 1] ? 'bg-green-100' : 'bg-gray-100'">{{ v[i - 1] }}</td>
           </tr>
