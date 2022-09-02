@@ -9,7 +9,7 @@ import BackHeader from '../components/BackHeader.vue'
 import ProgressBar from '../components/ProgressBar.vue'
 import { useRouter } from 'vue-router'
 import { PlusCircleIcon } from '@heroicons/vue/24/solid'
-import { TrashIcon } from '@heroicons/vue/outline'
+import { TrashIcon } from '@heroicons/vue/24/outline'
 import EditableList from '../components/EditableList.vue'
 import UserSelector from '../components/UserSelector.vue'
 const router = useRouter()

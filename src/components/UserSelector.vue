@@ -74,7 +74,7 @@ function submit () {
   <Transition name="fade">
     <div class="fixed top-0 left-0 w-screen h-screen bg-black opacity-50" v-if="props.modelValue" @click="emits('update:modelValue', false)" />
   </Transition>
-  <div class="print:hidden fixed top-0 w-11/12 sm:w-96 bg-white min-h-screen all-transition pb-4 overflow-y-auto" :class="props.modelValue ? 'right-0' : '-right-96'">
+  <div class="print:hidden fixed top-0 w-11/12 sm:w-96 bg-white h-screen all-transition pb-4 overflow-y-auto" :class="props.modelValue ? 'right-0' : '-right-96'">
     <div class="flex items-center whitespace-nowrap w-full shadow">
       <button class="grow p-2 font-bold all-transition" :class="mode === 0 && 'bg-blue-500 text-white'" @click="mode = 0">搜索用户</button>
       <button class="grow p-2 font-bold all-transition border-l" :class="mode === 1 && 'bg-blue-500 text-white'" @click="mode = 1">批量查询</button>
@@ -103,8 +103,8 @@ function submit () {
     </Transition>
     <hr>
     <Transition name="fade" mode="out-in">
-      <p class="p-4" v-if="!searching && !Object.keys(result).length">未找到用户</p>
-      <div v-else-if="!searching && Object.keys(result).length" class="p-4">
+      <div v-if="!searching" class="p-4 pt-2">
+        <p class="text-sm">共计查询到<code>{{ Object.keys(result).length }}</code>个用户</p>
         <div class="flex items-center justify-between mb-2">
           <label class="flex items-center select-none"><input type="checkbox" :checked="count === Object.keys(result).length" @change="selectAll">&nbsp;全选</label>
           <div class="text-sm flex items-center">
@@ -112,10 +112,10 @@ function submit () {
             <button v-if="count" class="all-transition font-bold text-white bg-blue-500 rounded shadow hover:shadow-md mx-2 px-2 py-1" @click="submit">确认选择</button>
           </div>
         </div>
-        <div v-for="(v, k) in result" class="flex items-center px-1 cursor-pointer all-transition" :class="v.selected ? 'bg-blue-100' : 'bg-gray-100'" @click="v.selected = !v.selected">
+        <div v-for="(v, k) in result" class="flex items-center px-1 cursor-pointer all-transition" :class="v.selected ? 'bg-blue-200' : 'bg-gray-100'" @click="v.selected = !v.selected">
           <CheckIcon v-if="v.selected" class="w-4 text-blue-500" />
           <PlusIcon v-else class="w-4 text-gray-400" />
-          <div class="mx-1 font-bold">{{ v.姓名 || v.name }}</div>
+          <div class="mx-1 font-bold" style="min-width: 4rem;">{{ v.姓名 || v.name }}</div>
           <div class="font-mono text-sm">{{ v.年级 }}</div>
           <div class="font-mono text-sm">{{ v.班级 }}</div>
           <div class="font-mono text-sm">{{ v.学号 }}</div>
