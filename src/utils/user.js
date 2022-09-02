@@ -18,7 +18,10 @@ export async function _id (u) {
 // @return: { 'id': { id, uid, name, time, 姓名, 年级, 班级, 学号 } }
 export async function query (list) {
   const res = {}
-  for (const u of list) res[await _id(u)] = {}
+  for (const u of list) {
+    if (!u) continue
+    res[await _id(u)] = {}
+  }
   const XRes = await fc.X.queryUser(state.user.token, Object.keys(res))
   const ZRes = await local.Z.query(state.user.token, Object.keys(res))
   for (const k in XRes) {

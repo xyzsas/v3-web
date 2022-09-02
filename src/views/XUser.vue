@@ -5,7 +5,7 @@ import spinner from '../assets/spinner.svg'
 import Toggle from '../components/Toggle.vue'
 import BackHeader from '../components/BackHeader.vue'
 import UserInput from '../components/UserInput.vue'
-import { SearchIcon } from '@heroicons/vue/outline'
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
@@ -44,7 +44,7 @@ function updateGeneral (perm) {
     <BackHeader @back="router.push('/')">用户权限管理</BackHeader>
     <div class="mx-4 flex items-start">
       <UserInput v-model="userId" class="w-64" @update:modelValue="got = false" @keyup.enter="getUser" />
-      <SearchIcon @click="getUser" class="w-8 rounded-full p-1 mx-1 text-blue-500 cursor-pointer" />
+      <MagnifyingGlassIcon @click="getUser" class="w-8 rounded-full p-1 mx-1 text-blue-500 cursor-pointer" />
     </div>
     <div v-if="got" class="m-4 p-2 bg-white rounded shadow-md ">
       <h2 class="text-xl font-bold mx-2">通用权限管理</h2>

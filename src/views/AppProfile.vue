@@ -4,7 +4,7 @@ import fc from '../utils/srpc-fc.js'
 import local from '../utils/srpc-local.js'
 import BackHeader from '../components/BackHeader.vue'
 import Wrapper from '../components/Wrapper.vue'
-import { PencilAltIcon, CheckIcon } from '@heroicons/vue/outline'
+import { PencilSquareIcon, CheckIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
 import state from '../state.js'
 import Toggle from '../components/Toggle.vue'
@@ -183,7 +183,7 @@ function edit (k) {
               <b>: </b>
               <span>{{ v }}</span>
             </template>
-            <PencilAltIcon v-if="editing === k" class="w-4 ml-2 text-blue-500" />
+            <PencilSquareIcon v-if="editing === k" class="w-4 ml-2 text-blue-500" />
           </div>
           <Wrapper :show="editing === k" class="px-4 py-2 bg-white">
             <DatePicker v-if="editors[k].date" @change="edit(k)" v-model="editors[k].value" :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }">

@@ -1,5 +1,5 @@
 <script setup>
-import { ArrowLeftIcon } from '@heroicons/vue/outline'
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
 const emits = defineEmits(['back'])
 </script>
 

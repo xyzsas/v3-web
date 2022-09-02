@@ -1,6 +1,6 @@
 <script setup>
 import { watch } from 'vue'
-import { CheckIcon, PlusIcon, ChevronLeftIcon, TrashIcon } from '@heroicons/vue/solid'
+import { CheckIcon, PlusIcon, ChevronLeftIcon, TrashIcon } from '@heroicons/vue/24/solid'
 import { query, search } from '../utils/user.js'
 import Wrapper from '../components/Wrapper.vue'
 import state from '../state.js'
@@ -32,6 +32,7 @@ async function modeSearch () {
       if (!filter[k]) delete filter[k]
       else f['账户.' + k] = filter[k]
     }
+    if (!Object.keys(f).length) return searching = false
     result = await search(f)
   }
   if (mode === 1) {
@@ -47,6 +48,9 @@ async function modeSearch () {
       return
     }
     result = await search(f)
+  }
+  for (const k in result) {
+    if (!result[k].uid) delete result[k]
   }
   searching = false
 }
@@ -101,7 +105,13 @@ function submit () {
     <Transition name="fade" mode="out-in">
       <p class="p-4" v-if="!searching && !Object.keys(result).length">未找到用户</p>
       <div v-else-if="!searching && Object.keys(result).length" class="p-4">
-        <label class="flex items-center mb-2"><input type="checkbox" :value="count === Object.keys(result).length" @change="selectAll">&nbsp;全选</label>
+        <div class="flex items-center justify-between mb-2">
+          <label class="flex items-center select-none"><input type="checkbox" :checked="count === Object.keys(result).length" @change="selectAll">&nbsp;全选</label>
+          <div class="text-sm flex items-center">
+            已选中 <code class="py-1">{{ count }}</code> 名用户
+            <button v-if="count" class="all-transition font-bold text-white bg-blue-500 rounded shadow hover:shadow-md mx-2 px-2 py-1" @click="submit">确认选择</button>
+          </div>
+        </div>
         <div v-for="(v, k) in result" class="flex items-center px-1 cursor-pointer all-transition" :class="v.selected ? 'bg-blue-100' : 'bg-gray-100'" @click="v.selected = !v.selected">
           <CheckIcon v-if="v.selected" class="w-4 text-blue-500" />
           <PlusIcon v-else class="w-4 text-gray-400" />
@@ -111,7 +121,7 @@ function submit () {
           <div class="font-mono text-sm">{{ v.学号 }}</div>
         </div>
         <div class="text-sm mt-2">已选中 <code>{{ count }}</code> 名用户</div>
-        <button class="all-transition font-bold text-white bg-blue-500 rounded-full shadow hover:shadow-md my-2 px-4 py-1" @click="submit">确认选择</button>
+        <button v-if="count" class="all-transition font-bold text-white bg-blue-500 rounded shadow hover:shadow-md my-2 px-4 py-1" @click="submit">确认选择</button>
       </div>
     </Transition>
   </div>

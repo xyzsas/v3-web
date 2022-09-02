@@ -18,7 +18,7 @@ async function submit () {
       uid: tmp[0], 姓名: tmp[1],
       年级: tmp[2].slice(0, 4),
       班级: tmp[2].slice(4, 6),
-      学号: tmp[2].slice(6, 8)
+      学号: tmp[2].slice(6)
     })
   }
   state.loading = true

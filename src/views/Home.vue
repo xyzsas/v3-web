@@ -1,5 +1,5 @@
 <script setup>
-import { FingerPrintIcon, TrendingUpIcon, UserGroupIcon, PencilAltIcon, FolderOpenIcon } from '@heroicons/vue/outline'
+import { FingerPrintIcon, UserGroupIcon, FolderOpenIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
 import MsgCard from '../components/MsgCard.vue'
 import scanImg from '../assets/scan.svg'
@@ -34,6 +34,21 @@ state.loading = false
 
 let trans = $ref('opacity-0')
 setTimeout(() => { trans = 'opacity-100' }, 1000)
+
+function showID () {
+  Swal.fire({
+    title: '我的ID',
+    html: `
+    <div class="flex justify-center items-center">
+      <svg class="w-28 sm:w-40" viewBox="0 0 12 12" fill="#000" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" version="1.1">${DATAMatrix({ msg: state.user.uid, pad: 0 }).innerHTML}</svg>
+      <div class="flex flex-col items-start ml-3 sm:ml-6">
+        <b>${state.user.name}</b>
+        <code>${state.user.uid}</code>
+        <code class="text-xs">${state.user.id}</code>
+      </div>
+    </div>`
+  })
+}
 </script>
 
 <template>
@@ -43,9 +58,10 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
       <p :class="trans" class="mt-1 text-1xl font-serif text-gray-500" style="transition: all 2s ease;">{{ greet.s }}</p>
     </div>
     <div class="flex flex-wrap"><!-- function buttons -->
+      <button class="card" @click="showID"><FingerPrintIcon class="w-6 text-blue-500 mr-2"/>我的ID</button>
+      <!--
       <button class="card" @click="router.push('/grade')"><TrendingUpIcon class="w-6 text-blue-500 mr-2"/>成绩查询</button>
-      <button class="card" @click="router.push('/grade')"><FolderOpenIcon class="w-6 text-blue-500 mr-2"/>档案管理</button>
-      <button class="card" @click="router.push('/admin/xyz')" v-if="false"><PencilAltIcon class="w-6 text-purple-500 mr-2"/>事务管理</button>
+      -->
     </div>
     <div v-if="Object.keys(perms).length > 0" class="flex flex-wrap items-center m-2 py-1 px-2 rounded bg-white border text-sm"><!-- admin entry -->
       <button v-if="perms.XAdmin" class="round" @click="router.push('/x/user')">用户授权</button>
