@@ -41,16 +41,18 @@ async function sendMsg() {
   <div class="relative flex flex-col">
     <BackHeader @back="router.push('/')">消息发送</BackHeader>
     <div class="sm:flex">
-      <div class="my-2 mx-4 sm:w-2/3">
+      <div class="my-2 mx-4 sm:w-1/2">
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2" @click="showUserSelector = true">添加用户</button>
-        <button class="text-white text-sm font-bold rounded bg-red-500 shadow py-1 px-2 m-2" @click="uids = ''">清除全部</button>
+        <button class="text-white text-sm font-bold rounded bg-red-500 shadow py-1 px-2 m-2" @click="users = []">清除全部</button>
         <UserSelector v-model="showUserSelector" @select="addUser"/>
-        <table v-if="Object.keys(users).length" class="whitespace-nowrap text-sm bg-white">
+        <table v-if="Object.keys(users).length" class="whitespace-nowrap text-sm bg-white sm:max-h-96 overflow-y-scroll">
           <tb>
             <tr v-for="u in users" class="font-mono border-b">
               <td class="px-2">{{ u._id }}</td>
               <td class="px-2">{{ u?.name || u?.姓名 || '未知用户' + (u?.uid || k) }}</td>
-              <td class="px-2 font-mono">{{ (u?.年级 + u?.班级 + u?.学号) || '' }}</td>
+              <td class="px-2 font-mono">{{ u?.年级 || '' }}</td>
+              <td class="px-2 font-mono">{{ u?.班级|| '' }}</td>
+              <td class="px-2 font-mono">{{ u?.学号 || '' }}</td>
             </tr>
           </tb>
         </table>
@@ -63,8 +65,8 @@ async function sendMsg() {
             <input class="px-2 py-1 shadow appearance-none border rounded block" type="text" :placeholder="d[1]" v-model="d[2]">
           </label>
         </div>
+        <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md m-4 px-4 py-2 w-32" :class="ready ? 'bg-blue-500' : 'bg-gray-500'" @click="sendMsg" :disabled="!ready">确认提交</button>
       </div>
     </div>
-    <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md m-4 px-4 py-2 w-32" :class="ready ? 'bg-blue-500' : 'bg-gray-500'" @click="sendMsg" :disabled="!ready">确认提交</button>
   </div>
 </template>
