@@ -41,21 +41,18 @@ async function sendMsg() {
   <div class="relative flex flex-col">
     <BackHeader @back="router.push('/')">消息发送</BackHeader>
     <div class="sm:flex">
-      <div class="my-2 mx-4 sm:w-1/2">
+      <div class="my-2 mx-4 sm:w-2/3">
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2" @click="showUserSelector = true">添加用户</button>
         <button class="text-white text-sm font-bold rounded bg-red-500 shadow py-1 px-2 m-2" @click="users = []">清除全部</button>
         <UserSelector v-model="showUserSelector" @select="addUser"/>
-        <table v-if="Object.keys(users).length" class="whitespace-nowrap text-sm bg-white sm:max-h-96 overflow-y-scroll">
-          <tb>
-            <tr v-for="u in users" class="font-mono border-b">
-              <td class="px-2">{{ u._id }}</td>
-              <td class="px-2">{{ u?.name || u?.姓名 || '未知用户' + (u?.uid || k) }}</td>
-              <td class="px-2 font-mono">{{ u?.年级 || '' }}</td>
-              <td class="px-2 font-mono">{{ u?.班级|| '' }}</td>
-              <td class="px-2 font-mono">{{ u?.学号 || '' }}</td>
-            </tr>
-          </tb>
-        </table>
+        <div v-if="Object.keys(users).length" class="flex flex-wrap overflow-y-scroll" style="max-height: 70vh">
+          <div v-for="u in users" class="flex items-center px-1 mx-1 bg-green-100 whitespace-nowrap">
+            <div class="mx-1 font-bold">{{ u.姓名 || u.name }}</div>
+            <div class="font-mono text-sm">{{ u.年级 }}</div>
+            <div class="font-mono text-sm">{{ u.班级 }}</div>
+            <div class="font-mono text-sm">{{ u.学号 }}</div>
+          </div>
+        </div>
         <div v-else class="text-2xl font-bold py-8 px-4">未选择用户</div>
       </div>
       <div>
