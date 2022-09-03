@@ -101,6 +101,13 @@ function addUser (obj) {
   }
 }
 
+function msg () {
+  const us = {}
+  for (const id in data) us[id] = userMap[id]
+  const w = window.open('/#/y/send?router=/app/enroll&title=' + info.title)
+  w.users = us
+}
+
 function excel () {
   // header
   let csv = '\uFEFF"超星uid","姓名","学号",'
@@ -174,11 +181,13 @@ function excel () {
       </div>
       <div class="flex items-center">
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow ml-2 py-1 px-2" @click="showUserSelector = true">添加用户</button>
+        <button class="text-white text-sm font-bold rounded bg-blue-500 shadow ml-2 py-1 px-2" @click="msg">发布消息</button>
+        <button class="text-white text-sm font-bold rounded bg-yellow-500 shadow ml-2 py-1 px-2" @click="excel">导出数据</button>
         <button class="text-white text-sm font-bold rounded bg-red-500 shadow ml-2 py-1 px-2" @click="data = {}">清除全部</button>
-        <button class="text-white text-sm font-bold rounded bg-blue-500 shadow ml-2 py-1 px-2" @click="excel">导出数据</button>
       </div>
       <UserSelector v-model="showUserSelector" @select="addUser" />
-      <div class="my-4 w-full overflow-auto">
+      <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md m-4 px-4 py-2 w-32" @click="submitData">提交数据</button>
+      <div class="w-full overflow-auto">
         <p class="text-xs my-1">列表中的用户具有访问权限，选课结果为选项序号。</p>
         <table class="min-w-full whitespace-nowrap text-sm bg-white">
           <tr v-for="(v, k) in data" class="border">
@@ -189,7 +198,6 @@ function excel () {
           </tr>
         </table>
       </div>
-      <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md my-2 px-4 py-2 w-32" @click="submitData">提交数据</button>
     </div>
   </div>
 </template>

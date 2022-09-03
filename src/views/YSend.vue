@@ -1,16 +1,18 @@
 <script setup>
 import srpc from '../utils/srpc-fc.js'
 import state from '../state.js'
+import { MinusCircleIcon } from '@heroicons/vue/24/outline'
 import BackHeader from '../components/BackHeader.vue'
 import UserSelector from '../components/UserSelector.vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
-let users = $ref([])
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter(), route = useRoute(), q = route.query
+let users = $ref(window.users || {})
+window.show = () => console.log(props)
 let data = $ref({
-  title: ['标题', '标题', ''],
-  router: ['内链（可选）', '系统内部链接', ''],
-  link: ['外链（可选）', '系统外部链接', ''],
-  tags: ['标签（可选）', 'tag1,tag2', '']
+  title: ['标题', '标题', q.title || ''],
+  router: ['内链（可选）', '系统内部链接', q.router || ''],
+  link: ['外链（可选）', '系统外部链接', q.link || ''],
+  tags: ['标签（可选）', 'tag1,tag2', q.tags || '']
 })
 let msg = $ref({})
 let showUserSelector = $ref(false)
@@ -19,7 +21,7 @@ const user = state.user
 let ready = $computed(() => Object.keys(users).length && data.title[2]?.match(/\S/))
 
 function addUser (obj) {
-  for (const id in obj) users.push(obj[id])
+  for (const id in obj) users[id] = obj[id]
 }
 
 async function sendMsg() {
@@ -29,8 +31,7 @@ async function sendMsg() {
     content[d] = data[d][2]
   }
   content.tags = content.tags.split(',').filter(d => d.match(/\S/))
-  const u = users.map(d => d._id)
-  const res = await srpc.Y.send(user.token, u, JSON.stringify(content), Date.now())
+  const res = await srpc.Y.send(user.token, Object.keys(users), JSON.stringify(content), Date.now())
   if (res) Swal.fire('消息发送成功', '', 'success')
   else Swal.fire('消息发送失败', '', 'error')
   state.loading = false
@@ -39,31 +40,30 @@ async function sendMsg() {
 
 <template>
   <div class="relative flex flex-col">
-    <BackHeader @back="router.push('/')">消息发送</BackHeader>
-    <div class="sm:flex">
-      <div class="my-2 mx-4 sm:w-2/3">
+    <BackHeader @back="router.go(-1)">消息发送</BackHeader>
+    <div class="flex flex-col-reverse sm:flex-row">
+      <div class="my-2 mx-4 sm:w-1/2">
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2" @click="showUserSelector = true">添加用户</button>
-        <button class="text-white text-sm font-bold rounded bg-red-500 shadow py-1 px-2 m-2" @click="users = []">清除全部</button>
-        <UserSelector v-model="showUserSelector" @select="addUser"/>
-        <div v-if="Object.keys(users).length" class="flex flex-wrap overflow-y-scroll" style="max-height: 70vh">
-          <div v-for="u in users" class="flex items-center px-1 mx-1 bg-green-100 whitespace-nowrap">
-            <div class="mx-1 font-bold">{{ u.姓名 || u.name }}</div>
-            <div class="font-mono text-sm">{{ u.年级 }}</div>
-            <div class="font-mono text-sm">{{ u.班级 }}</div>
-            <div class="font-mono text-sm">{{ u.学号 }}</div>
-          </div>
+        <button class="text-white text-sm font-bold rounded bg-red-500 shadow py-1 px-2 m-2" @click="users = {}">清除全部</button>
+        <p class="p-2 select-none">已选中<code class="mx-1">{{ Object.keys(users).length }}</code>个用户</p>
+        <div v-for="(u, k) in users" class="flex items-center px-1 mx-1 bg-white whitespace-nowrap">
+          <MinusCircleIcon class="w-5 cursor-pointer text-gray-500" @click="delete users[k]" />
+          <div class="mx-1 font-bold" style="min-width: 4rem;">{{ u.姓名 || u.name }}</div>
+          <div class="font-mono text-sm">{{ u.年级 }}</div>
+          <div class="font-mono text-sm">{{ u.班级 }}</div>
+          <div class="font-mono text-sm">{{ u.学号 }}</div>
         </div>
-        <div v-else class="text-2xl font-bold py-8 px-4">未选择用户</div>
       </div>
-      <div>
+      <div class="grow">
         <div v-for="d in data" :key="d[0]" class="my-2 mx-4">
           <label class="block">
             <p class="my-2 text-md font-bold mt-4">{{ d[0] }}</p>
-            <input class="px-2 py-1 shadow appearance-none border rounded block" type="text" :placeholder="d[1]" v-model="d[2]">
+            <input class="px-2 py-1 shadow appearance-none border rounded block w-full" type="text" :placeholder="d[1]" v-model="d[2]">
           </label>
         </div>
         <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md m-4 px-4 py-2 w-32" :class="ready ? 'bg-blue-500' : 'bg-gray-500'" @click="sendMsg" :disabled="!ready">确认提交</button>
       </div>
     </div>
+    <UserSelector v-model="showUserSelector" @select="addUser"/>
   </div>
 </template>
