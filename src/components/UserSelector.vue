@@ -76,7 +76,7 @@ function submit () {
   </Transition>
   <div class="print:hidden fixed top-0 w-11/12 sm:w-96 bg-white h-screen all-transition pb-4 overflow-y-auto" :class="props.modelValue ? 'right-0' : '-right-96'">
     <div class="flex items-center whitespace-nowrap w-full shadow">
-      <button class="grow p-2 font-bold all-transition" :class="mode === 0 && 'bg-blue-500 text-white'" @click="mode = 0">搜索用户</button>
+      <button class="grow p-2 font-bold all-transition" :class="mode === 0 && 'bg-blue-500 text-white'" @click="mode = 0">搜索学生</button>
       <button class="grow p-2 font-bold all-transition border-l" :class="mode === 1 && 'bg-blue-500 text-white'" @click="mode = 1">批量查询</button>
       <button class="grow p-2 font-bold all-transition border-l" :class="mode === 2 && 'bg-blue-500 text-white'" @click="mode = 2">高级检索</button>
     </div>

@@ -29,8 +29,11 @@ function addOption () {
     for (let i = 0; i < opt.length; i++) {
       if (!opt[i].match(/\S/)) continue
       const s = opt[i].split('\t')
-      list.push(s[0])
-      info[`$${i + 1}`] = Number(s[1])
+      list.push({
+        title: s[0].trim(),
+        space: Number(s[1]),
+        key: Math.random()
+      })
     }
   } catch {
     info = tmp
@@ -167,6 +170,7 @@ function excel () {
       </div>
       <EditableList :list="list" item-key="key" item-class="bg-white py-1 px-2 border my-2 rounded flex-nowrap">
         <template #item="{ elment: el, index: i }">
+          <div>{{ i + 1 }}.&nbsp;</div>
           <input class="grow" v-model="list[i].title" placeholder="点击编辑选项内容">
           <input type="number" v-model="list[i].space" class="border ml-2 w-12 pl-1">
         </template>
