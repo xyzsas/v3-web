@@ -1,11 +1,16 @@
 <script setup>
 import Wrapper from '../components/Wrapper.vue'
 import state from '../state.js'
+import fc from '../utils/srpc-fc.js'
+import local from '../utils/srpc-local.js'
 
 const version = window.localStorage['web-version'].replace(/-/g, '--')
 
 let show = $ref(false)
 setTimeout(() => { show = true }, 500)
+window.token = state.user?.token
+window.fc = fc
+window.local = local
 </script>
 
 <template>

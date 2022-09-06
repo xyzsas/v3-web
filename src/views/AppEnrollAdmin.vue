@@ -132,6 +132,9 @@ function excel () {
   link.click()
   document.body.removeChild(link)
 }
+
+window.data = $$(data)
+window.userMap = $$(userMap)
 </script>
 
 <template>
