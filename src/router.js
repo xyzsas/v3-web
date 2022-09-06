@@ -8,6 +8,7 @@ const index = {
 
   '/x/user': () => import('./views/XUser.vue'),
   // Y
+  '/y/admin': () => import('./views/YAdmin.vue'),
   '/y/send': () => import('./views/YSend.vue'),
   // App
   '/app/photo': () => import('./views/AppPhoto.vue'),

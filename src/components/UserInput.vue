@@ -40,7 +40,7 @@ watch($$(text), async v => {
 
 <template>
   <div class="relative">
-    <ScanInput v-model="text" class="w-full px-2 py-1 bg-white" placeholder="用户id/超星号" />
+    <ScanInput v-model="text" class="w-full px-2 py-1 bg-white border" placeholder="用户id/超星号" />
     <p v-if="tip" class="px-2 py-1 text-xs">{{ tip }}</p>
     <img v-else :src="spinner" class="w-5 m-1">
   </div>

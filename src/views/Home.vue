@@ -65,7 +65,7 @@ function showID () {
     </div>
     <div v-if="Object.keys(perms).length > 0" class="flex flex-wrap items-center m-2 py-1 px-2 rounded bg-white border text-sm"><!-- admin entry -->
       <button v-if="perms.XAdmin" class="round" @click="router.push('/x/user')">用户授权</button>
-      <button v-if="perms.YAdmin" class="round" @click="router.push('/y/send')">消息发送</button>
+      <button v-if="perms.YAdmin" class="round" @click="router.push('/y/admin')">消息管理</button>
       <button v-if="perms.ZAdmin" class="round" @click="router.push('/z/import')">学生档案导入</button>
       <button v-if="perms.UserQuery" class="round" @click="router.push('/app/scan/print')">二维码生成</button>
       <button v-if="perms.AppEnrollAdmin" class="round" @click="router.push('/app/enroll/admin')">选课管理</button>

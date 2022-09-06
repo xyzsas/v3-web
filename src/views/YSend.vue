@@ -1,6 +1,8 @@
 <script setup>
 import srpc from '../utils/srpc-fc.js'
 import state from '../state.js'
+import { Calendar, DatePicker } from 'v-calendar'
+import 'v-calendar/dist/style.css'
 import { MinusCircleIcon } from '@heroicons/vue/24/outline'
 import BackHeader from '../components/BackHeader.vue'
 import UserSelector from '../components/UserSelector.vue'
@@ -14,7 +16,7 @@ let data = $ref({
   link: ['外链（可选）', '系统外部链接', q.link || ''],
   tags: ['标签（可选）', 'tag1,tag2', q.tags || '']
 })
-let msg = $ref({})
+let msg = $ref({}), time = $ref(0), showTime = $ref(false)
 let showUserSelector = $ref(false)
 const user = state.user
 
@@ -31,7 +33,7 @@ async function sendMsg() {
     content[d] = data[d][2]
   }
   content.tags = content.tags.split(',').filter(d => d.match(/\S/))
-  const res = await srpc.Y.send(user.token, Object.keys(users), JSON.stringify(content), Date.now())
+  const res = await srpc.Y.send(user.token, Object.keys(users), JSON.stringify(content), showTime ? time : Date.now())
   if (res) Swal.fire('消息发送成功', '', 'success')
   else Swal.fire('消息发送失败', '', 'error')
   state.loading = false
@@ -40,7 +42,7 @@ async function sendMsg() {
 
 <template>
   <div class="relative flex flex-col">
-    <BackHeader @back="router.go(-1)">消息发送</BackHeader>
+    <BackHeader @back="router.push('/y/admin')">消息发送</BackHeader>
     <div class="flex flex-col-reverse sm:flex-row">
       <div class="my-2 mx-4 sm:w-1/2">
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2" @click="showUserSelector = true">添加用户</button>
@@ -61,6 +63,15 @@ async function sendMsg() {
             <input class="px-2 py-1 shadow appearance-none border rounded block w-full" type="text" :placeholder="d[1]" v-model="d[2]">
           </label>
         </div>
+        <label class="block my-2 mx-4 mt-4">
+          <input type="checkbox" v-model="showTime">&nbsp;自定义消息发送时间
+        </label>
+        <DatePicker class="my-2 mx-4" v-if="showTime" v-model="time" mode="dateTime" is24hr :model-config="{ type: 'number' }">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input class="px-2 py-1 shadow appearance-none border rounded block w-full" placeholder="请选择消息发送时间" :value="inputValue"
+              v-on="inputEvents">
+          </template>
+        </DatePicker>
         <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md m-4 px-4 py-2 w-32" :class="ready ? 'bg-blue-500' : 'bg-gray-500'" @click="sendMsg" :disabled="!ready">确认提交</button>
       </div>
     </div>
