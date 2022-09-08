@@ -51,9 +51,7 @@ async function sendMsg() {
         <div v-for="(u, k) in users" class="flex items-center px-1 mx-1 bg-white whitespace-nowrap">
           <MinusCircleIcon class="w-5 cursor-pointer text-gray-500" @click="delete users[k]" />
           <div class="mx-1 font-bold" style="min-width: 4rem;">{{ u.姓名 || u.name }}</div>
-          <div class="font-mono text-sm">{{ u.年级 }}</div>
-          <div class="font-mono text-sm">{{ u.班级 }}</div>
-          <div class="font-mono text-sm">{{ u.学号 }}</div>
+          <div class="font-mono text-sm">{{ u.年级 + u.班级 + u.学号 }}</div>
         </div>
       </div>
       <div class="grow">

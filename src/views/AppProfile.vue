@@ -72,6 +72,11 @@ let editors = $ref({
   '学生来源': { select: ['正常入学', '借读', '其他'] },
   '特长': { input: 'text', placeholder: '请填写学生特长' },
 
+  '小学名称': { input: 'text', placeholder: '请填写小学名称' },
+  '小学毕业时间': { date: 1, placeholder: '请选择小学毕业时间' },
+  '初中名称': { input: 'text', placeholder: '请填写初中名称' },
+  '初中毕业时间': { date: 1, placeholder: '请选择初中毕业时间' },
+
   '现住址': { region: 1, input: 'text', placeholder: '街道地址' },
   '出生地': { region: 1 },
   '通讯地址': { copyAddress: 1, region: 1, input: 'text', placeholder: '街道地址' },
@@ -81,12 +86,9 @@ let editors = $ref({
 
   '是否独生子女': { toggle: 1 },
   '是否烈士或优抚子女': { toggle: 1 },
-  '是否择校生': { toggle: 1 },
   '是否需要申请资助': { toggle: 1 },
   '是否外来务工子女': { toggle: 1 },
-  '是否由政府购买学位': { toggle: 1 },
   '是否在校': { toggle: 1 },
-  '是否提交真实材料': { toggle: 1 },
   '是否孤儿': { toggle: 1 },
   '是否寄宿': { toggle: 1 },
 
@@ -179,10 +181,7 @@ function edit (k) {
         <div v-if="show(k)" class="all-transition border-l-4" :class="v ? 'border-green-500' : 'border-gray-200'">
           <div class="px-2 py-1 cursor-pointer flex items-center flex-wrap" @click="editing = (editing === k ? '' : k)">
             <b>{{ k }}</b>
-            <template v-if="v">
-              <b>: </b>
-              <span>{{ v }}</span>
-            </template>
+            <span v-if="v"><b>:</b>&nbsp;{{ v }}</span>
             <PencilSquareIcon v-if="editing === k" class="w-4 ml-2 text-blue-500" />
           </div>
           <Wrapper :show="editing === k" class="px-4 py-2 bg-white">

@@ -116,9 +116,7 @@ function submit () {
           <CheckIcon v-if="v.selected" class="w-4 text-blue-500" />
           <PlusIcon v-else class="w-4 text-gray-400" />
           <div class="mx-1 font-bold" style="min-width: 4rem;">{{ v.姓名 || v.name }}</div>
-          <div class="font-mono text-sm">{{ v.年级 }}</div>
-          <div class="font-mono text-sm">{{ v.班级 }}</div>
-          <div class="font-mono text-sm">{{ v.学号 }}</div>
+          <div class="font-mono text-sm">{{ v.年级 + v.班级 + v.学号 }}</div>
         </div>
         <div class="text-sm mt-2">已选中 <code>{{ count }}</code> 名用户</div>
         <button v-if="count" class="all-transition font-bold text-white bg-blue-500 rounded shadow hover:shadow-md my-2 px-4 py-1" @click="submit">确认选择</button>
