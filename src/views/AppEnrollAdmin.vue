@@ -7,12 +7,12 @@ import { query } from '../utils/user.js'
 import srpc from '../utils/srpc-fc.js'
 import BackHeader from '../components/BackHeader.vue'
 import ProgressBar from '../components/ProgressBar.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { PlusCircleIcon } from '@heroicons/vue/24/solid'
 import { TrashIcon } from '@heroicons/vue/24/outline'
 import EditableList from '../components/EditableList.vue'
 import UserSelector from '../components/UserSelector.vue'
-const router = useRouter()
+const router = useRouter(), route = useRoute()
 
 state.loading = true
 let info = $ref(null), data = $ref(null)
@@ -48,6 +48,7 @@ function editCell (k, i, e) {
 
 async function init () {
   if (!state.user?.token) return router.push('/')
+  if (route.query.cmd) return
   const res = await srpc.app.enroll.getAll(state.user.token)
   if (!res.ok) return router.push('/')
   info = res.info
@@ -135,6 +136,11 @@ function excel () {
 
 window.data = $$(data)
 window.userMap = $$(userMap)
+window.adminProcess = async (force = false) => {
+  const res = await srpc.app.enroll.process(state.user.token, force)
+  console.log(res)
+}
+console.log('AppEnrollAdmin utils: data.value, userMap.value, adminProcess(force)\n> setInterval(() => { adminProcess() }, 1e3)')
 </script>
 
 <template>
