@@ -137,10 +137,13 @@ function excel () {
 window.data = $$(data)
 window.userMap = $$(userMap)
 window.adminProcess = async (force = false) => {
-  const res = await srpc.app.enroll.process(state.user.token, force)
-  console.log(res)
+  while (1) {
+    const res = await srpc.app.enroll.process(state.user.token, force)
+    console.log(res)
+    await new Promise(r => setTimeout(r, 1e3))
+  }
 }
-console.log('AppEnrollAdmin utils: data.value, userMap.value, adminProcess(force)\n> setInterval(() => { adminProcess() }, 1e3)')
+console.log('AppEnrollAdmin utils: data.value, userMap.value, adminProcess(force)')
 </script>
 
 <template>
