@@ -72,9 +72,11 @@ let editors = $ref({
   '学生来源': { select: ['正常入学', '借读', '其他'] },
   '特长': { input: 'text', placeholder: '请填写学生特长' },
 
-  '小学名称': { input: 'text', placeholder: '请填写小学名称' },
+  '小学名称': { input: 'text', placeholder: '请填写小学名称', tip: '请填写毕业小学的名称' },
+  '小学入学时间': { date: 1, placeholder: '请选择小学入学时间', tip: '以最终毕业小学的入学时间为准' },
   '小学毕业时间': { date: 1, placeholder: '请选择小学毕业时间' },
-  '初中名称': { input: 'text', placeholder: '请填写初中名称' },
+  '初中名称': { input: 'text', placeholder: '请填写初中名称', tip: '请填写毕业初中的名称' },
+  '初中入学时间': { date: 1, placeholder: '请选择初中入学时间', tip: '以最终毕业初中的入学时间为准' },
   '初中毕业时间': { date: 1, placeholder: '请选择初中毕业时间' },
 
   '现住址': { region: 1, input: 'text', placeholder: '街道地址' },

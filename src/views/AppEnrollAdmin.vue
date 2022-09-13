@@ -136,14 +136,15 @@ function excel () {
 
 window.data = $$(data)
 window.userMap = $$(userMap)
-window.adminProcess = async (force = false) => {
+window.adminProcess = async (use2 = true, force = false) => {
+  if (use2) srpc('https://sas.aauth.link/srpc2')
   while (1) {
     const res = await srpc.app.enroll.process(state.user.token, force)
     console.log(res)
     await new Promise(r => setTimeout(r, 1e3))
   }
 }
-console.log('AppEnrollAdmin utils: data.value, userMap.value, adminProcess(force)')
+console.log('AppEnrollAdmin utils: data.value, userMap.value, adminProcess(use2, force)')
 </script>
 
 <template>
