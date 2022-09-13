@@ -29,10 +29,10 @@ jobs:
     - name: Setup Aliyun OSS
       uses: manyuanrong/setup-ossutil@master
       with:
-        endpoint: oss-cn-shanghai.aliyuncs.com
+        endpoint: oss-cn-hangzhou.aliyuncs.com
         access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
         access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
     - name: Delete Old assets
-      run: ossutil rm -rf oss://xyzsas/assets/
+      run: ossutil rm -rf oss://njsc-fe/xyzsas/
     - name: Upload files to OSS
-      run: ossutil cp -rf ./dist oss://xyzsas/
+      run: ossutil cp -rf ./dist oss://njsc-fe/xyzsas/

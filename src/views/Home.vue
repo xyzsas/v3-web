@@ -37,15 +37,11 @@ setTimeout(() => { trans = 'opacity-100' }, 1000)
 
 function showID () {
   Swal.fire({
-    title: '我的ID',
+    showConfirmButton: false,
     html: `
-    <div class="flex justify-center items-center">
-      <svg class="w-28 sm:w-40" viewBox="0 0 12 12" fill="#000" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" version="1.1">${DATAMatrix({ msg: state.user.uid, pad: 0 }).innerHTML}</svg>
-      <div class="flex flex-col items-start ml-3 sm:ml-6">
-        <b>${state.user.name}</b>
-        <code>${state.user.uid}</code>
-        <code class="text-xs">${state.user.id}</code>
-      </div>
+    <div class="flex flex-col items-center">
+      <svg class="w-40 my-4" viewBox="0 0 12 12" fill="#000" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" version="1.1">${DATAMatrix({ msg: state.user.uid, pad: 0 }).innerHTML}</svg>
+      <p><b>${state.user.name}</b>&nbsp;<code>${state.user.uid}</code></p>
     </div>`
   })
 }

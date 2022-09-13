@@ -19,19 +19,20 @@ async function countDown (ms) {
   }
 }
 
+function parseRes (res) {
+  data = JSON.parse(res.data[state.user.id] || '[]')
+  res.info.options = JSON.parse(res.info.options)
+  info = res.info
+  info.min = info.min || 0
+  info.max = info.max || 9e9
+}
+
 async function init () {
   if (!state.user?.token) return router.push('/')
   state.loading = true
   const res = await srpc.app.enroll.get(state.user.token)
   state.loading = false
-  if (res.ok) {
-    data = JSON.parse(res.data[state.user.id] || '[]')
-    res.info.options = JSON.parse(res.info.options)
-    info = res.info
-    info.min = info.min || 0
-    info.max = info.max || 9e9
-    return
-  }
+  if (res.ok) return parseRes(res)
   if (res.time) {
     await countDown(res.time)
     return init()
@@ -68,14 +69,32 @@ async function submit () {
   if (state.loading) return
   state.loading = true
   const res = await srpc.app.enroll.put(state.user.token, data)
-  state.loading = false
-  if (res.ok) {
-    await Swal.fire('提交成功', '即将返回主页', 'success')
-    if (state.msg?.time) srpc.Y.set(state.user.token, state.msg.time, '已完成')
-    return router.push('/')
+  if (!res.ok) {
+    state.loading = false
+    await Swal.fire('错误', res.err, 'error')
+    return init()
   }
-  await Swal.fire('错误', res.err, 'error')
-  init()
+  let success = true
+  await sleep(1e3)
+  while (1) {
+    await sleep(2e3)
+    const newRes = await srpc.app.enroll.get(state.user.token)
+    if (newRes.info.queue < res.q) continue
+    const newData = JSON.parse(newRes.data[state.user.id] || '[]')
+    for (const d of data) {
+      if (!newData.includes(d)) success = false
+    }
+    for (const d of newData) {
+      if (!data.includes(d)) success = false
+    }
+    parseRes(newRes)
+    break
+  }
+  if (!success) await Swal.fire('错误', '名额不足', 'error')
+  state.loading = false
+  await Swal.fire('提交成功', '即将返回主页', 'success')
+  if (state.msg?.time) srpc.Y.set(state.user.token, state.msg.time, '已完成')
+  return router.push('/')
 }
 </script>
 
