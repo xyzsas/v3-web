@@ -74,7 +74,7 @@ function submit () {
   <Transition name="fade">
     <div class="fixed top-0 left-0 w-screen h-screen bg-black opacity-50" v-if="props.modelValue" @click="emits('update:modelValue', false)" />
   </Transition>
-  <div class="print:hidden fixed top-0 w-11/12 sm:w-96 bg-white h-screen all-transition pb-4 overflow-y-auto" :class="props.modelValue ? 'right-0' : '-right-96'">
+  <div class="print:hidden fixed top-0 w-11/12 sm:w-96 bg-white h-screen all-transition pb-4 overflow-y-auto" :class="props.modelValue ? 'right-0' : '-right-full'">
     <div class="flex items-center whitespace-nowrap w-full shadow">
       <button class="grow p-2 font-bold all-transition" :class="mode === 0 && 'bg-blue-500 text-white'" @click="mode = 0">搜索学生</button>
       <button class="grow p-2 font-bold all-transition border-l" :class="mode === 1 && 'bg-blue-500 text-white'" @click="mode = 1">批量查询</button>
