@@ -5,112 +5,57 @@ import Toggle from '../components/Toggle.vue'
 import RegionSelector from '../components/RegionSelector.vue'
 import { Calendar, DatePicker } from 'v-calendar'
 import 'v-calendar/dist/style.css'
+import CQECard from '../components/CQECard.vue'
 const router = useRouter()
 
-let D = $ref([
-  [
-    ['身份证号码', '无身份证请填写其它证件号', ''],
-    ['身份证件有效期', '', ''],
-    ['姓名', '请填写学生姓名', ''],
-    ['姓名拼音', '姓名中间有空格 例:zhang san', ''],
-    ['英文姓名', '可留空', ''],
-    ['性别', '', ''],
-    ['籍贯', '学生的籍贯', ''],
-    ['国籍', '学生的国籍', ''],
-    ['港澳台侨胞', '', ''],
-    ['出生日期', '', ''],
-    ['联系电话', '', ''],
-    ['邮政编码', '', ''],
-    ['户口性质', '', ''],
-    ['健康状况', '', ''],
-    ['婚姻状况', '', ''],
-    ['电子邮箱', '', ''],
-    ['主页地址', '', ''],
-    ['血型', '', ''],
-    ['就读方式', '', ''],
-    ['政治面貌', '', ''],
-    ['宗教信仰', '', ''],
-    ['学生来源', '', ''],
-    ['特长', '', ''],
-    ['入团年月', '默认选择该月1号', '']
-  ],
-  [
-    ['现住址', '填写详细地址', ''],
-    ['出生地', '填写完整的地区行政区划名称', ''],
-    ['通讯地址', '填写详细地址', ''],
-    ['户籍详细地址', '街道小区门牌号等详细地址', ''],
-    ['家庭常住地区', '填写完整的地区行政区划名称', ''],
-    ['家庭常住地详细地址', '街道小区门牌号等详细地址', '']
-  ],
-  [
-    ['是否独生子女', '', ''],
-    ['是否烈士或优抚子女', '', ''],
-    ['是否择校生', '', ''],
-    ['是否需要申请资助', '', ''],
-    ['是否外来务工子女', '', ''],
-    ['是否由政府购买学位', '', ''],
-    ['是否在校', '', ''],
-    ['是否提交真实材料', '', ''],
-    ['是否孤儿', '', ''],
-    ['是否寄宿', '', '']
-  ],
-  [
-    ['残疾类型', '', ''],
-    ['残疾证明类型', '', ''],
-    ['残疾证书号', '', ''],
-    ['残疾程度', '', ''],
-    ['特教就读类型', '', ''],
-    ['残疾情况说明', '', '']
-  ],
-  [
-    ['父亲姓名', '', ''],
-    ['父亲年龄', '', ''],
-    ['父亲单位', '', ''],
-    ['父亲联系方式', '', ''],
-    ['父亲是否法定监护人', '', ''],
-    ['父亲户口所在地行政区划', '', ''],
-    ['父亲现住址', '', ''],
-    ['父亲国籍', '', ''],
-    ['父亲民族', '', ''],
-    ['父亲证件类型', '', ''],
-    ['父亲证件号码', '', ''],
-    ['父亲关系说明', '', ''],
-    ['父亲职务', '', ''],
-    ['父亲出生日期', '', '']
-  ],
-  [
-    ['母亲姓名', '', ''],
-    ['母亲年龄', '', ''],
-    ['母亲单位', '', ''],
-    ['母亲联系方式', '', ''],
-    ['母亲是否法定监护人', '', ''],
-    ['母亲户口所在地行政区划', '', ''],
-    ['母亲现住址', '', ''],
-    ['母亲国籍', '', ''],
-    ['母亲民族', '', ''],
-    ['母亲证件类型', '', ''],
-    ['母亲证件号码', '', ''],
-    ['母亲关系说明', '', ''],
-    ['母亲职务', '', ''],
-    ['母亲出生日期', 'eg: 2008-01-01', '']
-  ],
-  [
-    ['*是否乘坐校车', '', ''],
-    ['*上下学方式', '', ''],
-    ['*上下学距离(公里)', '填写数字', ''],
-  ]
-])
+let D = $ref({
+  '思想品德': {
+    '日常操行': {
+      '出勤情况': [0, 0, 0, 0, 0],
+      '学习态度': [0, 0, 0, 0, 0],
+      '团结协作': [0, 0, 0, 0, 0],
+      '遵规守纪': [0, 0, 0, 0, 0],
+      '诚实守信': [0, 0, 0, 0, 0],
+      '文明礼仪': [0, 0, 0, 0, 0]
+    },
+    '德育活动': {
+      '党团活动': [0, 0, 0, 0, 0],
+      '公益活动': [0, 0, 0, 0, 0],
+      '志愿服务': [0, 0, 0, 0, 0],
+      '其他': [0, 0, 0, 0, 0]
+    }
+  }
+})
+
+const T = {
+  '思想品德': {
+    '日常操行': {
+      '出勤情况': ['按时到校，按时上下课，按时午休晚睡，按时参加学校、班级组织的各种活动，不迟到，不早退，不旷课，有事请假，按规定进出校门。', '无旷课或迟到少于2次，评价为10分；违规离开学校一次扣分，旷课1次或迟到2-3次评价为扣1分；旷课2次或迟到4-5次为3分；旷课3次以上或迟到6次以上扣10分'],
+      '学习态度': ['学习动机明确，态度端正，掌握有效的学习策略，能够独立思考。', '课堂、自习时对待学习的态度（1-5分）；自治自动和作业完成情况(1-5分）；整理本整理情况（1-5分）；对待考试的态度、学习效果（1-5分）。正课和自习睡觉、玩手机等与学习无关的事情，抄作业等采用扣分规则，每发现一次扣1分。'],
+      '团结协作': ['为人友善，相互尊重，相互包容，和睦相处，有团队意识，有集体荣誉感，主动协同他人搞好各项事务。', '各种集体活动参加情况（1-5分）、小组内是否服从小组长安排（1-5分）、宿舍内是否认真完成值日（1-5分）、自主管理团队内是否认真履行职责，服从管理（1-5分）。'],
+      '遵规守纪': ['具有法律和规则意识；遵守公共秩序和社会规则；遵守学校和班级的规章制度。', '遵守法律法规，遵守学校的规章制度（20分）。不遵守交通规则，不遵守文明城市创建要求的每次扣2分，参与打架、非法聚堆等非正常集体活动一次扣5分；有顶撞师长重大违纪的扣10分；宿舍内影响他人休息1次扣1分；教室内影响他人学习1次扣1分；进入营业性网吧的1次扣3分，不服从宿管管理扣5分。本项20分扣完为止。'],
+      '诚实守信': ['言行一致，知错就改；信守承诺，拒绝欺骗。', '言行一致，知错就改；信守承诺，拒绝欺骗。（20分）个人有1次及以上违反家庭公约及宿舍公约和班级公约扣5分。携带手机在教学区违规使用的发现1次扣5分；考试作弊扣20分。本项20分扣完为止。'],
+      '文明礼仪': ['仪表端正，举止得体；尊老爱幼，尊敬师长；礼貌待人；遵守社会公德。', '衣着得体，尊敬师长，文明交往，遵守社会公德。（20分）。化妆，烫发染发、不带首饰发现1次扣2分，不按规定穿校服一次扣2分，宿舍教室卫生区卫生不到位1次扣2分，影响他人文明观赏的1次扣2分，男女生交往过密影响校风校纪1次扣10分。'],
+    },
+    '德育活动': {
+      '党团活动': ['勇于承担责任，积极组织和参与各类党团活动。', '优秀团员荣誉称号（校级1次加1分、市级1次加2分，省级1次加5分）、组织参加的党团活动的半小时以内的1次1分、组织参加的党团活动的半小时时以上1次加3分、活动内容及成效（1-10分）'],
+      '公益活动': ['每学期至少参加一次，持续时间不少于半天，实效性强。', '参加的公益活动内容半小时以上的1次2分，过程、成效（1-10分）。'],
+      '志愿服务': ['每学期至少参加一次，持续时间不少于半天，实效性强。', '参加的志愿者服务活动半小时以上的1次2分，过程、成效（1-10分）。'],
+      '其他': ['', '未作说明但出现的事情，根据具体报综合素质评价委员会裁定。']
+    },
+    '评价主要依据': '《中学生日常行为规范（修订）》、《中小学生守则》、《中共中央国务院关于进一步加强和改进未成年人思想道德建设的若干意见》、《中小学文明礼仪教育纲要》、《江苏省普通高中课程设置及教学指导意见》'
+  }
+}
 
 const fields = [
   { title: '填写指南', done: false },
-  { title: '个人信息', data: D[0], done: false },
-  { title: '个人地址', data: D[1], done: false },
-  { title: '辅助信息', data: D[2], done: false },
-  { title: '特教信息', data: D[3], done: false },
-  { title: '父亲信息', data: D[4], done: false },
-  { title: '母亲信息', data: D[5], done: false },
-  { title: '交通方式', data: D[6], done: false },
-
+  { title: '思想品德', done: false },
+  { title: '学业水平', done: false },
+  { title: '身心健康', done: false },
+  { title: '艺术素养', done: false },
+  { title: '社会实践和劳动教育', done: false },
+  { title: '学期总表', done: false },
+  { title: '三年汇总表', done: false }
 ]
 
 let current = $ref(0) // index of field
@@ -135,390 +80,32 @@ let current = $ref(0) // index of field
       填写指南
     </template>
     <template v-if="current === 1">
-      <label class="label-item">
-        <p class="label-text">{{ D[0][0][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[0][0][1]" v-model="D[0][0][2]">
-      </label>
-      <label class="label-item">
-        <p class="label-text">{{ D[0][1][0] }}:</p>
-        <DatePicker v-model="D[0][1][2]" :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }">
-          <template v-slot="{ inputValue, inputEvents }">
-            <input class="label-input" :value="inputValue" v-on="inputEvents" />
-          </template>
-        </DatePicker>
-      </label>
-      <label class="label-item">
-        <p class="label-text">{{ D[0][2][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[0][2][1]" v-model="D[0][2][2]">
-      </label>
-      <label class="label-item">
-        <p class="label-text">{{ D[0][3][0] }}:</p>
-        <input v-model="D[0][3][2]" class="label-input" type="text" :placeholder="D[0][3][1]"
-          @input="D[0][3][2] = D[0][3][2].toLowerCase().replace(/[^a-z]/g, '')">
-      </label>
-      <label class="label-item">
-        <p class="label-text">{{ D[0][4][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[0][4][1]" v-model="D[0][4][2]">
-      </label>
-      <label class="inline-item">
-        <p>{{ D[0][5][0] }}: </p>
-        <select v-model="D[0][5][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="male">男</option>
-          <option value="female">女</option>
-        </select>
-      </label>
-      <label class="label-item">
-        <p class="label-text"> {{ D[0][6][0] }}: </p>
-        <RegionSelector v-model="D[0][6][2]" />
-      </label>
-      <label class="label-item">
-        <p class="label-text">{{ D[0][7][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[0][7][1]" v-model="D[0][7][2]">
-      </label>
-      <label class="inline-item">
-        <p>{{ D[0][8][0] }}: </p>
-        <select v-model="D[0][8][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="无">无</option>
-          <option value="香港">香港</option>
-          <option value="香港同胞亲属">香港同胞亲属</option>
-          <option value="澳门">澳门</option>
-          <option value="澳门同胞亲属">澳门同胞亲属</option>
-          <option value="台湾">台湾</option>
-          <option value="台湾同胞亲属">台湾同胞亲属</option>
-          <option value="海外华侨">海外华侨</option>
-          <option value="侨眷">侨眷</option>
-          <option value="归侨">归侨</option>
-          <option value="归侨子女">归侨子女</option>
-          <option value="归国留学人员">归国留学人员</option>
-          <option value="非华裔中国人">非华裔中国人</option>
-          <option value="外籍华裔人">外籍华裔人</option>
-          <option value="外国人">外国人</option>
-          <option value="其他">其他</option>
-        </select>
-      </label>
-      <label class="label-item">
-        <p class="label-text">{{ D[0][9][0] }}:</p>
-        <DatePicker v-model="D[0][9][2]" :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }">
-          <template v-slot="{ inputValue, inputEvents }">
-            <input class="label-input" :value="inputValue" v-on="inputEvents" />
-          </template>
-        </DatePicker>
-      </label>
-      <template v-for="i in 11">
-        <label class="label-item" v-if="i > 9">
-          <p class="label-text">{{ D[0][i][0] }}:</p>
-          <input class="label-input" type="text" :placeholder="D[0][i][1]" v-model="D[0][i][2]">
-        </label>
-      </template>
-      <label class="inline-item">
-        <p>{{ D[0][12][0] }}: </p>
-        <select v-model="D[0][12][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="农业户口">农业户口</option>
-          <option value="非农业户口">非农业户口</option>
-        </select>
-      </label>
-      <label class="inline-item">
-        <p>{{ D[0][13][0] }}: </p>
-        <select v-model="D[0][13][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="健康/良好">健康/良好</option>
-          <option value="一般/较弱">一般/较弱</option>
-          <option value="有慢性病">有慢性病</option>
-          <option value="有生理缺陷">有生理缺陷</option>
-          <option value="残疾">残疾</option>
-        </select>
-      </label>
-      <label class="inline-item">
-        <p>{{ D[0][14][0] }}: </p>
-        <select v-model="D[0][14][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="未婚">未婚</option>
-          <option value="已婚">已婚</option>
-          <option value="丧偶">丧偶</option>
-          <option value="离婚">离婚</option>
-          <option value="未说明的婚姻状况">未说明的婚姻状况</option>
-        </select>
-      </label>
-      <template v-for="i in 16">
-        <label class="label-item" v-if="i > 14">
-          <p class="label-text">{{ D[0][i][0] }}:</p>
-          <input class="label-input" type="text" :placeholder="D[0][i][1]" v-model="D[0][i][2]">
-        </label>
-      </template>
-      <label class="inline-item">
-        <p>{{ D[0][17][0] }}: </p>
-        <select v-model="D[0][17][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="未知血型">未知血型</option>
-          <option value="A血型">A血型</option>
-          <option value="B血型">B血型</option>
-          <option value="AB血型">AB血型</option>
-          <option value="O血型">O血型</option>
-          <option value="RH阳性血型">RH阳性血型</option>
-          <option value="RH阴性血型">RH阴性血型</option>
-          <option value="HLA血型">HLA血型</option>
-          <option value="未定血型">未定血型</option>
-          <option value="其他血型">其他血型</option>
-        </select>
-      </label>
-      <label class="inline-item">
-        <p>{{ D[0][18][0] }}: </p>
-        <select v-model="D[0][18][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="走读">走读</option>
-          <option value="住校">住校</option>
-          <option value="送教上门">送教上门</option>
-        </select>
-      </label>
-      <label class="inline-item">
-        <p>{{ D[0][19][0] }}: </p>
-        <select v-model="D[0][19][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="中国共产党党员">中国共产党党员</option>
-          <option value="中国共产党预备党员">中国共产党预备党员</option>
-          <option value="中国共产主义青年团团员">中国共产主义青年团团员</option>
-          <option value="群众">群众</option>
-          <option value="中国国民党革命委员会会员">中国国民党革命委员会会员</option>
-          <option value="中国民主同盟盟员">中国民主同盟盟员</option>
-          <option value="中国民主建国会会员">中国民主建国会会员</option>
-          <option value="中国民主促进会会员">中国民主促进会会员</option>
-          <option value="中国农工民主党党员">中国农工民主党党员</option>
-          <option value="中国致公党党员">中国致公党党员</option>
-          <option value="九三学社社员">九三学社社员</option>
-          <option value="台湾民主自治同盟盟员">台湾民主自治同盟盟员</option>
-          <option value="无党派民主人士">无党派民主人士</option>
-        </select>
-      </label>
-      <label class="label-item" v-if="D[0][19][2] === '中国共产主义青年团团员'">
-        <p class="label-text">{{ D[0][23][0] }}:</p>
-        <DatePicker v-model="D[0][23][2]" :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }">
-          <template v-slot="{ inputValue, inputEvents }">
-            <input class="label-input" :value="inputValue" v-on="inputEvents" :placeholder="D[0][23][1]" />
-          </template>
-        </DatePicker>
-      </label>
-      <label class="inline-item">
-        <p>{{ D[0][20][0] }}: </p>
-        <select v-model="D[0][20][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="无宗教信仰">无宗教信仰</option>
-          <option value="佛教">佛教</option>
-          <option value="喇嘛教">喇嘛教</option>
-          <option value="道教">道教</option>
-          <option value="天主教">天主教</option>
-          <option value="基督教">基督教</option>
-          <option value="东正教">东正教</option>
-          <option value="伊斯兰教">伊斯兰教</option>
-          <option value="其他">其他</option>
-        </select>
-      </label>
-      <label class="inline-item">
-        <p>{{ D[0][21][0] }}: </p>
-        <select v-model="D[0][21][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="正常入学">正常入学</option>
-          <option value="借读">借读</option>
-          <option value="其他">其他</option>
-        </select>
-      </label>
-      <label class="label-item">
-        <p class="label-text">{{ D[0][22][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[0][22][1]" v-model="D[0][22][2]">
-      </label>
+      <div class="text-2xl">日常操行</div>
+      <div v-for="(v, k) in D.思想品德.日常操行">
+        <CQECard v-model="D.思想品德.日常操行[k]" :title="k" :content="T.思想品德.日常操行[k][0]" :criterion="T.思想品德.日常操行[k][1]" :basis="T.思想品德.评价主要依据" />
+      </div>
+      <div class="text-2xl">德育活动</div>
+      <div v-for="(v, k) in D.思想品德.德育活动">
+        <CQECard v-model="D.思想品德.德育活动[k]" :title="k" :content="T.思想品德.德育活动[k][0]" :criterion="T.思想品德.德育活动[k][1]" :basis="T.思想品德.评价主要依据" />
+      </div>
     </template>
     <template v-if="current === 2">
-      <label class="label-item">
-        <p class="label-text">{{ D[1][0][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[1][0][1]" v-model="D[1][0][2]">
-      </label>
-      <label class="label-item">
-        <p class="label-text"> {{ D[1][1][0] }}: </p>
-        <RegionSelector v-model="D[1][1][2]" />
-      </label>
-      <template v-for="i in 5">
-        <label class="label-item" v-if="i > 1 && i !== 4">
-          <template class="flex">
-            <p class="label-text">{{ D[1][i][0] }}:</p>
-          </template>
-            <label><input type="checkbox" class="mr-2" @click="D[1][i][2] = D[1][i][2] === D[1][0][2] ? '' : D[1][0][2]">与现住址一致</label>
-          <input class="label-input mt-2" type="text" :placeholder="D[1][i][1]" v-model="D[1][i][2]">
-        </label>
-      </template>
-      <label class="label-item">
-        <p class="label-text"> {{ D[1][4][0] }}: </p>
-        <RegionSelector v-model="D[1][4][2]" />
-      </label>
+      
     </template>
     <template v-if="current === 3">
-      <label v-for="i in 10" class="inline-item">
-        <Toggle v-model="D[2][i - 1][2]" class="my-2">{{ D[2][i - 1][0] }}</Toggle>
-      </label>
+      
     </template>
     <template v-if="current === 4">
-      <label class="inline-item">
-        <p class="label-text">{{ D[3][0][0] }}: </p>
-        <select v-model="D[3][0][2]" class="ml-2">
-          <option value="">请选择</option>
-          <option value=无>无</option>
-          <option value=肢体障碍>肢体障碍</option>
-          <option value=听力障碍>听力障碍</option>
-          <option value=视力障碍>视力障碍</option>
-          <option value=言语障碍>言语障碍</option>
-          <option value=智力障碍>智力障碍</option>
-          <option value=精神障碍>精神障碍</option>
-          <option value=多重障碍>多重障碍</option>
-          <option value=其他残疾>其他残疾</option>
-        </select>
-      </label>
-      <label class="inline-item" v-if="D[3][0][2] !== '无'">
-        <p>{{ D[3][1][0] }}: </p>
-        <select v-model="D[3][1][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="残疾证">残疾证</option>
-          <option value="医学诊断证明">医学诊断证明</option>
-        </select>
-      </label>
-      <label class="label-item" v-if="D[3][1][2] === '残疾证'">
-        <p class="label-text">{{ D[3][2][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[3][2][1]" v-model="D[3][5][2]">
-      </label>
-      <label class="inline-item" v-if="D[3][1][2] === '残疾证'">
-        <p>{{ D[3][3][0] }}: </p>
-        <select v-model="D[3][3][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="1级">1级</option>
-          <option value="2级">2级</option>
-          <option value="3级">3级</option>
-          <option value="4级">4级</option>
-        </select>
-      </label>
-      <label class="inline-item" v-if="D[3][0][2] !== '无'">
-        <p>{{ D[3][4][0] }}: </p>
-        <select v-model="D[3][4][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="普通学校特教班就读">普通学校特教班就读</option>
-          <option value="普通学校随班就读">普通学校随班就读</option>
-          <option value="特教学校就读">特教学校就读</option>
-          <option value="送教上门">送教上门</option>
-          <option value="康复机构特教学校办学点就读">康复机构特教学校办学点就读</option>
-          <option value="福利机构特教办学点就读">福利机构特教办学点就读</option>
-        </select>
-      </label>
-      <label class="label-item" v-if="D[3][1][2] === '医学诊断证明'">
-        <p class="label-text">{{ D[3][5][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[3][5][1]" v-model="D[3][5][2]">
-      </label>
+      
     </template>
-     <template v-if="current === 5">
-      <label v-for="i in 4" class="label-item">
-        <p class="label-text">{{ D[4][i - 1][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[4][i - 1][1]" v-model="D[4][i - 1][2]">
-      </label>
-      <Toggle v-model="D[4][4][2]" class="my-2">{{ D[4][4][0] }}</Toggle>
-      <label class="label-item">
-        <p class="label-text"> {{ D[4][5][0] }}: </p>
-        <RegionSelector v-model="D[4][5][2]" />
-      </label>
-      <template v-for="i in 8">
-        <label class="label-item" v-if="i > 5">
-          <p class="label-text">{{ D[4][i][0] }}:</p>
-          <input class="label-input" type="text" :placeholder="D[4][i][1]" v-model="D[4][i][2]">
-        </label>
-      </template>
-      <label class="inline-item">
-        <p>{{ D[4][9][0] }}: </p>
-        <select v-model="D[4][9][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="无户籍">无户籍</option>
-          <option value="居民身份证">居民身份证</option>
-          <option value="香港特区护照/身份证明">香港特区护照/身份证明</option>
-          <option value="澳门特区护照/身份证明">澳门特区护照/身份证明</option>
-          <option value="台湾居民来往大陆通行证">台湾居民来往大陆通行证</option>
-          <option value="境外永久居住证">境外永久居住证</option>
-          <option value="护照">护照</option>
-          <option value="其他">其他</option>
-        </select>
-      </label>
-      <template v-for="i in 12">
-        <label class="label-item" v-if="i > 9">
-          <p class="label-text">{{ D[4][i][0] }}:</p>
-          <input class="label-input" type="text" :placeholder="D[4][i][1]" v-model="D[4][i][2]">
-        </label>
-      </template>
-      <label class="label-item">
-        <p class="label-text">{{ D[4][13][0] }}:</p>
-        <DatePicker v-model="D[4][13][2]" :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }">
-          <template v-slot="{ inputValue, inputEvents }">
-            <input class="label-input" :value="inputValue" v-on="inputEvents" />
-          </template>
-        </DatePicker>
-      </label>
+    <template v-if="current === 5">
+      
     </template>
     <template v-if="current === 6">
-      <label v-for="i in 4" class="label-item">
-        <p class="label-text">{{ D[5][i - 1][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[5][i - 1][1]" v-model="D[5][i - 1][2]">
-      </label>
-      <Toggle v-model="D[5][4][2]" class="my-2">{{ D[5][4][0] }}</Toggle>
-      <label class="label-item">
-        <p class="label-text"> {{ D[5][5][0] }}: </p>
-        <RegionSelector v-model="D[5][5][2]" />
-      </label>
-      <template v-for="i in 8">
-        <label class="label-item" v-if="i > 5">
-          <p class="label-text">{{ D[5][i][0] }}:</p>
-          <input class="label-input" type="text" :placeholder="D[5][i][1]" v-model="D[5][i][2]">
-        </label>
-      </template>
-      <label class="inline-item">
-        <p>{{ D[5][9][0] }}: </p>
-        <select v-model="D[5][9][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="无户籍">无户籍</option>
-          <option value="居民身份证">居民身份证</option>
-          <option value="香港特区护照/身份证明">香港特区护照/身份证明</option>
-          <option value="澳门特区护照/身份证明">澳门特区护照/身份证明</option>
-          <option value="台湾居民来往大陆通行证">台湾居民来往大陆通行证</option>
-          <option value="境外永久居住证">境外永久居住证</option>
-          <option value="护照">护照</option>
-          <option value="其他">其他</option>
-        </select>
-      </label>
-      <template v-for="i in 12">
-        <label class="label-item" v-if="i > 9">
-          <p class="label-text">{{ D[5][i][0] }}:</p>
-          <input class="label-input" type="text" :placeholder="D[5][i][1]" v-model="D[5][i][2]">
-        </label>
-      </template>
-      <label class="label-item">
-        <p class="label-text">{{ D[5][13][0] }}:</p>
-        <DatePicker v-model="D[5][13][2]" :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }">
-          <template v-slot="{ inputValue, inputEvents }">
-            <input class="label-input" :value="inputValue" v-on="inputEvents" />
-          </template>
-        </DatePicker>
-      </label>
+      
     </template>
     <template v-if="current === 7">
-      <Toggle v-model="D[6][0][2]" class="my-2">{{ D[6][0][0] }}</Toggle>
-      <label class="inline-item">
-        <p>{{ D[6][1][0] }}: </p>
-        <select v-model="D[6][1][2]" class="inline-input">
-          <option value="">请选择</option>
-          <option value="步行">步行</option>
-          <option value="自行车(含摩托车、电动自行车)">自行车(含摩托车、电动自行车)</option>
-          <option value="公共交通(含城市公交、农村客运、地铁)">公共交通(含城市公交、农村客运、地铁)</option>
-          <option value="家长自行接送">家长自行接送</option>
-          <option value="校车">校车</option>
-        </select>
-      </label>
-      <label class="label-item">
-        <p class="label-text">{{ D[6][2][0] }}:</p>
-        <input class="label-input" type="text" :placeholder="D[6][2][1]" v-model="D[6][2][2]">
-      </label>
+      
     </template>
   </div>
 </template>

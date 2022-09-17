@@ -46,7 +46,7 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价', '�
       </div>
     </Wrapper>
     <div class="flex justify-center items-center cursor-pointer rounded border-t" @click="show = !show">
-      <ChevronDownIcon class="w-6" :class="show ? 'rotate-180' : ''"/>
+      <ChevronDownIcon class="w-6 all-transition" :class="show ? 'rotate-180' : ''"/>
     </div>
   </div>
 </template>
