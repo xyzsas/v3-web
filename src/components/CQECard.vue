@@ -2,7 +2,7 @@
 import Wrapper from '../components/Wrapper.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { watch } from 'vue'
-const props = defineProps(['modelValue', 'title', 'content', 'criterion', 'basis'])
+const props = defineProps(['modelValue', 'title', 'content', 'criterion', 'basis', 'max'])
 const emits = defineEmits(['update:modelValue'])
 let data = $ref(props.modelValue)
 
@@ -22,12 +22,13 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价', '�
   <div class="rounded px-4 py-2 mx-8 my-4 bg-white">
     <div class="md:flex items-center whitespace-nowrap">
       <div class="text-2xl my-2 md:mr-8">{{ props.title }}</div>
-      <div class="my-2 flex flex-wrap items-center">
+      <div class="my-2 flex flex-wrap items-center md:mr-8">
         <div v-for="(pt, idx) in data" class="flex items-center my-1">
           {{ item[idx] }}:
-          <input type="number" v-model="data[idx]" class="font-mono w-16 m-2 px-1 rounded border" :class="(data[idx] < 0 || data[idx] > 10) ? 'text-red-500' : 'text-black'">
+          <input type="number" v-model="data[idx]" class="font-mono w-16 m-2 px-1 rounded border" :class="(data[idx] < 0 || data[idx] > props.max) ? 'text-red-500' : ''">
         </div>
       </div>
+      <div class="font-mono text-gray-500">最高分: {{ props.max > 100 ? '不限' : props.max }}</div>
     </div>
     <Wrapper :show="show">
       <div>
