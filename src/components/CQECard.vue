@@ -32,15 +32,15 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价', '�
     </div>
     <Wrapper :show="show">
       <div>
-        <div class="p-2">
+        <div v-if="props.content" class="p-2">
           <div class="text-xl">评价内容</div>
           <div>{{ props.content }}</div>
         </div>
-        <div class="p-2">
+        <div v-if="props.criterion" class="p-2">
           <div class="text-xl">评价方式</div>
           <div>{{ props.criterion }}</div>
         </div>
-        <div class="p-2">
+        <div v-if="props.basis" class="p-2">
           <div class="text-xl">评价主要依据</div>
           <div>{{ props.basis }}</div>
         </div>
