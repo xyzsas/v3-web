@@ -6,47 +6,104 @@ import RegionSelector from '../components/RegionSelector.vue'
 import { Calendar, DatePicker } from 'v-calendar'
 import 'v-calendar/dist/style.css'
 import CQECard from '../components/CQECard.vue'
+import { watch } from 'vue'
 const router = useRouter()
+
+let done = $ref({
+  '思想品德': {
+    '出勤情况': false,
+    '学习态度': false,
+    '团结协作': false,
+    '遵规守纪': false,
+    '诚实守信': false,
+    '文明礼仪': false,
+    '党团活动': false,
+    '公益活动': false,
+    '志愿服务': false,
+    '其他': false
+  },
+  '学业水平': {
+    '国家课程': false,
+    '校本课程': false,
+    '研究性学习': false
+  },
+  '身心健康': {
+    '体质监测': false,
+    '日常锻炼': false,
+    '运动特长': false,
+    '心理素质': false,
+    '自我修习': false,
+    '自我认知': false,
+    '未来规划': false,
+    '其他': false
+  },
+  '艺术素养': {
+    '学校课程': false,
+    '个人提升': false,
+    '艺术特长': false
+  },
+  '社会实践和劳动教育': {
+    '社区服务': false,
+    '社会实践': false,
+    '社团活动': false,
+    '规定性课程': false,
+    '自主性课程': false
+  }
+})
+
+watch($$(done), () => {
+  const titles = ['思想品德', '学业水平', '身心健康', '艺术素养', '社会实践和劳动教育']
+  for (let i = 0; i < titles.length; i++) {
+    const v = titles[i]
+    for (const k in done[v]) {
+      if (!done[v][k]) {
+        fields[i + 1].done = false
+        break
+      }
+      fields[i + 1].done = true
+    }
+  }
+}, { deep: true })
 
 let D = $ref({
   '思想品德': {
-    '出勤情况': [0, 0, 0, 0, 0],
-    '学习态度': [0, 0, 0, 0, 0],
-    '团结协作': [0, 0, 0, 0, 0],
-    '遵规守纪': [0, 0, 0, 0, 0],
-    '诚实守信': [0, 0, 0, 0, 0],
-    '文明礼仪': [0, 0, 0, 0, 0],
-    '党团活动': [0, 0, 0, 0, 0],
-    '公益活动': [0, 0, 0, 0, 0],
-    '志愿服务': [0, 0, 0, 0, 0],
-    '其他': [0, 0, 0, 0, 0]
+    '出勤情况': [-1, -1, -1, -1, -1],
+    '学习态度': [-1, -1, -1, -1, -1],
+    '团结协作': [-1, -1, -1, -1, -1],
+    '遵规守纪': [-1, -1, -1, -1, -1],
+    '诚实守信': [-1, -1, -1, -1, -1],
+    '文明礼仪': [-1, -1, -1, -1, -1],
+    '党团活动': [-1, -1, -1, -1, -1],
+    '公益活动': [-1, -1, -1, -1, -1],
+    '志愿服务': [-1, -1, -1, -1, -1],
+    '其他': [-1, -1, -1, -1, -1]
   },
   '学业水平': {
-    '规定性课程、自主性课程': [0, 0, 0, 0, 0],
-    '规定性课程、自主性课程': [0, 0, 0, 0, 0],
-    '研究性学习': [0, 0, 0, 0, 0]
+    '国家课程': [-1, -1, -1, -1, -1],
+    '校本课程': [-1, -1, -1, -1, -1],
+    '研究性学习': [-1, -1, -1, -1, -1]
   },
   '身心健康': {
-    '体质监测': [0, 0, 0, 0, 0],
-    '日常锻炼': [0, 0, 0, 0, 0],
-    '运动特长': [0, 0, 0, 0, 0],
-    '心理素质': [0, 0, 0, 0, 0],
-    '自我修习': [0, 0, 0, 0, 0],
-    '自我认知': [0, 0, 0, 0, 0],
-    '未来规划': [0, 0, 0, 0, 0],
-    '其他': [0, 0, 0, 0, 0]
+    '体质监测': [-1, -1, -1, -1, -1],
+    '日常锻炼': [-1, -1, -1, -1, -1],
+    '运动特长': [-1, -1, -1, -1, -1],
+    '心理素质': [-1, -1, -1, -1, -1],
+    '自我修习': [-1, -1, -1, -1, -1],
+    '自我认知': [-1, -1, -1, -1, -1],
+    '未来规划': [-1, -1, -1, -1, -1],
+    '其他': [-1, -1, -1, -1, -1]
   },
   '艺术素养': {
-    '学校课程': [0, 0, 0, 0, 0],
-    '个人提升': [0, 0, 0, 0, 0],
-    '艺术特长': [0, 0, 0, 0, 0]
+    '学校课程': [-1, -1, -1, -1, -1],
+    '个人提升': [-1, -1, -1, -1, -1],
+    '艺术特长': [-1, -1, -1, -1, -1]
   },
   '社会实践和劳动教育': {
-    '社区服务': [0, 0, 0, 0, 0],
-    '社会实践': [0, 0, 0, 0, 0],
-    '社团活动': [0, 0, 0, 0, 0],
-    '规定性课程': [0, 0, 0, 0, 0],
-    '自主性课程': [0, 0, 0, 0, 0]
+    '社区服务': [-1, -1, -1, -1, -1],
+    '社会实践': [-1, -1, -1, -1, -1],
+    '社团活动': [-1, -1, -1, -1, -1],
+    '规定性课程': [-1, -1, -1, -1, -1],
+    '自主性课程': [-1, -1, -1, -1, -1]
   }
 })
 
@@ -65,8 +122,8 @@ const T = {
     '评价主要依据': '《中学生日常行为规范（修订）》、《中小学生守则》、《中共中央国务院关于进一步加强和改进未成年人思想道德建设的若干意见》、《中小学文明礼仪教育纲要》、《江苏省普通高中课程设置及教学指导意见》'
   },
   '学业水平': {
-    '规定性课程、自主性课程': ['根据自己的发展需要、兴趣特长和学习潜能选择学习内容并丰富和拓展知识领域。学习目标达成度高，模块检测质量高，完成必修、选修规定的学分。', '重视参与学习过程，对学习过程进行记录与评价，每学期必须完成国家课程要求内容，测试合格，赋予相应的学分，若测试不合格，不能获得学分。（语数外政完成1门2学分，其他每完成1门得1学分）'],
-    '规定性课程、自主性课程': ['根据个人发展需要和学习潜能选课，重视学习过程，拓展知识领域。每学期至少选择1门规定校本课程，达到规定的学时数且成绩合格。', '完成1门校本课程的选择，且修满学时，测试合格，赋予相应的学分，若测试不合格，不能获得学分。（完成1门的2学分）'],
+    '国家课程': ['根据自己的发展需要、兴趣特长和学习潜能选择学习内容并丰富和拓展知识领域。学习目标达成度高，模块检测质量高，完成必修、选修规定的学分。', '重视参与学习过程，对学习过程进行记录与评价，每学期必须完成国家课程要求内容，测试合格，赋予相应的学分，若测试不合格，不能获得学分。（语数外政完成1门2学分，其他每完成1门得1学分）'],
+    '校本课程': ['根据个人发展需要和学习潜能选课，重视学习过程，拓展知识领域。每学期至少选择1门规定校本课程，达到规定的学时数且成绩合格。', '完成1门校本课程的选择，且修满学时，测试合格，赋予相应的学分，若测试不合格，不能获得学分。（完成1门的2学分）'],
     '研究性学习': ['积极参与研究性学习，制定研究性学习方案，有质量较高的研究性成果。', '参加研究性学习，完成研究任务的，获得当学期学分，否则不能获得相应的学分。优秀成果作为标志性成果上传。（每完成一次0.5学分）'],
     '评价主要依据': '《江苏省普通高中课程设置及教学指导意见》、《江苏省普通高中学生综合素质评价实施方案》'
   },
@@ -96,8 +153,8 @@ const T = {
   }
 }
 
-const fields = [
-  { title: '填写指南', done: false },
+const fields = $ref([
+  { title: '填写指南', done: true },
   { title: '思想品德', done: false },
   { title: '学业水平', done: false },
   { title: '身心健康', done: false },
@@ -105,8 +162,7 @@ const fields = [
   { title: '社会实践和劳动教育', done: false },
   { title: '学期总表', done: false },
   { title: '三年汇总表', done: false }
-]
-
+])
 let current = $ref(0) // index of field
 </script>
 
@@ -118,7 +174,7 @@ let current = $ref(0) // index of field
       <div v-for="(v, i) in fields" class="my-4">
         <div class="flex flex-col justify-center items-center mx-2 px-2 cursor-pointer" @click="current = i">
           <button class="all-transition text-white font-bold text-lg rounded-full w-12 h-12 mb-1 text-center"
-            :class="[current === i && 'ring', v.done ? 'bg-green-600' : 'bg-gray-500']">{{ i + 1 }}</button>
+            :class="[current === i && 'ring ring-sky-500/50', v.done ? 'bg-green-600' : 'bg-gray-400']">{{ i + 1 }}</button>
           <div class="text-xs whitespace-nowrap text-gray-500">{{ v.title }}</div>
         </div>
       </div>
@@ -130,27 +186,27 @@ let current = $ref(0) // index of field
     </template>
     <template v-if="current === 1">
       <div v-for="(v, k) in D.思想品德">
-        <CQECard v-model="D.思想品德[k]" :title="k" :content="T.思想品德[k][0]" :criterion="T.思想品德[k][1]" :basis="T.思想品德.评价主要依据" :max="T.思想品德[k][2] || 999"/>
+        <CQECard v-if="k != 'done'" v-model="D.思想品德[k]" :title="k" :content="T.思想品德[k][0]" :criterion="T.思想品德[k][1]" :basis="T.思想品德.评价主要依据" :max="T.思想品德[k][2] || 999" @done="d => done.思想品德[k] = d"/>
       </div>
     </template>
     <template v-if="current === 2">
       <div v-for="(v, k) in D.学业水平">
-        <CQECard v-model="D.学业水平[k]" :title="k" :content="T.学业水平[k][0]" :criterion="T.学业水平[k][1]" :basis="T.学业水平.评价主要依据" :max="T.学业水平[k][2] || 999"/>
+        <CQECard v-if="k != 'done'" v-model="D.学业水平[k]" :title="k" :content="T.学业水平[k][0]" :criterion="T.学业水平[k][1]" :basis="T.学业水平.评价主要依据" :max="T.学业水平[k][2] || 999" @done="d => done.学业水平[k] = d"/>
       </div>
     </template>
     <template v-if="current === 3">
       <div v-for="(v, k) in D.身心健康">
-        <CQECard v-model="D.身心健康[k]" :title="k" :content="T.身心健康[k][0]" :criterion="T.身心健康[k][1]" :basis="T.身心健康.评价主要依据" :max="T.身心健康[k][2] || 999"/>
+        <CQECard v-if="k != 'done'" v-model="D.身心健康[k]" :title="k" :content="T.身心健康[k][0]" :criterion="T.身心健康[k][1]" :basis="T.身心健康.评价主要依据" :max="T.身心健康[k][2] || 999" @done="d => done.身心健康[k] = d"/>
       </div>
     </template>
     <template v-if="current === 4">
       <div v-for="(v, k) in D.艺术素养">
-        <CQECard v-model="D.艺术素养[k]" :title="k" :content="T.艺术素养[k][0]" :criterion="T.艺术素养[k][1]" :basis="T.艺术素养.评价主要依据" :max="T.艺术素养[k][2] || 999"/>
+        <CQECard v-if="k != 'done'" v-model="D.艺术素养[k]" :title="k" :content="T.艺术素养[k][0]" :criterion="T.艺术素养[k][1]" :basis="T.艺术素养.评价主要依据" :max="T.艺术素养[k][2] || 999" @done="d => done.艺术素养[k] = d"/>
       </div>
     </template>
     <template v-if="current === 5">
       <div v-for="(v, k) in D.社会实践和劳动教育">
-        <CQECard v-model="D.社会实践和劳动教育[k]" :title="k" :content="T.社会实践和劳动教育[k][0]" :criterion="T.社会实践和劳动教育[k][1]" :basis="T.社会实践和劳动教育[k][2]" :max="T.社会实践和劳动教育[k][3] || 999"/>
+        <CQECard v-if="k != 'done'" v-model="D.社会实践和劳动教育[k]" :title="k" :content="T.社会实践和劳动教育[k][0]" :criterion="T.社会实践和劳动教育[k][1]" :basis="T.社会实践和劳动教育[k][2]" :max="T.社会实践和劳动教育[k][3] || 999" @done="d => done[社会实践和劳动教育] = d"/>
       </div>
     </template>
     <template v-if="current === 6">
