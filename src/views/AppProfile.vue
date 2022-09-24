@@ -144,7 +144,7 @@ for (const k of keys) {
 
 async function init () {
   state.loading = true
-  const res = await local.Z.profile.get(state.user.token)
+  const res = await local.app.profile.get(state.user.token)
   state.loading = false
   if (!res) {
     await Swal.fire('学生档案不存在', '请联系老师或工作人员', 'error')
@@ -163,7 +163,7 @@ function edit (k) {
   if (e.regionValue) v = e.regionValue + (v || '')
   if (v === '') return
   profile[k] = v
-  local.Z.profile.update(state.user.token, { [k]: v })
+  local.app.profile.update(state.user.token, { [k]: v })
   const i = keys.indexOf(k)
   if (keys[i + 1] && !profile[keys[i + 1]]) editing = keys[i + 1]
   else editing = ''
