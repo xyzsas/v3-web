@@ -7,7 +7,20 @@ import { Calendar, DatePicker } from 'v-calendar'
 import 'v-calendar/dist/style.css'
 import CQECard from '../components/CQECard.vue'
 import { watch } from 'vue'
+import state from '../state.js'
+import local from '../utils/srpc-local.js'
 const router = useRouter()
+
+async function init () {
+  const res = await local.app.CQE.get(state.user.token)
+  for (const k in D) {
+    for (const i in D[k]) {
+      if (res[k] && res[k][i]) D[k][i] = res[k][i]
+    }
+  }
+}
+
+init()
 
 let done = $ref({
   '思想品德': {
@@ -67,43 +80,43 @@ watch($$(done), () => {
 
 let D = $ref({
   '思想品德': {
-    '出勤情况': [-1, -1, -1, -1, -1],
-    '学习态度': [-1, -1, -1, -1, -1],
-    '团结协作': [-1, -1, -1, -1, -1],
-    '遵规守纪': [-1, -1, -1, -1, -1],
-    '诚实守信': [-1, -1, -1, -1, -1],
-    '文明礼仪': [-1, -1, -1, -1, -1],
-    '党团活动': [-1, -1, -1, -1, -1],
-    '公益活动': [-1, -1, -1, -1, -1],
-    '志愿服务': [-1, -1, -1, -1, -1],
-    '其他': [-1, -1, -1, -1, -1]
+    '出勤情况': [-1, -1, -1, -1],
+    '学习态度': [-1, -1, -1, -1],
+    '团结协作': [-1, -1, -1, -1],
+    '遵规守纪': [-1, -1, -1, -1],
+    '诚实守信': [-1, -1, -1, -1],
+    '文明礼仪': [-1, -1, -1, -1],
+    '党团活动': [-1, -1, -1, -1],
+    '公益活动': [-1, -1, -1, -1],
+    '志愿服务': [-1, -1, -1, -1],
+    '其他': [-1, -1, -1, -1]
   },
   '学业水平': {
-    '国家课程': [-1, -1, -1, -1, -1],
-    '校本课程': [-1, -1, -1, -1, -1],
-    '研究性学习': [-1, -1, -1, -1, -1]
+    '国家课程': [-1, -1, -1, -1],
+    '校本课程': [-1, -1, -1, -1],
+    '研究性学习': [-1, -1, -1, -1]
   },
   '身心健康': {
-    '体质监测': [-1, -1, -1, -1, -1],
-    '日常锻炼': [-1, -1, -1, -1, -1],
-    '运动特长': [-1, -1, -1, -1, -1],
-    '心理素质': [-1, -1, -1, -1, -1],
-    '自我修习': [-1, -1, -1, -1, -1],
-    '自我认知': [-1, -1, -1, -1, -1],
-    '未来规划': [-1, -1, -1, -1, -1],
-    '其他': [-1, -1, -1, -1, -1]
+    '体质监测': [-1, -1, -1, -1],
+    '日常锻炼': [-1, -1, -1, -1],
+    '运动特长': [-1, -1, -1, -1],
+    '心理素质': [-1, -1, -1, -1],
+    '自我修习': [-1, -1, -1, -1],
+    '自我认知': [-1, -1, -1, -1],
+    '未来规划': [-1, -1, -1, -1],
+    '其他': [-1, -1, -1, -1]
   },
   '艺术素养': {
-    '学校课程': [-1, -1, -1, -1, -1],
-    '个人提升': [-1, -1, -1, -1, -1],
-    '艺术特长': [-1, -1, -1, -1, -1]
+    '学校课程': [-1, -1, -1, -1],
+    '个人提升': [-1, -1, -1, -1],
+    '艺术特长': [-1, -1, -1, -1]
   },
   '社会实践和劳动教育': {
-    '社区服务': [-1, -1, -1, -1, -1],
-    '社会实践': [-1, -1, -1, -1, -1],
-    '社团活动': [-1, -1, -1, -1, -1],
-    '规定性课程': [-1, -1, -1, -1, -1],
-    '自主性课程': [-1, -1, -1, -1, -1]
+    '社区服务': [-1, -1, -1, -1],
+    '社会实践': [-1, -1, -1, -1],
+    '社团活动': [-1, -1, -1, -1],
+    '规定性课程': [-1, -1, -1, -1],
+    '自主性课程': [-1, -1, -1, -1]
   }
 })
 
@@ -186,27 +199,27 @@ let current = $ref(0) // index of field
     </template>
     <template v-if="current === 1">
       <div v-for="(v, k) in D.思想品德">
-        <CQECard v-if="k != 'done'" v-model="D.思想品德[k]" :title="k" :content="T.思想品德[k][0]" :criterion="T.思想品德[k][1]" :basis="T.思想品德.评价主要依据" :max="T.思想品德[k][2] || 999" @done="d => done.思想品德[k] = d"/>
+        <CQECard v-if="k != 'done'" v-model="D.思想品德[k]" page="思想品德" :title="k" :content="T.思想品德[k][0]" :criterion="T.思想品德[k][1]" :basis="T.思想品德.评价主要依据" :max="T.思想品德[k][2] || 999" @done="d => done.思想品德[k] = d"/>
       </div>
     </template>
     <template v-if="current === 2">
       <div v-for="(v, k) in D.学业水平">
-        <CQECard v-if="k != 'done'" v-model="D.学业水平[k]" :title="k" :content="T.学业水平[k][0]" :criterion="T.学业水平[k][1]" :basis="T.学业水平.评价主要依据" :max="T.学业水平[k][2] || 999" @done="d => done.学业水平[k] = d"/>
+        <CQECard v-if="k != 'done'" v-model="D.学业水平[k]" page="学业水平" :title="k" :content="T.学业水平[k][0]" :criterion="T.学业水平[k][1]" :basis="T.学业水平.评价主要依据" :max="T.学业水平[k][2] || 999" @done="d => done.学业水平[k] = d"/>
       </div>
     </template>
     <template v-if="current === 3">
       <div v-for="(v, k) in D.身心健康">
-        <CQECard v-if="k != 'done'" v-model="D.身心健康[k]" :title="k" :content="T.身心健康[k][0]" :criterion="T.身心健康[k][1]" :basis="T.身心健康.评价主要依据" :max="T.身心健康[k][2] || 999" @done="d => done.身心健康[k] = d"/>
+        <CQECard v-if="k != 'done'" v-model="D.身心健康[k]" page="身心健康" :title="k" :content="T.身心健康[k][0]" :criterion="T.身心健康[k][1]" :basis="T.身心健康.评价主要依据" :max="T.身心健康[k][2] || 999" @done="d => done.身心健康[k] = d"/>
       </div>
     </template>
     <template v-if="current === 4">
       <div v-for="(v, k) in D.艺术素养">
-        <CQECard v-if="k != 'done'" v-model="D.艺术素养[k]" :title="k" :content="T.艺术素养[k][0]" :criterion="T.艺术素养[k][1]" :basis="T.艺术素养.评价主要依据" :max="T.艺术素养[k][2] || 999" @done="d => done.艺术素养[k] = d"/>
+        <CQECard v-if="k != 'done'" v-model="D.艺术素养[k]" page="艺术素养" :title="k" :content="T.艺术素养[k][0]" :criterion="T.艺术素养[k][1]" :basis="T.艺术素养.评价主要依据" :max="T.艺术素养[k][2] || 999" @done="d => done.艺术素养[k] = d"/>
       </div>
     </template>
     <template v-if="current === 5">
       <div v-for="(v, k) in D.社会实践和劳动教育">
-        <CQECard v-if="k != 'done'" v-model="D.社会实践和劳动教育[k]" :title="k" :content="T.社会实践和劳动教育[k][0]" :criterion="T.社会实践和劳动教育[k][1]" :basis="T.社会实践和劳动教育[k][2]" :max="T.社会实践和劳动教育[k][3] || 999" @done="d => done[社会实践和劳动教育] = d"/>
+        <CQECard v-if="k != 'done'" v-model="D.社会实践和劳动教育[k]" page="社会实践和劳动教育" :title="k" :content="T.社会实践和劳动教育[k][0]" :criterion="T.社会实践和劳动教育[k][1]" :basis="T.社会实践和劳动教育[k][2]" :max="T.社会实践和劳动教育[k][3] || 999" @done="d => done[社会实践和劳动教育] = d"/>
       </div>
     </template>
     <template v-if="current === 6">
