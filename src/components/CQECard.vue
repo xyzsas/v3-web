@@ -51,40 +51,44 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
 </script>
 
 <template>
-  <div class="rounded px-4 py-2 mx-8 my-4 bg-white border border-2 all-transition" :class="done ? 'border-green-500' : 'border-gray-500'">
+  <div class="rounded px-4 py-2 mx-8 my-4 bg-white shadow-md all-transition  font-serif" :class="done ? 'shadow-green-500/50' : 'shadow-gray-500/50'">
     <div class="flex items-center whitespace-nowrap">
-      <div class="text-2xl my-2 mr-8">{{ props.title }}</div>
+      <div class="text-2xl my-2 mr-2 md:mr-8">{{ props.title }}</div>
       <div class="flex items-center" :class="data[3] == -1 ? 'text-gray-500' : isNaN(data[3]) ? 'text-red-500' : 'text-green-500'">
         <div class="text-sm my-2 mr-2">学校评价:</div>
-        <div class="text-2xl my-2">{{ data[3] }}</div>
+        <div class="text-xl my-2">{{ data[3] == -1 ? '' : data[3] }}</div>
       </div>
       <div class="grow"></div>
-      <div class="text-blue-500 text-sm">{{ updating ? '保存中...' : '已保存' }}</div>
+      <div v-if="!updating" class="flex justify-center items-center cursor-pointer" @click="show = !show">
+        <ChevronDownIcon class="w-6 all-transition" :class="show ? 'rotate-180' : ''"/>
+      </div>
+      <div v-else>
+        <img src="/logo.svg" class="w-6 h-6">
+      </div>
     </div>
     <Wrapper :show="show">
-      <div class="my-2 flex flex-wrap items-center md:mr-8">
-        <div v-for="(pt, idx) in data" class="flex items-center my-1">
-          {{ item[idx] }}:
-          <input type="number" v-model="data[idx]" class="font-mono w-16 m-2 px-1 rounded border" :class="data[idx] == -1 ? 'text-gray-500 border-gray-500' : (isNaN(data[idx]) || data[idx] === '') ? 'text-red-500 border-red-500' : 'text-green-500 border-green-500'">
-        </div>
-      </div>
       <div>
-        <div v-if="props.content" class="p-2">
-          <div class="text-xl">评价内容</div>
-          <div>{{ props.content }}</div>
+        <div class="my-2 flex flex-wrap items-center md:mr-8 font-mono">
+          <div v-for="(pt, idx) in data" class="flex items-center my-1">
+            {{ item[idx] }}:
+            <input type="number" v-model="data[idx]" class="w-16 m-2 px-1 rounded border" :class="data[idx] == -1 ? 'text-gray-500 border-gray-500' : (isNaN(data[idx]) || data[idx] === '') ? 'text-red-500 border-red-500' : 'text-green-500 border-green-500'">
+          </div>
         </div>
-        <div v-if="props.criterion" class="p-2">
-          <div class="text-xl">评价方式</div>
-          <div>{{ props.criterion }}</div>
-        </div>
-        <div v-if="props.basis" class="p-2">
-          <div class="text-xl">评价主要依据</div>
-          <div>{{ props.basis }}</div>
+        <div class="text-gray-500">
+          <div v-if="props.content" class="p-2">
+            <div class="text-md">评价内容</div>
+            <div class="text-sm">{{ props.content }}</div>
+          </div>
+          <div v-if="props.criterion" class="p-2">
+            <div class="text-md">评价方式</div>
+            <div class="text-sm">{{ props.criterion }}</div>
+          </div>
+          <div v-if="props.basis" class="p-2">
+            <div class="text-md">评价主要依据</div>
+            <div class="text-sm">{{ props.basis }}</div>
+          </div>
         </div>
       </div>
     </Wrapper>
-    <div class="flex justify-center items-center cursor-pointer rounded border-t" @click="show = !show">
-      <ChevronDownIcon class="w-6 all-transition" :class="show ? 'rotate-180' : ''"/>
-    </div>
   </div>
 </template>

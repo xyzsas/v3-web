@@ -172,7 +172,7 @@ const fields = $ref([
   { title: '学业水平', done: false },
   { title: '身心健康', done: false },
   { title: '艺术素养', done: false },
-  { title: '社会实践和劳动教育', done: false },
+  { title: '社会实践', done: false },
   { title: '学期总表', done: false },
   { title: '三年汇总表', done: false }
 ])
@@ -187,7 +187,7 @@ let current = $ref(0) // index of field
       <div v-for="(v, i) in fields" class="my-4">
         <div class="flex flex-col justify-center items-center mx-2 px-2 cursor-pointer" @click="current = i">
           <button class="all-transition text-white font-bold text-lg rounded-full w-12 h-12 mb-1 text-center"
-            :class="[current === i && 'ring ring-sky-500/50', v.done ? 'bg-green-600' : 'bg-gray-400']">{{ i + 1 }}</button>
+            :class="[current === i && 'ring ring-blue-500/50', v.done ? 'bg-green-500' : 'bg-gray-500']">{{ i + 1 }}</button>
           <div class="text-xs whitespace-nowrap text-gray-500">{{ v.title }}</div>
         </div>
       </div>
@@ -198,27 +198,27 @@ let current = $ref(0) // index of field
       填写指南
     </template>
     <template v-if="current === 1">
-      <div v-for="(v, k) in D.思想品德">
+      <div v-for="(v, k) in D.思想品德" class="w-full">
         <CQECard v-if="k != 'done'" v-model="D.思想品德[k]" page="思想品德" :title="k" :content="T.思想品德[k][0]" :criterion="T.思想品德[k][1]" :basis="T.思想品德.评价主要依据" :max="T.思想品德[k][2] || 999" @done="d => done.思想品德[k] = d"/>
       </div>
     </template>
     <template v-if="current === 2">
-      <div v-for="(v, k) in D.学业水平">
+      <div v-for="(v, k) in D.学业水平" class="w-full">
         <CQECard v-if="k != 'done'" v-model="D.学业水平[k]" page="学业水平" :title="k" :content="T.学业水平[k][0]" :criterion="T.学业水平[k][1]" :basis="T.学业水平.评价主要依据" :max="T.学业水平[k][2] || 999" @done="d => done.学业水平[k] = d"/>
       </div>
     </template>
     <template v-if="current === 3">
-      <div v-for="(v, k) in D.身心健康">
+      <div v-for="(v, k) in D.身心健康" class="w-full">
         <CQECard v-if="k != 'done'" v-model="D.身心健康[k]" page="身心健康" :title="k" :content="T.身心健康[k][0]" :criterion="T.身心健康[k][1]" :basis="T.身心健康.评价主要依据" :max="T.身心健康[k][2] || 999" @done="d => done.身心健康[k] = d"/>
       </div>
     </template>
     <template v-if="current === 4">
-      <div v-for="(v, k) in D.艺术素养">
+      <div v-for="(v, k) in D.艺术素养" class="w-full">
         <CQECard v-if="k != 'done'" v-model="D.艺术素养[k]" page="艺术素养" :title="k" :content="T.艺术素养[k][0]" :criterion="T.艺术素养[k][1]" :basis="T.艺术素养.评价主要依据" :max="T.艺术素养[k][2] || 999" @done="d => done.艺术素养[k] = d"/>
       </div>
     </template>
     <template v-if="current === 5">
-      <div v-for="(v, k) in D.社会实践和劳动教育">
+      <div v-for="(v, k) in D.社会实践和劳动教育" class="w-full">
         <CQECard v-if="k != 'done'" v-model="D.社会实践和劳动教育[k]" page="社会实践和劳动教育" :title="k" :content="T.社会实践和劳动教育[k][0]" :criterion="T.社会实践和劳动教育[k][1]" :basis="T.社会实践和劳动教育[k][2]" :max="T.社会实践和劳动教育[k][3] || 999" @done="d => done[社会实践和劳动教育] = d"/>
       </div>
     </template>
