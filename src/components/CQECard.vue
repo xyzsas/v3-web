@@ -1,6 +1,7 @@
 <script setup>
 import Wrapper from '../components/Wrapper.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { PencilSquareIcon } from '@heroicons/vue/24/outline'
 import { watch } from 'vue'
 const props = defineProps(['modelValue', 'page', 'title', 'content', 'criterion', 'basis', 'max'])
 const emits = defineEmits(['update:modelValue', 'done'])
@@ -68,10 +69,11 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
     </div>
     <Wrapper :show="show">
       <div>
-        <div class="my-2 flex flex-wrap items-center md:mr-8 font-mono">
+        <div class="m-2 flex flex-wrap items-center md:mr-8 font-mono">
+          <PencilSquareIcon class="w-6 text-blue-500 m-1" />
           <div v-for="(pt, idx) in data" class="flex items-center my-1">
             {{ item[idx] }}:
-            <input type="number" v-model="data[idx]" class="w-16 m-2 px-1 rounded border" :class="data[idx] == -1 ? 'text-gray-500 border-gray-500' : (isNaN(data[idx]) || data[idx] === '') ? 'text-red-500 border-red-500' : 'text-green-500 border-green-500'">
+            <input type="number" v-model="data[idx]" class="w-16 m-2 px-1 rounded border" :class="data[idx] == -1 ? 'text-gray-500 border-blue-500' : isNaN(data[idx]) ? 'text-red-500 border-red-500' : 'text-green-500 border-green-500'">
           </div>
         </div>
         <div class="text-gray-500">
