@@ -187,7 +187,7 @@ let current = $ref(0) // index of field
       <div v-for="(v, i) in fields" class="my-4">
         <div class="flex flex-col justify-center items-center mx-2 px-2 cursor-pointer" @click="current = i">
           <button class="all-transition text-white font-bold text-lg rounded-full w-12 h-12 mb-1 text-center"
-            :class="[current === i && 'ring ring-blue-500/50', v.done ? 'bg-green-500' : 'bg-gray-500']">{{ i + 1 }}</button>
+            :class="[current === i && 'ring', v.done ? 'bg-green-600' : 'bg-gray-500']">{{ i + 1 }}</button>
           <div class="text-xs whitespace-nowrap text-gray-500">{{ v.title }}</div>
         </div>
       </div>

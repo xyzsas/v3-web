@@ -1,7 +1,6 @@
 <script setup>
 import Wrapper from '../components/Wrapper.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import { PencilSquareIcon } from '@heroicons/vue/24/outline'
 import { watch } from 'vue'
 const props = defineProps(['modelValue', 'page', 'title', 'content', 'criterion', 'basis', 'max'])
 const emits = defineEmits(['update:modelValue', 'done'])
@@ -52,16 +51,16 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
 </script>
 
 <template>
-  <div class="rounded px-4 py-2 mx-8 my-4 bg-white shadow-md all-transition  font-serif" :class="done ? 'shadow-green-500/50' : 'shadow-gray-500/50'">
-    <div class="flex items-center whitespace-nowrap">
+  <div class="rounded px-4 py-2 mx-8 my-4 bg-white shadow-md all-transition" :class="done ? 'shadow-green-600/50' : 'shadow-gray-500/50'">
+    <div class="flex items-center whitespace-nowrap" @click="show = !show">
       <div class="text-2xl my-2 mr-2 md:mr-8">{{ props.title }}</div>
-      <div class="flex items-center" :class="data[3] == -1 ? 'text-gray-500' : isNaN(data[3]) ? 'text-red-500' : 'text-green-500'">
-        <div class="text-sm my-2 mr-2">学校评价:</div>
+      <div class="flex items-center" :class="data[3] == -1 ? 'text-gray-500' : 'text-green-600'">
+        <div class="text-sm m-2">学校评价:</div>
         <div class="text-xl my-2">{{ data[3] == -1 ? '' : data[3] }}</div>
       </div>
       <div class="grow"></div>
-      <div v-if="!updating" class="flex justify-center items-center cursor-pointer" @click="show = !show">
-        <ChevronDownIcon class="w-6 all-transition" :class="show ? 'rotate-180' : ''"/>
+      <div v-if="!updating" class="flex justify-center items-center cursor-pointer">
+        <ChevronDownIcon class="w-6 all-transition" :class="show ? '' : 'rotate-90'"/>
       </div>
       <div v-else>
         <img src="/logo.svg" class="w-6 h-6">
@@ -69,25 +68,24 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
     </div>
     <Wrapper :show="show">
       <div>
-        <div class="m-2 flex flex-wrap items-center md:mr-8 font-mono">
-          <PencilSquareIcon class="w-6 text-blue-500 m-1" />
+        <div class="p-2 flex flex-wrap items-center md:mr-8">
           <div v-for="(pt, idx) in data" class="flex items-center my-1">
             {{ item[idx] }}:
-            <input type="number" v-model="data[idx]" class="w-16 m-2 px-1 rounded border" :class="data[idx] == -1 ? 'text-gray-500 border-blue-500' : isNaN(data[idx]) ? 'text-red-500 border-red-500' : 'text-green-500 border-green-500'">
+            <input type="number" v-model="data[idx]" class="w-16 m-2 pl-1 rounded border" :class="data[idx] == -1 ? 'text-gray-500 border-gray-500' : 'text-green-600 border-green-600'">
           </div>
         </div>
         <div class="text-gray-500">
           <div v-if="props.content" class="p-2">
-            <div class="text-md">评价内容</div>
-            <div class="text-sm">{{ props.content }}</div>
+            <div class="text-gray-700">评价内容</div>
+            <div class="text-xs">{{ props.content }}</div>
           </div>
           <div v-if="props.criterion" class="p-2">
-            <div class="text-md">评价方式</div>
-            <div class="text-sm">{{ props.criterion }}</div>
+            <div class="text-gray-700">评价方式</div>
+            <div class="text-xs">{{ props.criterion }}</div>
           </div>
           <div v-if="props.basis" class="p-2">
-            <div class="text-md">评价主要依据</div>
-            <div class="text-sm">{{ props.basis }}</div>
+            <div class="text-gray-700d">评价主要依据</div>
+            <div class="text-xs">{{ props.basis }}</div>
           </div>
         </div>
       </div>
