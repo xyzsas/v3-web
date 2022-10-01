@@ -2,7 +2,7 @@
 import Wrapper from '../components/Wrapper.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { watch } from 'vue'
-const props = defineProps(['modelValue', 'page', 'title', 'content', 'criterion', 'basis', 'max'])
+const props = defineProps(['modelValue', 'page', 'title', 'content', 'criterion', 'basis'])
 const emits = defineEmits(['update:modelValue', 'done'])
 import local from '../utils/srpc-local.js'
 import state from '../state.js'
@@ -11,11 +11,9 @@ let updating = $ref(false)
 
 let data = $ref(props.modelValue)
 let done = $computed(() => {
-  for (const pt of data) {
-    if (pt < 0 || pt > props.max || pt === '') {
-      if (done) emits('done', false)
-      return false
-    }
+  if (data[3] < 0 || data[3] === '') {
+    if (done) emits('done', false)
+    return false
   }
   if (!done) emits('done', true)
   return true
