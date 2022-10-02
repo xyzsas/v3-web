@@ -90,8 +90,11 @@ async function submit () {
     parseRes(newRes)
     break
   }
-  if (!success) await Swal.fire('错误', '名额不足', 'error')
   state.loading = false
+  if (!success) {
+    await Swal.fire('错误', '名额不足', 'error')
+    return init()
+  }
   await Swal.fire('提交成功', '即将返回主页', 'success')
   if (state.msg?.time) srpc.Y.set(state.user.token, state.msg.time, '已完成')
   return router.push('/')
