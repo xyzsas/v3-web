@@ -49,7 +49,7 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
 </script>
 
 <template>
-  <div class="rounded px-4 py-2 mx-8 my-4 bg-white shadow-md all-transition" :class="done ? 'shadow-green-600/50' : 'shadow-gray-500/50'">
+  <div class="rounded px-4 py-2 m-2 sm:mx-8 sm:my-4 bg-white shadow-md all-transition" :class="done ? 'shadow-green-600/50' : 'shadow-gray-500/50'">
     <div class="flex items-center whitespace-nowrap" @click="show = !show">
       <div class="text-2xl my-2 mr-2 md:mr-8">{{ props.title }}</div>
       <div class="flex items-center" :class="data[3] == -1 ? 'text-gray-500' : 'text-green-600'">
