@@ -16,13 +16,13 @@ export async function _id (u) {
 // integrated user query from both X and Z
 // @params list: ['id', 'chaoxing uid']
 // @return: { 'id': { id, uid, name, time, 姓名, 年级, 班级, 学号 } }
-export async function query (list) {
+export async function query (list, queryX = true) {
   const res = {}
   for (const u of list) {
     if (!u) continue
     res[await _id(u)] = {}
   }
-  const XRes = await fc.X.queryUser(state.user.token, Object.keys(res))
+  const XRes = queryX ? await fc.X.queryUser(state.user.token, Object.keys(res)) : {}
   const ZRes = await local.Z.query(state.user.token, Object.keys(res))
   for (const k in XRes) {
     res[k].id = k

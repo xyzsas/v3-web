@@ -59,7 +59,7 @@ async function init () {
   delete info.id
   delete data.id
   for (const u in data) data[u] = JSON.parse(data[u]).sort((a, b) => a - b)
-  userMap = await query(Object.keys(data))
+  userMap = await query(Object.keys(data), false)
   state.loading = false
 }
 init()

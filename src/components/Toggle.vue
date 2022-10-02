@@ -14,9 +14,11 @@ watch(() => props.modelValue, v => {
 </script>
 
 <template>
-  <label class="inline-flex relative items-center cursor-pointer">
-    <input type="checkbox" v-model="input" class="sr-only peer">
-    <div class="w-11 h-6 bg-gray-500 rounded-full peer peer-checked:after:translate-x-full after:border after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+  <label class="inline-flex items-center items-center cursor-pointer">
+    <div class="relative">
+      <input type="checkbox" v-model="input" class="sr-only peer">
+      <div class="w-11 h-6 bg-gray-500 rounded-full peer peer-checked:after:translate-x-full after:border after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+    </div>
     <span class="ml-2 font-medium text-gray-900">
       <slot></slot>
     </span>

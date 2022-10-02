@@ -14,6 +14,8 @@ const router = useRouter(), route = useRoute(), q = route.query
 let range = $ref({ start: 0, end: 0 }), user = $ref('')
 let list = $ref([]), userMap = $ref({})
 
+const parseDate = t => moment(t).format('YYYY-MM-DD HH:mm:ss')
+
 let statusColor = status => {
   if (status === '已完成') return 'bg-green-600'
   if (status === '进行中') return 'bg-yellow-600'
@@ -85,9 +87,10 @@ async function del () {
         <tr v-for="l in list" class="all-transition border border-x-0 cursor-pointer" :class="l.selected && 'bg-blue-200'" @click="l.selected = !l.selected">
           <td class="py-1 px-2">{{ userMap[l.user]?.name || userMap[l.user]?.姓名 || '未知用户' + (userMap[l.user]?.uid || l.user) }}</td>
           <td class="py-1 px-2 font-mono">{{ (userMap[l.user]?.年级 + userMap[l.user]?.班级 + userMap[l.user]?.学号) || '' }}</td>
-          <td class="font-bold px-2">{{ l.content.title }}</td>
-          <td><div v-if="l.status" class="inline-block text-white font-bold rounded-full text-xs px-2 py-1 my-1" :class="statusColor(l.status)">{{ l.status }}</div></td>
-          <td class="font-mono text-xs hidden lg:table-cell">{{ l.content.router || l.content.link }}</td>
+          <td class="font-bold px-2">{{ l.content.title }}<span class="px-1 ml-2 bg-blue-100 rounded text-xs" v-for="t in l.content.tags" :key="t">{{ t }}</span></td>
+          <td class="flex justify-center"><div v-if="typeof l.status === 'string'" class="inline-block text-white font-bold rounded-full text-xs px-2 py-1 my-1" :class="statusColor(l.status)">{{ l.status || '未读' }}</div></td>
+          <td class="font-mono text-xs hidden lg:table-cell">{{ l.content.router }}{{l.content.link }}</td>
+          <td class="font-mono text-xs hidden lg:table-cell">{{ parseDate(l.time) }}</td>
         </tr>
       </table>
     </div>
