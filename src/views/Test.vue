@@ -6,6 +6,9 @@ import Toggle from '../components/Toggle.vue'
 import EditableList from '../components/EditableList.vue'
 import ProgressBar from '../components/ProgressBar.vue'
 import UserSelector from '../components/UserSelector.vue'
+import Wrapper from '../components/Wrapper.vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import CQECard from '../components/CQECard.vue'
 
 let toggle = $ref(false)
 let region = $ref('江苏省扬州市广陵区')
@@ -20,6 +23,8 @@ let showSelect = $ref(false)
 function select (obj) {
   console.log(obj)
 }
+
+let v = $ref([1, 2, 3, 4, 5])
 </script>
 
 <template>
@@ -39,5 +44,8 @@ function select (obj) {
   </EditableList>
   <ProgressBar :ratio="0.15" class="w-72"></ProgressBar>
   <button @click="showSelect = !showSelect">click</button>
+  <button @click="show = 1">show</button>
   <UserSelector v-model="showSelect" @select="select" />
+  <CQECard v-model="v" title="出勤情况" content="按时到校，按时上下课，按时午休晚睡，按时参加学校、班级组织的各种活动，不迟到，不早退，不旷课，有事请假，按规定进出校门。" criterion="无旷课或迟到少于2次，评价为10分；违规离开学校一次扣分，旷课1次或迟到2-3次评价为扣1分；旷课2次或迟到4-5次为3分；旷课3次以上或迟到6次以上扣10分" basis="《中学生日常行为规范（修订）》、《中小学生守则》、《中共中央国务院关于进一步加强和改进未成年人思想道德建设的若干意见》、《中小学文明礼仪教育纲要》、《江苏省普通高中课程设置及教学指导意见》"/>
+  {{ v }}
 </template>

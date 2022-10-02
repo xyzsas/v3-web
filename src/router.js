@@ -17,6 +17,7 @@ const index = {
   '/app/profile': () => import('./views/AppProfile.vue'),
   '/app/enroll': () => import('./views/AppEnroll.vue'),
   '/app/enroll/admin': () => import('./views/AppEnrollAdmin.vue'),
+  '/app/cqe': () => import('./views/AppCQE.vue'),
   // Z
   '/z/import': () => import('./views/ZImport.vue')
 }
