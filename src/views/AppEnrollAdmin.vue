@@ -181,7 +181,7 @@ console.log('AppEnrollAdmin utils: data.value, userMap.value, adminProcess(use2,
         <button class="text-white text-sm font-bold rounded bg-amber-500 shadow py-1 px-2 mr-2" @click="addOption">导入选项</button>
         <button class="text-white text-sm font-bold rounded bg-green-500 shadow py-1 px-2 mr-2" @click="list.push({ key: Math.random() })">新增选项</button>
       </div>
-      <EditableList :list="list" item-key="key" item-class="bg-white py-1 px-2 border my-2 rounded flex-nowrap">
+      <EditableList :list="list" item-class="bg-white py-1 px-2 border my-2 rounded flex-nowrap">
         <template #item="{ elment: el, index: i }">
           <div>{{ i + 1 }}.&nbsp;</div>
           <input class="grow" v-model="list[i].title" placeholder="点击编辑选项内容">

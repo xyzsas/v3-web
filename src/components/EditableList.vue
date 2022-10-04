@@ -2,18 +2,12 @@
 import { onMounted } from 'vue'
 import Sortable from 'sortablejs/modular/sortable.core.esm.js'
 import { TrashIcon, Bars2Icon } from '@heroicons/vue/24/outline'
-const props = defineProps(['list', 'itemClass', 'disableDrag'])
+const props = defineProps(['list', 'itemClass'])
 let el = $ref()
-
-onMounted(() => {
-  const sortable = new Sortable(el, {
-    handle: '.handle',
-    animation: 150,
-    onUpdate: e => {
-      props.list.splice(e.newIndex, 0, props.list.splice(e.oldIndex, 1)[0])
-    }
-  })
-})
+onMounted(() => new Sortable(el, {
+  handle: '.handle', animation: 150,
+  onUpdate: e => props.list.splice(e.newIndex, 0, props.list.splice(e.oldIndex, 1)[0])
+}))
 </script>
 
 <template>
@@ -22,7 +16,7 @@ onMounted(() => {
       <slot name="item" :element="e" :index="i"></slot>
       <div class="flex">
         <TrashIcon class="w-4 mx-2 cursor-pointer text-red-500" @click="props.list.splice(i, 1)"/>
-        <Bars2Icon v-if="!props.disableDrag" class="w-4 cursor-pointer handle text-gray-500" />
+        <Bars2Icon class="w-4 cursor-pointer handle text-gray-500" />
       </div>
     </div>
   </div>
