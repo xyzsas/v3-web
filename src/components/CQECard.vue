@@ -2,7 +2,7 @@
 import Wrapper from '../components/Wrapper.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { watch } from 'vue'
-const props = defineProps(['modelValue', 'page', 'title', 'content', 'criterion', 'basis'])
+const props = defineProps(['modelValue', 'term', 'page', 'title', 'content', 'basis'])
 const emits = defineEmits(['update:modelValue', 'done'])
 import local from '../utils/srpc-local.js'
 import state from '../state.js'
@@ -10,6 +10,8 @@ import state from '../state.js'
 let updating = $ref(false)
 
 let data = $ref(props.modelValue)
+const T = props.term * 4
+
 let done = $computed(() => {
   if (data[3] < 0 || data[3] === '') {
     if (done) emits('done', false)
@@ -67,19 +69,19 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
     <Wrapper :show="show">
       <div>
         <div class="p-2 flex flex-wrap items-center md:mr-8">
-          <div v-for="(pt, idx) in data" class="flex items-center my-1">
-            {{ item[idx] }}:
-            <input type="number" v-model="data[idx]" class="w-16 m-2 pl-1 rounded border" :class="data[idx] == -1 ? 'text-gray-500 border-gray-500' : 'text-green-600 border-green-600'">
+          <div v-for="idx in 4" class="flex items-center my-1">
+            {{ item[idx - 1] }}:
+            <input type="number" v-model="data[T + idx - 1]" class="w-16 m-2 pl-1 rounded border" :class="data[T + idx - 1] == -1 ? 'text-gray-500 border-gray-500' : 'text-green-600 border-green-600'">
           </div>
         </div>
         <div class="text-gray-500">
-          <div v-if="props.content" class="p-2">
+          <div v-if="props.content[0]" class="p-2">
             <div class="text-gray-700">评价内容</div>
-            <div class="text-xs">{{ props.content }}</div>
+            <div class="text-xs">{{ props.content[0] }}</div>
           </div>
-          <div v-if="props.criterion" class="p-2">
+          <div v-if="props.content[1]" class="p-2">
             <div class="text-gray-700">评价方式</div>
-            <div class="text-xs">{{ props.criterion }}</div>
+            <div class="text-xs">{{ props.content[1] }}</div>
           </div>
           <div v-if="props.basis" class="p-2">
             <div class="text-gray-700d">评价主要依据</div>
