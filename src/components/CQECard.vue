@@ -2,7 +2,7 @@
 import Wrapper from '../components/Wrapper.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { watch } from 'vue'
-const props = defineProps(['modelValue', 'term', 'page', 'title', 'content', 'basis'])
+const props = defineProps(['modelValue', 'term', 'target', 'page', 'title', 'content', 'basis'])
 const emits = defineEmits(['update:modelValue', 'done'])
 import local from '../utils/srpc-local.js'
 import state from '../state.js'
@@ -12,34 +12,32 @@ let updating = $ref(false)
 let data = $ref(props.modelValue)
 const T = props.term * 4
 
-let done = $computed(() => {
-  if (data[3] < 0 || data[3] === '') {
-    if (done) emits('done', false)
-    return false
-  }
-  if (!done) emits('done', true)
-  return true
-})
+let done = $computed(() => (data[T + 3] >= 0 && data[T + 3] !== ''))
 
 async function update (i) {
   updating = true
-  const res = await local.app.CQE.update(state.user.token, `${props.page}.${props.title}`, i, data[i])
+  const res = await local.app.CQE.update(state.user.token, props.target, `${props.page}.${props.title}`, props.term, i, data[T + i])
   updating = false
   if (res) return true
   await Swal.fire('错误', '保存时出错，请刷新后重试！', 'error')
   return false
 }
 
-watch($$(data), async (v, old) => {
-  let flag = true
+let old = []
+
+for (let i = 0; i < 4; i++) old.push(data[T + i])
+
+watch($$(data), async () => {
+  console.log(data, old)
   for (let i = 0; i < 4; i++) {
-    if (!(await update(i))) {
-      flag = false
-      break
+    if (data[T + i] != old[i]) {
+      if (!(await update(i))) {
+        emits('update:modelValue', old)
+        break
+      }
+      old[i] = data[T + i]
     }
   }
-  if (!flag) emits('update:modelValue', old)
-  else emits('update:modelValue', v)
 }, { deep: true })
 
 watch(() => props.modelValue, v => {
@@ -54,9 +52,9 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
   <div class="rounded px-4 py-2 m-2 sm:mx-8 sm:my-4 bg-white shadow-md all-transition" :class="done ? 'shadow-green-600/50' : 'shadow-gray-500/50'">
     <div class="flex items-center whitespace-nowrap" @click="show = !show">
       <div class="text-2xl my-2 mr-2 md:mr-8">{{ props.title }}</div>
-      <div class="flex items-center" :class="data[3] == -1 ? 'text-gray-500' : 'text-green-600'">
+      <div class="flex items-center" :class="data[T + 3] == -1 ? 'text-gray-500' : 'text-green-600'">
         <div class="text-sm m-2">学校评价:</div>
-        <div class="text-xl my-2">{{ data[3] == -1 ? '' : data[3] }}</div>
+        <div class="text-xl my-2">{{ data[T + 3] == -1 ? '' : data[T + 3] }}</div>
       </div>
       <div class="grow"></div>
       <div v-if="!updating" class="flex justify-center items-center cursor-pointer">
