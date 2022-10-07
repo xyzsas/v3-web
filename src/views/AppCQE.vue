@@ -9,6 +9,7 @@ import CQECard from '../components/CQECard.vue'
 import { watch } from 'vue'
 import state from '../state.js'
 import local from '../utils/srpc-local.js'
+import fc from '../utils/srpc-fc.js'
 import { T } from '../utils/CQE.js'
 const router = useRouter()
 const target = state.user.id
@@ -23,7 +24,7 @@ const fields = $ref([
   { title: '学期总表', done: false },
   { title: '三年汇总表', done: false }
 ])
-let current = $ref(0), term = $ref(0)
+let current = $ref(0), term = $ref(0), mode = $ref(0)
 
 let D = $ref({
   '思想品德': {
@@ -72,7 +73,7 @@ watch($$(D), () => {
   for (let i = 0; i < titles.length; i++) {
     const v = titles[i]
     for (const k in D[v]) {
-      if (D[v][k][term * 4 + 3] >= 0) {
+      if (D[v][k][term * 4 + 3] < 0) {
         fields[i + 1].done = false
         break
       }
@@ -82,7 +83,6 @@ watch($$(D), () => {
 }, { deep: true })
 
 async function init () {
-  console.log(state.user.token, target)
   const res = await local.app.CQE.get(state.user.token, target)
   for (const k in D) {
     for (const i in D[k]) {
@@ -124,27 +124,27 @@ init()
     </template>
     <template v-if="current === 1">
       <div v-for="(v, k) in D.思想品德" class="w-full">
-        <CQECard v-if="k != 'done'" :target="target" :term="term" :key="term" v-model="D.思想品德[k]" page="思想品德" :title="k" :content="T.思想品德[k]" :basis="T.思想品德.评价主要依据"/>
+        <CQECard :mode="mode" :target="target" :term="term" :key="term" v-model="D.思想品德[k]" :content="T.思想品德[k]"/>
       </div>
     </template>
     <template v-if="current === 2">
       <div v-for="(v, k) in D.学业水平" class="w-full">
-        <CQECard v-if="k != 'done'" :target="target" :term="term" :key="term" v-model="D.学业水平[k]" page="学业水平" :title="k" :content="T.学业水平[k]" :basis="T.学业水平.评价主要依据"/>
+        <CQECard :mode="mode" :target="target" :term="term" :key="term" v-model="D.学业水平[k]" :content="T.学业水平[k]"/>
       </div>
     </template>
     <template v-if="current === 3">
       <div v-for="(v, k) in D.身心健康" class="w-full">
-        <CQECard v-if="k != 'done'" :target="target" :term="term" :key="term" v-model="D.身心健康[k]" page="身心健康" :title="k" :content="T.身心健康[k]" :basis="T.身心健康.评价主要依据"/>
+        <CQECard :mode="mode" :target="target" :term="term" :key="term" v-model="D.身心健康[k]" :content="T.身心健康[k]"/>
       </div>
     </template>
     <template v-if="current === 4">
       <div v-for="(v, k) in D.艺术素养" class="w-full">
-        <CQECard v-if="k != 'done'" :target="target" :term="term" :key="term" v-model="D.艺术素养[k]" page="艺术素养" :title="k" :content="T.艺术素养[k]" :basis="T.艺术素养.评价主要依据"/>
+        <CQECard :mode="mode" :target="target" :term="term" :key="term" v-model="D.艺术素养[k]" :content="T.艺术素养[k]"/>
       </div>
     </template>
     <template v-if="current === 5">
       <div v-for="(v, k) in D.社会实践和劳动教育" class="w-full">
-        <CQECard v-if="k != 'done'" :target="target" :term="term" :key="term" v-model="D.社会实践和劳动教育[k]" page="社会实践和劳动教育" :title="k" :content="T.社会实践和劳动教育[k]" :basis="T.社会实践和劳动教育[k][2]"/>
+        <CQECard :mode="mode" :target="target" :term="term" :key="term" v-model="D.社会实践和劳动教育[k]" :content="T.社会实践和劳动教育[k]"/>
       </div>
     </template>
     <template v-if="current === 6">

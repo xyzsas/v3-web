@@ -2,7 +2,7 @@
 import Wrapper from '../components/Wrapper.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { watch } from 'vue'
-const props = defineProps(['modelValue', 'term', 'target', 'page', 'title', 'content', 'basis'])
+const props = defineProps(['modelValue', 'term', 'target', 'mode', 'content'])
 const emits = defineEmits(['update:modelValue', 'done'])
 import local from '../utils/srpc-local.js'
 import state from '../state.js'
@@ -16,7 +16,7 @@ let done = $computed(() => (data[T + 3] >= 0 && data[T + 3] !== ''))
 
 async function update (i) {
   updating = true
-  const res = await local.app.CQE.update(state.user.token, props.target, `${props.page}.${props.title}`, props.term, i, data[T + i])
+  const res = await local.app.CQE.update(state.user.token, props.target, `${props.content[4]}.${props.content[3]}`, props.term, i, data[T + i])
   updating = false
   if (res) return true
   await Swal.fire('错误', '保存时出错，请刷新后重试！', 'error')
@@ -25,17 +25,16 @@ async function update (i) {
 
 let old = []
 
-for (let i = 0; i < 4; i++) old.push(data[T + i])
+for (let i = 0; i < 24; i++) old.push(data[i])
 
 watch($$(data), async () => {
-  console.log(data, old)
   for (let i = 0; i < 4; i++) {
-    if (data[T + i] != old[i]) {
+    if (data[T + i] != old[T + i]) {
       if (!(await update(i))) {
         emits('update:modelValue', old)
         break
       }
-      old[i] = data[T + i]
+      old[T + i] = data[T + i]
     }
   }
 }, { deep: true })
@@ -51,7 +50,7 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
 <template>
   <div class="rounded px-4 py-2 m-2 sm:mx-8 sm:my-4 bg-white shadow-md all-transition" :class="done ? 'shadow-green-600/50' : 'shadow-gray-500/50'">
     <div class="flex items-center whitespace-nowrap" @click="show = !show">
-      <div class="text-2xl my-2 mr-2 md:mr-8">{{ props.title }}</div>
+      <div class="text-2xl my-2 mr-2 md:mr-8">{{ props.content[3] }}</div>
       <div class="flex items-center" :class="data[T + 3] == -1 ? 'text-gray-500' : 'text-green-600'">
         <div class="text-sm m-2">学校评价:</div>
         <div class="text-xl my-2">{{ data[T + 3] == -1 ? '' : data[T + 3] }}</div>
@@ -68,8 +67,8 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
       <div>
         <div class="p-2 flex flex-wrap items-center md:mr-8">
           <div v-for="idx in 4" class="flex items-center my-1">
-            {{ item[idx - 1] }}:
-            <input type="number" v-model="data[T + idx - 1]" class="w-16 m-2 pl-1 rounded border" :class="data[T + idx - 1] == -1 ? 'text-gray-500 border-gray-500' : 'text-green-600 border-green-600'">
+            <div :class="props.mode != idx - 1 ? 'text-gray-500' : 'text-black font-bold'">{{ item[idx - 1] }}:</div>
+            <input type="number" v-model="data[T + idx - 1]" class="w-16 m-2 pl-1 rounded border" :class="data[T + idx - 1] == -1 ? 'text-gray-500 border-gray-500' : 'text-green-600 border-green-600'" :disabled="props.mode != idx - 1">
           </div>
         </div>
         <div class="text-gray-500">
@@ -81,9 +80,9 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
             <div class="text-gray-700">评价方式</div>
             <div class="text-xs">{{ props.content[1] }}</div>
           </div>
-          <div v-if="props.basis" class="p-2">
+          <div v-if="props.content[2]" class="p-2">
             <div class="text-gray-700d">评价主要依据</div>
-            <div class="text-xs">{{ props.basis }}</div>
+            <div class="text-xs">{{ props.content[2] }}</div>
           </div>
         </div>
       </div>
