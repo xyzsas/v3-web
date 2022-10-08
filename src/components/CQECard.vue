@@ -7,6 +7,8 @@ const emits = defineEmits(['update:modelValue', 'done'])
 import local from '../utils/srpc-local.js'
 import state from '../state.js'
 
+const item = ['分项积分', '班级评价', '年级评价', '学校评价'], color = ['pink', 'purple', 'blue', 'green']
+
 let updating = $ref(false)
 
 let data = $ref(props.modelValue)
@@ -19,7 +21,7 @@ async function update (i) {
   const res = await local.app.CQE.update(state.user.token, props.target, `${props.content[4]}.${props.content[3]}`, props.term, i, data[T + i])
   updating = false
   if (res) return true
-  await Swal.fire('错误', '保存时出错，请刷新后重试！', 'error')
+  await Swal.fire('错误', '保存时出错，请稍后重试！', 'error')
   return false
 }
 
@@ -31,7 +33,7 @@ watch($$(data), async () => {
   for (let i = 0; i < 4; i++) {
     if (data[T + i] != old[T + i]) {
       if (!(await update(i))) {
-        emits('update:modelValue', old)
+        data[T + i] = old[T + i]
         break
       }
       old[T + i] = data[T + i]
@@ -44,7 +46,7 @@ watch(() => props.modelValue, v => {
 })
 
 let show = $ref(false)
-const item = ['分项积分', '班级评价', '年级评价', '学校评价']
+
 </script>
 
 <template>
@@ -67,8 +69,8 @@ const item = ['分项积分', '班级评价', '年级评价', '学校评价']
       <div>
         <div class="p-2 flex flex-wrap items-center md:mr-8">
           <div v-for="idx in 4" class="flex items-center my-1">
-            <div :class="props.mode != idx - 1 ? 'text-gray-500' : 'text-black font-bold'">{{ item[idx - 1] }}:</div>
-            <input type="number" v-model="data[T + idx - 1]" class="w-16 m-2 pl-1 rounded border" :class="data[T + idx - 1] == -1 ? 'text-gray-500 border-gray-500' : 'text-green-600 border-green-600'" :disabled="props.mode != idx - 1">
+            <div :class="props.mode != idx - 1 ? `text-${color[idx - 1]}-300` : `text-${color[idx - 1]}-500 font-bold`">{{ item[idx - 1] }}</div>
+            <input type="number" v-model="data[T + idx - 1]" class="w-16 m-2 pl-1 rounded border" :class="props.mode != idx - 1 ? `text-${color[idx - 1]}-300 border-${color[idx - 1]}-300` : `text-${color[idx - 1]}-500 border-${color[idx - 1]}-500`" :disabled="props.mode != idx - 1">
           </div>
         </div>
         <div class="text-gray-500">

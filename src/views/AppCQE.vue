@@ -84,9 +84,11 @@ watch($$(D), () => {
 
 async function init () {
   const res = await local.app.CQE.get(state.user.token, target)
+  if (!res) await Swal.fire('错误', '用户不存在', 'error')
+  const data = res.综评
   for (const k in D) {
     for (const i in D[k]) {
-      if (res[k] && res[k][i]) D[k][i] = res[k][i]
+      if (data[k] && data[k][i]) D[k][i] = data[k][i]
     }
   }
 }
