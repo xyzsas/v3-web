@@ -70,7 +70,7 @@ let show = $ref(false)
         <div class="p-2 flex flex-wrap items-center md:mr-8">
           <div v-for="idx in 4" class="flex items-center my-1">
             <div :class="props.mode != idx - 1 ? `text-${color[idx - 1]}-300` : `text-${color[idx - 1]}-500 font-bold`">{{ item[idx - 1] }}</div>
-            <input type="number" v-model="data[T + idx - 1]" class="w-16 m-2 pl-1 rounded border" :class="props.mode != idx - 1 ? `text-${color[idx - 1]}-300 border-${color[idx - 1]}-300` : `text-${color[idx - 1]}-500 border-${color[idx - 1]}-500`" :disabled="props.mode != idx - 1">
+            <input type="number" v-model="data[T + idx - 1]" class="w-16 m-2 pl-1 rounded border" :class="props.mode != idx - 1 ? `text-${color[idx - 1]}-500 border-${color[idx - 1]}-300` : `text-${color[idx - 1]}-500 border-${color[idx - 1]}-500`" :disabled="props.mode != idx - 1">
           </div>
         </div>
         <div class="text-gray-500">
@@ -90,4 +90,5 @@ let show = $ref(false)
       </div>
     </Wrapper>
   </div>
+  <div class="text-pink-300 text-pink-500 text-purple-300 text-purple-500 text-blue-300 text-blue-500 text-green-300 text-green-500 border-pink-300 border-pink-500 border-purple-300 border-purple-500 border-blue-300 border-blue-500 border-green-300 border-green-500"></div>
 </template>
