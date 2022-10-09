@@ -2,60 +2,45 @@
 import Wrapper from '../components/Wrapper.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { watch } from 'vue'
-const props = defineProps(['modelValue', 'term', 'target', 'mode', 'content'])
-const emits = defineEmits(['update:modelValue', 'done'])
+const props = defineProps(['value', 'term', 'target', 'mode', 'content'])
 import local from '../utils/srpc-local.js'
 import state from '../state.js'
+import { debounce } from '../utils/utils.js'
 
-const item = ['分项积分', '班级评价', '年级评价', '学校评价'], color = ['pink', 'purple', 'blue', 'green']
+const item = ['分项积分', '班级评价', '年级评价', '学校评价']
 
 let updating = $ref(false)
 
-let data = $ref(props.modelValue)
-const T = props.term * 4
+const data = props.value
 
-let done = $computed(() => (data[T + 3] >= 0 && data[T + 3] !== ''))
+let T = $computed(() => props.term * 4)
+let done = $computed(() => {
+  for (let i = 0; i <= 3; i++) {
+    if (!props.mode.includes(i)) continue
+    if (data[T + i] === '') return false
+  }
+  return true
+})
 
-async function update (i) {
+const update = debounce(async i => {
   updating = true
   const res = await local.app.CQE.update(state.user.token, props.target, `${props.content[4]}.${props.content[3]}`, props.term, i, data[T + i])
   updating = false
   if (res) return true
   await Swal.fire('错误', '保存时出错，请稍后重试！', 'error')
   return false
-}
-
-let old = []
-
-for (let i = 0; i < 24; i++) old.push(data[i])
-
-watch($$(data), async () => {
-  for (let i = 0; i < 4; i++) {
-    if (data[T + i] != old[T + i]) {
-      if (!(await update(i))) {
-        data[T + i] = old[T + i]
-        break
-      }
-      old[T + i] = data[T + i]
-    }
-  }
-}, { deep: true })
-
-watch(() => props.modelValue, v => {
-  if (data !== v) data = v
 })
 
 let show = $ref(false)
-
 </script>
 
 <template>
   <div class="rounded px-4 py-2 m-2 sm:mx-8 sm:my-4 bg-white shadow-md all-transition" :class="done ? 'shadow-green-600/50' : 'shadow-gray-500/50'">
     <div class="flex items-center whitespace-nowrap" @click="show = !show">
       <div class="text-2xl my-2 mr-2 md:mr-8">{{ props.content[3] }}</div>
-      <div class="flex items-center" :class="data[T + 3] == -1 ? 'text-gray-500' : 'text-green-600'">
+      <div class="flex items-center" :class="data[T + 3] === '' ? 'text-gray-500' : 'text-green-600'">
         <div class="text-sm m-2">学校评价:</div>
-        <div class="text-xl my-2">{{ data[T + 3] == -1 ? '' : data[T + 3] }}</div>
+        <div class="text-xl my-2">{{ data[T + 3] === '' ? '' : data[T + 3] }}</div>
       </div>
       <div class="grow"></div>
       <div v-if="!updating" class="flex justify-center items-center cursor-pointer">
@@ -69,8 +54,8 @@ let show = $ref(false)
       <div>
         <div class="p-2 flex flex-wrap items-center md:mr-8">
           <div v-for="idx in 4" class="flex items-center my-1">
-            <div :class="props.mode != idx - 1 ? `text-${color[idx - 1]}-300` : `text-${color[idx - 1]}-500 font-bold`">{{ item[idx - 1] }}</div>
-            <input type="number" v-model="data[T + idx - 1]" class="w-16 m-2 pl-1 rounded border" :class="props.mode != idx - 1 ? `text-${color[idx - 1]}-500 border-${color[idx - 1]}-300` : `text-${color[idx - 1]}-500 border-${color[idx - 1]}-500`" :disabled="props.mode != idx - 1">
+            <div :class="props.mode.includes(idx - 1) ? 'text-black font-bold' : 'text-gray-500'">{{ item[idx - 1] }}:</div>
+            <input type="number" v-model="data[T + idx - 1]" class="w-16 m-2 pl-1 rounded border" :class="data[T + idx - 1] === '' ? 'text-gray-500 border-gray-500' : 'text-green-600 border-green-600'" :disabled="!props.mode.includes(idx - 1)" @change="update(idx - 1)">
           </div>
         </div>
         <div class="text-gray-500">
@@ -90,5 +75,4 @@ let show = $ref(false)
       </div>
     </Wrapper>
   </div>
-  <div class="text-pink-300 text-pink-500 text-purple-300 text-purple-500 text-blue-300 text-blue-500 text-green-300 text-green-500 border-pink-300 border-pink-500 border-purple-300 border-purple-500 border-blue-300 border-blue-500 border-green-300 border-green-500"></div>
 </template>
