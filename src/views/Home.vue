@@ -1,5 +1,5 @@
 <script setup>
-import { FingerPrintIcon, UserGroupIcon, FolderOpenIcon } from '@heroicons/vue/24/outline'
+import { FingerPrintIcon, UserGroupIcon, FolderOpenIcon, SwatchIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
 import MsgCard from '../components/MsgCard.vue'
 import scanImg from '../assets/scan.svg'
@@ -55,9 +55,7 @@ function showID () {
     </div>
     <div class="flex flex-wrap"><!-- function buttons -->
       <button class="card" @click="showID"><FingerPrintIcon class="w-6 text-blue-500 mr-2"/>我的ID</button>
-      <!--
-      <button class="card" @click="router.push('/grade')"><TrendingUpIcon class="w-6 text-blue-500 mr-2"/>成绩查询</button>
-      -->
+      <button class="card" @click="router.push('/app/cqe')"><SwatchIcon class="w-6 text-orange-500 mr-2"/>综合素质评价</button>
     </div>
     <div v-if="Object.keys(perms).length > 0" class="flex flex-wrap items-center m-2 py-1 px-2 rounded bg-white border text-sm"><!-- admin entry -->
       <button v-if="perms.XAdmin" class="round" @click="router.push('/x/user')">用户授权</button>
