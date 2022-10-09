@@ -81,15 +81,22 @@ watchEffect(() => {
   }
 })
 
+let files = $ref({})
+
 async function fetch () {
   const res = await local.app.CQE.get(state.user.token, target)
-  if (!res) await Swal.fire('错误', '用户不存在', 'error')
+  if (!res) {
+    await Swal.fire('错误', '综评资料不存在不存在', 'error')
+    router.push('/')
+    return
+  }
   const data = res.综评
   for (const k in D) {
     for (const i in D[k]) {
       if (data[k] && data[k][i]) D[k][i] = data[k][i]
     }
   }
+  files = res.综评材料 || {}
 }
 fetch()
 </script>
@@ -139,12 +146,12 @@ fetch()
     </template>
     <template v-if="current === 4">
       <div v-for="(v, k) in D.艺术素养" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :key="term" :value="D.艺术素养[k]" :content="T.艺术素养[k]"/>
+        <CQECard :mode="mode" :target="target" :term="term" :key="term" :value="D.艺术素养[k]" :content="T.艺术素养[k]" />
       </div>
     </template>
     <template v-if="current === 5">
       <div v-for="(v, k) in D.社会实践" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :key="term" :value="D.社会实践[k]" :content="T.社会实践[k]"/>
+        <CQECard :mode="mode" :target="target" :term="term" :key="term" :value="D.社会实践[k]" :content="T.社会实践[k]" :files="files" :file-key="k" />
       </div>
     </template>
     <template v-if="current === 6">
