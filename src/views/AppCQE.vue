@@ -1,17 +1,16 @@
 <script setup>
 import BackHeader from '../components/BackHeader.vue'
 import { useRouter } from 'vue-router'
-import Toggle from '../components/Toggle.vue'
-import RegionSelector from '../components/RegionSelector.vue'
-import { Calendar, DatePicker } from 'v-calendar'
-import 'v-calendar/dist/style.css'
 import CQECard from '../components/CQECard.vue'
+import Wrapper from '../components/Wrapper.vue'
 import { watch, watchEffect } from 'vue'
 import state from '../state.js'
 import local from '../utils/srpc-local.js'
 import fc from '../utils/srpc-fc.js'
-import { T } from '../utils/CQE.js'
+import { search } from '../utils/user.js'
+import { T, initGrade } from '../utils/CQE.js'
 const router = useRouter()
+
 const target = $ref(state.user.id)
 
 const fields = $ref({
@@ -26,54 +25,13 @@ const fields = $ref({
 })
 let current = $ref(0), term = $ref(0), mode = $ref('0')
 
-const initGrade = ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
-let D = $ref({
-  '思想品德': {
-    '出勤情况': [...initGrade],
-    '学习态度': [...initGrade],
-    '团结协作': [...initGrade],
-    '遵规守纪': [...initGrade],
-    '诚实守信': [...initGrade],
-    '文明礼仪': [...initGrade],
-    '党团活动': [...initGrade],
-    '公益活动': [...initGrade],
-    '志愿服务': [...initGrade],
-    '其他': [...initGrade]
-  },
-  '学业水平': {
-    '国家课程': [...initGrade],
-    '校本课程': [...initGrade],
-    '研究性学习': [...initGrade]
-  },
-  '身心健康': {
-    '体质监测': [...initGrade],
-    '日常锻炼': [...initGrade],
-    '运动特长': [...initGrade],
-    '心理素质': [...initGrade],
-    '自我修习': [...initGrade],
-    '自我认知': [...initGrade],
-    '未来规划': [...initGrade],
-    '其他': [...initGrade]
-  },
-  '艺术素养': {
-    '学校课程': [...initGrade],
-    '个人提升': [...initGrade],
-    '艺术特长': [...initGrade]
-  },
-  '社会实践': {
-    '社区服务': [...initGrade],
-    '社会实践': [...initGrade],
-    '社团活动': [...initGrade],
-    '规定性课程': [...initGrade],
-    '自主性课程': [...initGrade]
-  }
-})
+let D = $ref(JSON.parse(JSON.stringify(initGrade)))
 
 watchEffect(() => {
   for (const f in D) {
     fields[f] = true
     for (const k in D[f]) {
-      if (typeof D[f][k][term * 4 + 3] !== 'number' || D[f][k][term * 4 + 3] < 0) {
+      if (D[f][k][term * 4 + 3] === '') {
         fields[f] = false
         break
       }
@@ -81,30 +39,56 @@ watchEffect(() => {
   }
 })
 
-let files = $ref({})
+let files = $ref({}), admin = $ref(false)
 
-async function fetch () {
-  const res = await local.app.CQE.get(state.user.token, target)
+async function fetch (id) {
+  if (admin) admin.show = false
+  state.loading = true
+  const res = await local.app.CQE.get(state.user.token, id)
+  state.loading = false
   if (!res) {
     await Swal.fire('错误', '综评资料不存在不存在', 'error')
-    router.push('/')
+    if (!admin) router.push('/')
     return
   }
+  D = JSON.parse(JSON.stringify(initGrade))
   const data = res.综评
   for (const k in D) {
     for (const i in D[k]) {
       if (data[k] && data[k][i]) D[k][i] = data[k][i]
     }
   }
-  files = res.综评材料 || {}
+  files = res.综评材料
+  target = id
+  if (!admin) return mode = '0'
+  mode = admin.index
+  if (state.user.id === target) mode += '0'
 }
-fetch()
+
+async function init () {
+  state.loading = true
+  const res = await fc.X.get(state.user.id, 'AppCQEAdmin')
+  if (!res) admin = false
+  const data = JSON.parse(res.data)
+  const filter = {}
+  if (data.grade) filter['账户.年级'] = { $in: data.grade.split(',') }
+  if (data.class) filter['账户.班级'] = { $in: data.class.split(',') }
+  const us = await search(filter)
+  admin = {
+    show: false,
+    index: data.index,
+    users: us,
+    ids: Object.keys(us).sort((a, b) => us[a].年级 + us[a].班级 + us[a].学号 < us[b].年级 + us[b].班级 + us[b].学号 ? -1 : 1)
+  }
+  fetch(state.user.id)
+}
+init()
 </script>
 
 <template>
   <div class="flex items-center">
     <BackHeader @back="router.push('/')">综合素质评价</BackHeader>
-    <select :value="term" class="py-1 px-2 rounded border text-sm text-gray-500">
+    <select v-model="term" class="py-1 px-2 rounded border text-sm font-bold">
       <option value="0">高一上学期</option>
       <option value="1">高一下学期</option>
       <option value="2">高二上学期</option>
@@ -125,33 +109,33 @@ fetch()
       </div>
     </div>
   </div>
-  <div class="flex flex-col items-start p-4 sm:p-10">
+  <div class="flex flex-col items-start p-4 sm:p-10" :key="target">
     <template v-if="current === 0">
       填写指南
     </template>
     <template v-if="current === 1">
       <div v-for="(v, k) in D.思想品德" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :key="term" :value="D.思想品德[k]" :content="T.思想品德[k]"/>
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.思想品德[k]" :content="T.思想品德[k]"/>
       </div>
     </template>
     <template v-if="current === 2">
       <div v-for="(v, k) in D.学业水平" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :key="term" :value="D.学业水平[k]" :content="T.学业水平[k]"/>
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.学业水平[k]" :content="T.学业水平[k]"/>
       </div>
     </template>
     <template v-if="current === 3">
       <div v-for="(v, k) in D.身心健康" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :key="term" :value="D.身心健康[k]" :content="T.身心健康[k]"/>
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.身心健康[k]" :content="T.身心健康[k]"/>
       </div>
     </template>
     <template v-if="current === 4">
       <div v-for="(v, k) in D.艺术素养" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :key="term" :value="D.艺术素养[k]" :content="T.艺术素养[k]" />
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.艺术素养[k]" :content="T.艺术素养[k]" />
       </div>
     </template>
     <template v-if="current === 5">
       <div v-for="(v, k) in D.社会实践" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :key="term" :value="D.社会实践[k]" :content="T.社会实践[k]" :files="files" :file-key="k" />
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.社会实践[k]" :content="T.社会实践[k]" :files="files" :file-key="k" />
       </div>
     </template>
     <template v-if="current === 6">
@@ -160,6 +144,20 @@ fetch()
     <template v-if="current === 7">
       
     </template>
+  </div>
+  <div v-if="admin" class="fixed right-2 bottom-2 rounded shadow overflow-hidden all-transition bg-white" :class="admin.show ? 'w-72' : 'w-48'">
+    <div class="bg-gray-700 text-white font-bold text-sm p-2 cursor-pointer" @click="admin.show = !admin.show">综评管理</div>
+    <div class="text-xs p-2" :set="u = target === state.user.id ? state.user : admin.users[target]">
+      当前：{{ u?.name || u?.姓名 || '未知用户' }}
+      <code v-if="u" class="ml-1">{{ u.年级 }}{{ u.班级 }}{{ u.学号 }}</code>
+    </div>
+    <Wrapper :show="admin.show" style="max-height: 50vh; overflow-y: auto;">
+      <div class="text-sm py-px px-2 all-transition hover:bg-blue-50 cursor-pointer text-gray-500" :class="target === state.user.id && 'bg-blue-100'" @click="fetch(state.user.id)">{{ state.user.name}}（我）</div>
+      <div v-for="id in admin.ids" class="text-sm flex items-center py-px px-2 all-transition hover:bg-blue-50 cursor-pointer text-gray-500" :class="target === id && 'bg-blue-100'" @click="fetch(id)">
+        <span class="block w-16">{{ admin.users[id].姓名 }}</span>
+        <code :set="u = admin.users[id]">{{ u.年级 }}{{ u.班级 }}{{ u.学号 }}</code>
+      </div>
+    </Wrapper>
   </div>
 </template>
 

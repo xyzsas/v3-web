@@ -34,7 +34,7 @@ const update = debounce(async i => {
 let show = $ref(false)
 
 // following are for files
-if (!props.files[props.fileKey]) props.files[props.fileKey] = {}
+if (props.files && !props.files[props.fileKey]) props.files[props.fileKey] = {}
 
 async function submitFile () {
   updating = true
