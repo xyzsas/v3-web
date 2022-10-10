@@ -54,6 +54,10 @@ async function selectFile () {
   }
 }
 
+async function openFile (id) {
+  window.open(`https://s.yzzx.org/disk/#/preview/${id}?token=${state.user.token}`)
+}
+
 async function removeFile (id) {
   delete props.files[props.fileKey][id]
   submitFile()
@@ -101,10 +105,10 @@ async function removeFile (id) {
         <div v-if="props.fileKey" class="border-t-1 border-gray-200 p-2">
           <div class="text-gray-700">相关材料</div>
           <div class="flex items-center flex-wrap">
-            <div v-for="(name, id) in props.files[props.fileKey]" class="flex items-center text-blue-500 text-sm border border-blue-500 bg-blue-50 rounded px-2 py-1 m-1">
-              <a :href="`https://s.yzzx.org/yzdisk/file/${id}?token=${state.user.token}`">{{ name }}</a>
-              <XMarkIcon class="w-4 cursor-pointer ml-1" @click="removeFile(id)" />
-            </div>
+            <button v-for="(name, id) in props.files[props.fileKey]" class="flex items-center text-blue-500 text-sm border border-blue-500 bg-blue-50 rounded px-2 py-1 m-1" @click="openFile(id)">
+              {{ name }}
+              <XMarkIcon class="w-4 cursor-pointer ml-1" @click.stop="removeFile(id)" />
+            </button>
           </div>
           <button v-if="props.mode.includes(0)" class="all-transition bg-blue-500 font-bold text-white rounded bg-blue-500 shadow hover:shadow-md text-sm px-4 py-2 my-2" @click="selectFile">选择&上传文件</button>
         </div>
