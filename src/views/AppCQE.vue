@@ -31,9 +31,12 @@ watchEffect(() => {
   for (const f in D) {
     fields[f] = true
     for (const k in D[f]) {
-      if (D[f][k][term * 4 + 3] === '') {
-        fields[f] = false
-        break
+      for (let i = 0; i <= 3; i++) {
+        if (!mode.includes(i)) continue
+        if (D[f][k][term * 4 + i] === '') {
+          fields[f] = false
+          break
+        }
       }
     }
   }
@@ -47,7 +50,7 @@ async function fetch (id) {
   const res = await local.app.CQE.get(state.user.token, id)
   state.loading = false
   if (!res) {
-    await Swal.fire('错误', '综评资料不存在不存在', 'error')
+    await Swal.fire('错误', '综评资料不存在', 'error')
     if (!admin) router.push('/')
     return
   }
@@ -68,18 +71,19 @@ async function fetch (id) {
 async function init () {
   state.loading = true
   const res = await fc.X.get(state.user.id, 'AppCQEAdmin')
-  if (!res) admin = false
-  const data = JSON.parse(res.data)
-  const filter = {}
-  if (data.grade) filter['账户.年级'] = { $in: data.grade.split(',') }
-  if (data.class) filter['账户.班级'] = { $in: data.class.split(',') }
-  const us = await search(filter)
-  admin = {
-    show: false,
-    index: data.index,
-    users: us,
-    ids: Object.keys(us).sort((a, b) => us[a].年级 + us[a].班级 + us[a].学号 < us[b].年级 + us[b].班级 + us[b].学号 ? -1 : 1)
-  }
+  if (res) {
+    const data = JSON.parse(res.data)
+    const filter = {}
+    if (data.grade) filter['账户.年级'] = { $in: data.grade.split(',') }
+    if (data.class) filter['账户.班级'] = { $in: data.class.split(',') }
+    const us = await search(filter)
+    admin = {
+      show: false,
+      index: data.index,
+      users: us,
+      ids: Object.keys(us).sort((a, b) => us[a].年级 + us[a].班级 + us[a].学号 < us[b].年级 + us[b].班级 + us[b].学号 ? -1 : 1)
+    }
+  } else admin = false
   fetch(state.user.id)
 }
 init()
@@ -130,7 +134,7 @@ init()
     </template>
     <template v-if="current === 4">
       <div v-for="(v, k) in D.艺术素养" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :value="D.艺术素养[k]" :content="T.艺术素养[k]" />
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.艺术素养[k]" :content="T.艺术素养[k]" :files="files" :file-key="k" />
       </div>
     </template>
     <template v-if="current === 5">
