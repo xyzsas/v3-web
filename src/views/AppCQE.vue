@@ -25,6 +25,8 @@ const fields = $ref({
 })
 let current = $ref(0), term = $ref(0), mode = $ref('0')
 
+const titles = ['思想品德', '身心健康', '艺术素养', '社会实践']
+
 let D = $ref(JSON.parse(JSON.stringify(initGrade)))
 
 watchEffect(() => {
@@ -43,6 +45,15 @@ watchEffect(() => {
 })
 
 let files = $ref({}), admin = $ref(false), account = $ref({})
+
+function calcGrade (k, t = term) {
+  const T = t * 4 + 3
+  let sum = 0
+  for (const i in D[k]) {
+    sum += D[k][i][T] || 0
+  }
+  return sum
+}
 
 async function fetch (id) {
   account = {}
@@ -147,10 +158,35 @@ init()
       </div>
     </template>
     <template v-if="current === 6">
-      
+      <div class="flex flex-wrap">
+        <div v-for="k in titles" class="flex items-center rounded bg-white shadow px-4 py-2 m-2 whitespace-nowrap">
+          <div class="text-2xl m-1">{{ k }}</div>
+          <div class="m-1 font-mono">总积分: {{ calcGrade(k) }}</div>
+        </div>
+      </div>
     </template>
     <template v-if="current === 7">
-      
+      <div class="w-full font-serif overflow-x-auto text-center">
+        <table class="w-full bg-white whitespace-nowrap">
+          <thead>
+            <tr>
+              <th class="border p-2 text-xl">评价内容</th>
+              <th class="border p-1">高一上学期</th>
+              <th class="border p-1">高一下学期</th>
+              <th class="border p-1">高二上学期</th>
+              <th class="border p-1">高二下学期</th>
+              <th class="border p-1">高三上学期</th>
+              <th class="border p-1">高三下学期</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="k in titles" class="border">
+              <td class="border p-1">{{ k }}</td>
+              <td v-for="i in 6" class="border">{{ calcGrade(k, i - 1) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </template>
   </div>
   <div v-if="admin" class="fixed right-2 bottom-2 rounded shadow overflow-hidden all-transition bg-white" :class="admin.show ? 'w-72' : 'w-48'">
