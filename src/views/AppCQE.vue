@@ -42,9 +42,10 @@ watchEffect(() => {
   }
 })
 
-let files = $ref({}), admin = $ref(false)
+let files = $ref({}), admin = $ref(false), account = $ref({})
 
 async function fetch (id) {
+  account = {}
   if (admin) admin.show = false
   state.loading = true
   const res = await local.app.CQE.get(state.user.token, id)
@@ -62,6 +63,9 @@ async function fetch (id) {
     }
   }
   files = res.综评材料
+  account = res.账户
+  account.year = moment().format('YYYY') - account.年级 + ((moment().format('MM') - 9 + 12) % 12) / 12
+  term = Math.floor(Math.min(account.year, 2.9) * 2)
   target = id
   if (!admin) return mode = '0'
   mode = admin.index
@@ -94,11 +98,11 @@ init()
     <BackHeader @back="router.push('/')">综合素质评价</BackHeader>
     <select v-model="term" class="py-1 px-2 rounded border text-sm font-bold">
       <option value="0">高一上学期</option>
-      <option value="1">高一下学期</option>
-      <option value="2">高二上学期</option>
-      <option value="3">高二下学期</option>
-      <option value="4">高三上学期</option>
-      <option value="5">高三下学期</option>
+      <option value="1" v-if="account.year > 0.5">高一下学期</option>
+      <option value="2" v-if="account.year > 1">高二上学期</option>
+      <option value="3" v-if="account.year > 1.5">高二下学期</option>
+      <option value="4" v-if="account.year > 2">高三上学期</option>
+      <option value="5" v-if="account.year > 2.5">高三下学期</option>
     </select>
   </div>
   <!-- fields selector -->
