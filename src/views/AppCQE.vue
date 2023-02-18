@@ -11,9 +11,9 @@ import { search } from '../utils/user.js'
 import { T, initGrade } from '../utils/CQE.js'
 const router = useRouter()
 
-const target = $ref(state.user.id)
+let target = $ref(state.user.id)
 
-const fields = $ref({
+let fields = $ref({
   '填写指南': true,
   '思想品德': false,
   '学业水平': false,
