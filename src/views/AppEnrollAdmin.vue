@@ -46,6 +46,14 @@ function editCell (k, i, e) {
   if (!data[k][i - 1]) data[k].splice(i - 1, 1)
 }
 
+const parseTime = t => moment(t).format('YYYY-MM-DD HH:mm:ss')
+
+function parseData (d) {
+  data = d
+  delete data.id
+  for (const u in data) data[u] = JSON.parse(data[u]).sort((a, b) => a - b)
+}
+
 async function init () {
   if (!state.user?.token) return router.push('/')
   if (route.query.cmd) return
@@ -55,10 +63,8 @@ async function init () {
   info.min = info.min || 0
   info.max = info.max || 9e9
   list = JSON.parse(info.options).map((x, i) => ({ title: x, space: info[`$${i + 1}`], key: Math.random() }))
-  data = res.data
   delete info.id
-  delete data.id
-  for (const u in data) data[u] = JSON.parse(data[u]).sort((a, b) => a - b)
+  parseData(res.data)
   userMap = await query(Object.keys(data), false)
   state.loading = false
 }
@@ -136,14 +142,28 @@ function excel () {
 
 window.data = $$(data)
 window.userMap = $$(userMap)
-window.adminProcess = async (use2 = true, force = false) => {
+let proc = $ref({})
+async function adminProcess (use2 = true, force = false) {
+  const { isConfirmed } = await Swal.fire({
+    title: '启动高频模式？',
+    html: '在高频模式下，此页面会控制选课系统处理流程，加速系统处理能力。<b>特别注意，多个管理页面不可同时运行高频模式！</b>开启后，刷新页面即可关闭高频模式，请务必在观察到选课请求几乎消失后再关闭高频模式。<b>关闭高频模式后，选课系统将暂停处理20秒，随后进入正常处理模式。</b>',
+    icon: 'warning',
+    showCancelButton: true
+  })
+  if (!isConfirmed) return
+  proc.time = parseTime(Date.now())
   if (use2) srpc('https://sas.aauth.link/srpc2')
   while (1) {
     const res = await srpc.app.enroll.process(state.user.token, force)
     console.log(res)
+    proc.err = res.err
+    proc.cot = res.cot
+    proc.time = parseTime(Date.now())
+    if (res.data) parseData(res.data)
     await new Promise(r => setTimeout(r, 1e3))
   }
 }
+window.adminProcess = adminProcess
 console.log('AppEnrollAdmin utils: data.value, userMap.value, adminProcess(use2, force)')
 </script>
 
@@ -203,7 +223,18 @@ console.log('AppEnrollAdmin utils: data.value, userMap.value, adminProcess(use2,
         <button class="text-white text-sm font-bold rounded bg-red-500 shadow ml-2 py-1 px-2" @click="data = {}">清除全部</button>
       </div>
       <UserSelector v-model="showUserSelector" @select="addUser" />
-      <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md m-4 px-4 py-2 w-32" @click="submitData">提交数据</button>
+      <div class="flex items-center">
+        <button class="all-transition bg-blue-500 font-bold text-white rounded-full shadow hover:shadow-md m-4 px-4 py-2 w-32" @click="submitData">提交数据</button>
+        <button class="all-transition bg-red-500 font-bold text-white rounded-full shadow hover:shadow-md m-4 px-4 py-2 w-32" @click="adminProcess" v-if="!proc.time">启动高频模式</button>
+        <div class="text-red-500 text-sm whitespace-nowrap" v-else>
+          <p class="text-xs">高频模式运行中：如需停止高频模式，请刷新本页面。</p>
+          <p>
+            <span class="font-mono mr-4">{{ proc.time }}</span>
+            <span v-if="proc.err">{{ proc.err }}</span>
+            <span v-else class="font-bold">处理数量 {{ proc.cot }}</span>
+          </p>
+        </div>
+      </div>
       <div class="w-full overflow-auto">
         <p class="text-xs my-1">列表中的用户具有访问权限，选课结果为选项序号。</p>
         <table class="min-w-full whitespace-nowrap text-sm bg-white">

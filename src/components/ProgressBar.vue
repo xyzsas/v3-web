@@ -1,7 +1,6 @@
 <script setup>
-import { computed } from '@vue/reactivity';
 const { ratio } = defineProps(['ratio'])
-const bar = computed(() => (ratio * 100).toFixed(1) + '%')
+const bar = $computed(() => ((ratio || 0) * 100).toFixed(1) + '%')
 </script>
 
 <template>
