@@ -107,7 +107,9 @@ async function init () {
 init()
 
 async function updateCredit (k, idx) {
-  console.log(C[k][term * 3 + idx])
+  const res = local.app.CQE.updateCredit(state.user.token, state.user.id, k, term, idx, C[k][term * 3 + idx])
+  if (res) return true
+  await Swal.fire('错误', '保存时出错！', 'error')
 }
 </script>
 
