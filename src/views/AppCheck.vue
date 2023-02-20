@@ -18,16 +18,7 @@
             datetime: "May 2, 2022",
             statusTransaction: "completed",
           },
-          {
-            transaction: "学生档案导入",
-            datetime: "Apr 22, 2022",
-            statusTransaction: "completed",
-          },
-          {
-            transaction: "二维码生成",
-            datetime: "May 2, 2022",
-            statusTransaction: "completed",
-          },
+        
           {
             transaction: "综合素质评价",
             datetime: "May 5, 2022",
@@ -69,7 +60,7 @@
 </script>
 
 <template>
-  <div class="dashboard p-4">
+  <div class="h-screen dashboard p-4">
     <nav class="flex" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-3">
         <li class="inline-flex items-center">
@@ -90,18 +81,18 @@
       </ol>
     </nav>
     <!-- end nav -->
-    <div class="mt-5 w-full">
+    <div class="mt-3 w-full">
       <h1 class="text-2xl text-gray-900 dark:text-gray-200 font-medium">
         Dashboard
       </h1>
     </div>
     <!-- grid wrapper card -->
     <div
-      class="wrapper-card grid lg:grid-cols-4 grid-cols-1 md:grid-cols-2 gap-2 mt-5"
+      class="wrapper-card grid lg:grid-cols-4 grid-cols-1 md:grid-cols-1 gap-2 mt-1"
     >
       <!-- card  -->
       <div
-        class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
+        class="card bg-white dark:bg-gray-800 w-full rounded-md p-2 shadow flex"
       >
         <div class="p-2 max-w-sm">
           <div
@@ -136,7 +127,7 @@
       </div>
       <!-- end card -->
       <div
-        class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
+        class="card bg-white dark:bg-gray-800 w-full rounded-md p-2 shadow flex"
       >
         <div class="p-2 max-w-sm">
           <div
@@ -174,7 +165,7 @@
       </div>
       <!-- end card -->
       <div
-        class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
+        class="card bg-white dark:bg-gray-800 w-full rounded-md p-2 shadow flex"
       >
         <div class="p-2 max-w-sm">
           <div
@@ -214,7 +205,7 @@
       </div>
       <!-- end card -->
       <div
-        class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
+        class="card bg-white dark:bg-gray-800 w-full rounded-md p-2 shadow flex"
       >
         <div class="p-2 max-w-sm">
           <div
@@ -251,106 +242,26 @@
       <!-- end card -->
     </div>
     <!-- end wrapper card -->
-    <div class="mt-2 lg:flex block lg:gap-2">
-      <div
-        class="bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
-      >
-        <h2 class="font-bold text-2xl text-gray-800 dark:text-gray-200">
-          访问量
-        </h2>
-        <p class="text-gray-400 font-lexend font-normal">
-          每天更新一次
-        </p>
-        <span class="float-right">
-          <h2 class="text-red-500 -mt-12 flex">
-            <span class="mr-2"> 12.2% </span
-            ><span>
-              <Icon icon="akar-icons:arrow-up" />
-            </span>
-          </h2>
-        </span>
-        <br />
-        <br />
-        <hr />
-        <div class="wrapper-button mt-3">
-          <select
-            name=""
-            id=""
-            class="dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-300 border max-w-lg px-4 py-3 block rounded-md text-gray-500 dark:text-gray-400"
-          >
-            <option value="">Last 7 days</option>
-            <option value="">Last 14 days</option>
-            <option value="">Last 30 days</option>
-          </select>
-          <button
-            class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
-          >
-            CQE使用次数报告
-          </button>
-
-        <div id="myChart123" :style="{width: '1500px', height: '550px'}"></div>
-        </div>
-      </div>
-      <div
-        class="bg-white dark:bg-gray-800 p-5 lg:w-96 lg:mt-0 mt-4 shadow rounded-md w-full"
-      >
-        <h2 class="dark:text-gray-200 text-2xl font-bold">Project Summary</h2>
-        <p class="text-gray-400">展示了目前项目的进展状况。</p>
-       
-        <div class="mt-8 grid grid-cols-1 gap-6">
-          <span class="text-left">
-            <h1 class="font-bold text-xm dark:text-gray-200">
-              学生事务系统启动时间
-            </h1>
-            <p class="text-gray-400 dark:text-gray-200">01/2023</p>
-          </span>
-          <span class="text-left">
-            <h1 class="font-bold text-xm dark:text-gray-200">
-              学生事务系统结束时间
-            </h1>
-            <p class="text-gray-400 dark:text-gray-200">02/2023</p>
-          </span>
-          <span class="text-left">
-            <h1 class="font-bold text-xm dark:text-gray-200">
-              综合素质评价启动时间
-            </h1>
-            <p class="text-gray-400 dark:text-gray-200">01/2023</p>
-          </span>
-          <span class="text-left">
-            <h1 class="font-bold text-xm dark:text-gray-200">
-              综合素质评价结束时间
-            </h1>
-            <p class="text-gray-400 dark:text-gray-200">02/2023</p>
-          </span>
-          <span class="text-left">
-            <h1 class="font-bold text-xm dark:text-gray-200">
-              项目进展
-            </h1>
-            <p class="text-gray-400 dark:text-gray-200">进行中</p>
-          </span>
-        </div>
-      </div>
-    </div>
     <div
       class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
     >
-      <h2 class="font-bold text-2xl text-gray-800 dark:text-gray-200">
+      <h2 class="font-bold text-xl text-gray-800 dark:text-gray-200">
         项目进展状况
       </h2>
-      <p class="text-gray-400 font-lexend font-normal">
+      <p class="text-gray-400 font-lexend font-normal text-sm">
         这是目前学生事务系统开发进展
       </p>
-      <div class="wrapping-table mt-10">
+      <div class="wrapping-table mt-3">
         <table
-          class="w-full text-sm text-left text-gray-500 dark:text-gray-400 lg:overflow-auto overflow-x-scroll"
+          class="w-full text-xs text-left text-gray-500 dark:text-gray-400 lg:overflow-auto overflow-x-scroll"
         >
           <thead
-            class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
           >
             <tr>
-              <th scope="col" class="text-lg px-16 py-3 pl-10">名称</th>
-              <th scope="col" class="text-lg px-16 py-3">开始时间</th>
-              <th scope="col" class="text-lg px-6 py-3">状态</th>
+              <th scope="col" class="text-xm px-16 py-2 pl-10">名称</th>
+              <th scope="col" class="text-xm px-16 py-2">开始时间</th>
+              <th scope="col" class="text-xm px-6 py-2">状态</th>
             </tr>
           </thead>
           <tbody>
@@ -359,13 +270,13 @@
               v-for="items in tableTransaction"
               :key="items.transaction"
             >
-              <td class="pl-10 px-16 py-6">
+              <td class="pl-10 px-16 py-3">
                 {{ items.transaction }}
               </td>
-              <td class="px-16 py-6">
+              <td class="px-16 py-3">
                 {{ items.datetime }}
               </td>
-              <td class="px-6 py-6">
+              <td class="px-6 py-3">
                 <span
                   class="text-green-800 bg-green-300 px-3 py-1 rounded-md"
                   v-if="items.statusTransaction == 'completed'"
@@ -389,11 +300,11 @@
           </tbody>
         </table>
       </div>
-      <div class="wrapper-button mt-3">
+      <div class="wrapper-button mt-2">
         <select
           name=""
           id=""
-          class="dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-300 border max-w-lg px-4 py-3 block rounded-md text-gray-500 dark:text-gray-400"
+          class="dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-300 border px-2 py-1 block rounded-md text-gray-500 dark:text-gray-400 text-sm"
         >
           <option value="">Last 1 years</option>
           <option value="">Last 2 years</option>
@@ -406,5 +317,85 @@
         </button>
       </div>
     </div>
+
+    <div class="mt-2 lg:flex block lg:gap-4">
+      <div
+        class="bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
+      >
+        <h2 class="font-bold text-xl text-gray-800 dark:text-gray-200">
+          访问量
+        </h2>
+        <p class="text-gray-400 font-lexend text-sm">
+          每天更新一次
+        </p>
+        <span class="float-right">
+          <h2 class="text-red-500 -mt-12 flex">
+            <span class="mr-2"> 12.2% </span
+            ><span>
+              <Icon icon="akar-icons:arrow-up" />
+            </span>
+          </h2>
+        </span>
+        <hr />
+        <div class="wrapper-button mt-3">
+          <select
+            name=""
+            id=""
+            class="dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-300 border px-2 py-1 block rounded-md text-gray-500 dark:text-gray-400 text-sm"
+          >
+            <option value="">Last 7 days</option>
+            <option value="">Last 14 days</option>
+            <option value="">Last 30 days</option>
+          </select>
+          <button
+            class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
+          >
+            CQE使用次数报告
+          </button>
+        <div class="pl-44 -mt-12">
+        <div id="myChart123" :style="{width: '1200px', height: '325px'}"></div></div>
+        </div>
+      </div>
+      <div
+        class="bg-white dark:bg-gray-800 p-5 lg:w-96 lg:mt-0 mt-2 shadow rounded-md w-full"
+      >
+        <h2 class="dark:text-gray-200 text-xl font-bold">Project Summary</h2>
+        <p class="text-gray-400">展示了目前项目的进展状况。</p>
+       
+        <div class="mt-4 grid grid-cols-1 gap-2">
+          <span class="text-left">
+            <h1 class="font-bold text-ml dark:text-gray-200">
+              学生事务系统启动时间
+            </h1>
+            <p class="text-gray-400 dark:text-gray-200">01/2023</p>
+          </span>
+          <span class="text-left">
+            <h1 class="font-bold text-ml dark:text-gray-200">
+              学生事务系统结束时间
+            </h1>
+            <p class="text-gray-400 dark:text-gray-200">02/2023</p>
+          </span>
+          <span class="text-left">
+            <h1 class="font-bold text-ml dark:text-gray-200">
+              综合素质评价启动时间
+            </h1>
+            <p class="text-gray-400 dark:text-gray-200">01/2023</p>
+          </span>
+          <span class="text-left">
+            <h1 class="font-bold text-ml dark:text-gray-200">
+              综合素质评价结束时间
+            </h1>
+            <p class="text-gray-400 dark:text-gray-200">02/2023</p>
+          </span>
+          <span class="text-left">
+            <h1 class="font-bold text-ml dark:text-gray-200">
+              项目进展
+            </h1>
+            <p class="text-gray-400 dark:text-gray-200">进行中</p>
+          </span>
+        </div>
+      </div>
+    </div>
+    
   </div>
 </template>
