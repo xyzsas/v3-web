@@ -11,22 +11,30 @@
           {
             transaction: "用户授权",
             datetime: "Apr 22, 2022",
+            endtime: "Aug 22, 2022",
+            leader: "Shiheng Li",
             statusTransaction: "completed",
           },
           {
             transaction: "消息管理",
             datetime: "May 2, 2022",
+            endtime: "Aug 22, 2022",
+            leader: "Shiheng Li",
             statusTransaction: "completed",
           },
         
           {
             transaction: "综合素质评价",
             datetime: "May 5, 2022",
+            endtime: "——",
+            leader: "Shiheng Li",
             statusTransaction: "progress",
           },
           {
             transaction: "投票",
             datetime: "May 5, 2022",
+            endtime: "——",
+            leader: "Shiheng Li",
             statusTransaction: "cancelled",
           },
         ],
@@ -119,7 +127,7 @@
           </div>
        </div>
         <div class="block p-2 w-full">
-          <p class="font-semibold text-gray-900 dark:text-gray-200 text-xl">
+          <p class="font-semibold text-gray-900 dark:text-gray-200 text-4xl">
             289
           </p>
           <h2 class="font-normal text-gray-400 text-md mt-1">CQE使用次数</h2>
@@ -157,7 +165,7 @@
         </div>
 
         <div class="block p-2 w-full">
-          <p class="font-semibold text-gray-900 dark:text-gray-200 text-xl">
+          <p class="font-semibold text-gray-900 dark:text-gray-200 text-4xl">
             256
           </p>
           <h2 class="font-normal text-gray-400 text-md mt-1">教师总数</h2>
@@ -195,7 +203,7 @@
         </div>
 
         <div class="block p-2 w-full">
-          <p class="font-semibold text-gray-900 dark:text-gray-200 text-xl">
+          <p class="font-semibold text-gray-900 dark:text-gray-200 text-4xl">
             2,586
           </p>
           <h2 class="font-normal text-gray-400 text-md mt-1">
@@ -233,7 +241,7 @@
         </div>
 
         <div class="block p-2 w-full">
-          <p class="font-semibold text-gray-900 dark:text-gray-200 text-xl">
+          <p class="font-semibold text-gray-900 dark:text-gray-200 text-4xl">
             7,230
           </p>
           <h2 class="font-normal text-gray-400 text-md mt-1">总访问次数</h2>
@@ -261,6 +269,8 @@
             <tr>
               <th scope="col" class="text-xm px-16 py-2 pl-10">名称</th>
               <th scope="col" class="text-xm px-16 py-2">开始时间</th>
+              <th scope="col" class="text-xm px-16 py-2">结束时间</th>
+              <th scope="col" class="text-xm px-16 py-2">负责人</th>
               <th scope="col" class="text-xm px-6 py-2">状态</th>
             </tr>
           </thead>
@@ -275,6 +285,12 @@
               </td>
               <td class="px-16 py-3">
                 {{ items.datetime }}
+              </td>
+              <td class="px-16 py-3">
+                {{ items.endtime }}
+              </td>
+              <td class="px-16 py-3">
+                {{ items.leader }}
               </td>
               <td class="px-6 py-3">
                 <span
@@ -326,7 +342,7 @@
           访问量
         </h2>
         <p class="text-gray-400 font-lexend text-sm">
-          每天更新一次
+          系统每天凌晨1点刷新数据
         </p>
         <span class="float-right">
           <h2 class="text-red-500 -mt-12 flex">
@@ -352,8 +368,35 @@
           >
             CQE使用次数报告
           </button>
-        <div class="pl-44 -mt-12">
-        <div id="myChart123" :style="{width: '1200px', height: '325px'}"></div></div>
+        <div class="ml-64 -mt-12">
+        <div id="myChart123" :style="{width: '700px', height: '325px'}"></div></div>
+        </div>
+      </div>
+      <div
+        class="bg-white dark:bg-gray-800 p-5 lg:w-96 lg:mt-0 mt-2 shadow rounded-md w-full"
+      >
+        <h2 class="dark:text-gray-200 text-xl font-bold">安全检查</h2>
+        <p class="text-gray-400">展示了目前项目的安全。</p>
+       
+        <div class="mt-4 grid grid-cols-1 gap-5">
+          <span class="text-left">
+            <h1 class="font-bold text-ml dark:text-gray-200 mb-5">
+              学生事务系统
+            </h1>
+            <span class="mt-5 text-green-800 bg-green-300 px-3 py-2 rounded-md"> SECURITY </span>
+          </span>
+          <span class="text-left">
+            <h1 class="font-bold text-ml dark:text-gray-200 mb-5">
+              综合素质评价
+            </h1>
+            <span class="mt-5 text-green-800 bg-green-300 px-3 py-2 rounded-md"> SECURITY </span>
+          </span>
+          <span class="text-left">
+            <h1 class="font-bold text-ml dark:text-gray-200 mb-5">
+              安全风险
+            </h1>
+            <span class="mt-5 text-red-800 bg-red-300 px-3 py-2 rounded-md"> 0 </span>
+          </span>
         </div>
       </div>
       <div
