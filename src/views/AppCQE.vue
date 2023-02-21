@@ -8,7 +8,7 @@ import state from '../state.js'
 import local from '../utils/srpc-local.js'
 import fc from '../utils/srpc-fc.js'
 import { search } from '../utils/user.js'
-import { T, initGrade } from '../utils/CQE.js'
+import { T, initGrade, initCredit } from '../utils/CQE.js'
 const router = useRouter()
 
 let target = $ref(state.user.id)
@@ -28,6 +28,7 @@ let current = $ref(0), term = $ref(0), mode = $ref('0')
 const titles = ['思想品德', '身心健康', '艺术素养', '社会实践']
 
 let D = $ref(JSON.parse(JSON.stringify(initGrade)))
+let C = $ref(JSON.parse(JSON.stringify(initCredit)))
 
 watchEffect(() => {
   for (const f in D) {
@@ -67,12 +68,15 @@ async function fetch (id) {
     return
   }
   D = JSON.parse(JSON.stringify(initGrade))
-  const data = res.综评
+  const grades = res.综评
   for (const k in D) {
     for (const i in D[k]) {
-      if (data[k] && data[k][i]) D[k][i] = data[k][i]
+      if (grades[k] && grades[k][i]) D[k][i] = grades[k][i]
     }
   }
+  C = JSON.parse(JSON.stringify(initCredit))
+  const credits = res.综评学分
+  for (const k in C) if (credits[k]) C[k] = credits[k]
   files = res.综评材料
   account = res.账户
   account.year = moment().format('YYYY') - account.年级 + ((moment().format('MM') - 9 + 12) % 12) / 12
@@ -102,6 +106,12 @@ async function init () {
   fetch(state.user.id)
 }
 init()
+
+async function updateCredit (k, idx) {
+  const res = await local.app.CQE.updateCredit(state.user.token, state.user.id, k, term, idx, C[k][term * 3 + idx])
+  if (res) return true
+  await Swal.fire('错误', '保存时出错！', 'error')
+}
 </script>
 
 <template>
@@ -158,10 +168,59 @@ init()
       </div>
     </template>
     <template v-if="current === 6">
-      <div class="flex flex-wrap">
-        <div v-for="k in titles" class="flex items-center rounded bg-white shadow px-4 py-2 m-2 whitespace-nowrap">
-          <div class="text-2xl m-1">{{ k }}</div>
-          <div class="m-1 font-mono">总积分: {{ calcGrade(k) }}</div>
+      <div>
+        <div class="rounded bg-white shadow px-4 py-2 m-2 flex flex-col items-center">
+          <div class="text-2xl m-2">学业水平（学分）</div>
+          <div class="flex flex-wrap whitespace-nowrap">
+            <div v-for="(v, k) in C" class="m-4">
+              <div class="text-xl border-l-2 border-blue-500 px-4">{{ k }}</div>
+              <div class="font-mono px-4">
+                <div class="flex my-2">
+                  必修
+                  <div class="grow" />
+                  <input class="rounded border mx-2 w-16" type="number" v-model="C[k][term * 3]" @change="updateCredit(k, 0)">
+                </div>
+                <div class="flex my-2">
+                  选择性必修
+                  <div class="grow" />
+                  <input class="rounded border mx-2 w-16" type="number" v-model="C[k][term * 3 + 1]" @change="updateCredit(k, 1)">
+                </div>
+                <div class="flex my-2">
+                  选修
+                  <div class="grow" />
+                  <input class="rounded border mx-2 w-16" type="number" v-model="C[k][term * 3 + 2]" @change="updateCredit(k, 2)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rounded bg-white shadow px-4 py-2 m-2">
+          <div class="flex items-center my-2">
+            <div class="text-2xl">思想品德</div>
+            <div class="text-mono mx-2">总积分: {{ calcGrade('思想品德') }}</div>
+          </div>
+          <div class="text-gray-500 my-2">说明：1、本项积分105分以上为A等级（其中德育活动高一、二年级每学期不得少于10分，高三年级不得少于6分）2、本项积分95分以上为B等级（其中德育活动高一、二年级每学期不得少于8分，高三年级不得少于4分）3、本项积分85分以上为C等级（其中德育活动高一、二年级每学期不得少于6分，高三年级不得少于2分）4、本项积分85分以下为D等级</div>
+        </div>
+        <div class="rounded bg-white shadow px-4 py-2 m-2">
+          <div class="flex items-center my-2">
+            <div class="text-2xl">身心健康</div>
+            <div class="text-mono mx-2">总积分: {{ calcGrade('身心健康') }}</div>
+          </div>
+          <div class="text-gray-500 my-2">说明：1、五项内容至少两项为A等级，其他为B等级以上才能获得校级及以上“三好生”、“优秀学生干部”、“优秀团员”、“优秀团干”等荣誉称号。2、五项内容全部B等级以上才能获得“单项之星”荣誉称号和参加相关奖学金评定。3、突出表现的证明材料另附，在上述表格中简单说明并注明材料份数。</div>
+        </div>
+        <div class="rounded bg-white shadow px-4 py-2 m-2">
+          <div class="flex items-center my-2">
+            <div class="text-2xl">艺术素养</div>
+            <div class="text-mono mx-2">总积分: {{ calcGrade('艺术素养') }}</div>
+          </div>
+          <div class="text-gray-500 my-2">说明：1、本项45分以上为A等级（其中学校课程必须在40分以上）2、本项35分以上为B等级（其中学校课程必须在30分以上）3、本项25分以上为C等级 4、本项25分以下为D等级</div>
+        </div>
+        <div class="rounded bg-white shadow px-4 py-2 m-2">
+          <div class="flex items-center my-2">
+            <div class="text-2xl">社会实践</div>
+            <div class="text-mono mx-2">总积分: {{ calcGrade('社会实践') }}</div>
+          </div>
+          <div class="text-gray-500 my-2">注明：1、本项积分85分以上为A等级。本项积分75分以上为B等级。本项积分60分以上为C等级。本项积分60分一下为D等级。</div>
         </div>
       </div>
     </template>
@@ -196,7 +255,7 @@ init()
       <code v-if="u" class="ml-1">{{ u.年级 }}{{ u.班级 }}{{ u.学号 }}</code>
     </div>
     <Wrapper :show="admin.show" style="max-height: 50vh; overflow-y: auto;">
-      <div class="text-sm py-px px-2 all-transition hover:bg-blue-50 cursor-pointer text-gray-500" :class="target === state.user.id && 'bg-blue-100'" @click="fetch(state.user.id)">{{ state.user.name}}（我）</div>
+      <div class="text-sm py-px px-2 all-transition hover:bg-blue-50 cursor-pointer text-gray-500" :class="target === state.user.id && 'bg-blue-100'" @click="fetch(state.user.id)">{{ state.user.name }}（我）</div>
       <div v-for="id in admin.ids" class="text-sm flex items-center py-px px-2 all-transition hover:bg-blue-50 cursor-pointer text-gray-500" :class="target === id && 'bg-blue-100'" @click="fetch(id)">
         <span class="block w-16">{{ admin.users[id].姓名 }}</span>
         <code :set="u = admin.users[id]">{{ u.年级 }}{{ u.班级 }}{{ u.学号 }}</code>
