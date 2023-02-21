@@ -74,6 +74,7 @@ async function fetch (id) {
       if (grades[k] && grades[k][i]) D[k][i] = grades[k][i]
     }
   }
+  C = JSON.parse(JSON.stringify(initCredit))
   const credits = res.综评学分
   for (const k in C) if (credits[k]) C[k] = credits[k]
   files = res.综评材料
@@ -107,7 +108,7 @@ async function init () {
 init()
 
 async function updateCredit (k, idx) {
-  const res = local.app.CQE.updateCredit(state.user.token, state.user.id, k, term, idx, C[k][term * 3 + idx])
+  const res = await local.app.CQE.updateCredit(state.user.token, state.user.id, k, term, idx, C[k][term * 3 + idx])
   if (res) return true
   await Swal.fire('错误', '保存时出错！', 'error')
 }
