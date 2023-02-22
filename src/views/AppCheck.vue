@@ -43,16 +43,16 @@ const router = useRouter()
   <div class="h-screen bg-gray-200">
     <BackHeader @back="router.push('/')">Dashboard</BackHeader>
     <div class="wrapper-card grid lg:grid-cols-4 grid-cols-1 md:grid-cols-1 gap-3 mt-2 ml-5 mr-5">
-      <div class="card bg-white dark:bg-gray-800 w-full rounded-md p-2 shadow flex">
+      <div class="card bg-white w-full rounded-md p-2 shadow flex">
         <div class="p-2 max-w-sm">
           <div class="bg-green-200 rounded-full w-14 h-14 text-lg p-3 text-green-600 mx-auto"><UserIcon class="w-8"/></div>
         </div>
         <div class="block p-2 w-full">
-          <p class="font-semibold text-gray-900 dark:text-gray-200 text-5xl">256</p>
+          <p class="font-semibold text-gray-900 text-5xl">256</p>
           <h2 class="font-normatext-md mt-1">教师总数</h2>
         </div>
       </div>
-      <div class="card bg-white dark:bg-gray-800 w-full rounded-md p-2 shadow flex">
+      <div class="card bg-white w-full rounded-md p-2 shadow flex">
         <div class="p-2 max-w-sm">
           <div class="bg-red-200 rounded-full w-14 h-14 text-lg p-3 text-red-600 mx-auto">
             <span class="">
@@ -78,20 +78,20 @@ const router = useRouter()
           </div>
         </div>
         <div class="block p-2 w-full">
-          <p class="font-semibold text-gray-900 dark:text-gray-200 text-5xl">2,586</p>
+          <p class="font-semibold text-gray-900 text-5xl">2,586</p>
           <h2 class="font-normal text-md mt-1">学生总数</h2>
         </div>
       </div>
-      <div class="card bg-white dark:bg-gray-800 w-full rounded-md p-2 shadow flex">
+      <div class="card bg-white w-full rounded-md p-2 shadow flex">
         <div class="p-2 max-w-sm">
           <div class="bg-orange-200 rounded-full w-14 h-14 text-lg p-3 text-orange-600 mx-auto"><QuestionMarkCircleIcon class="w-8"/></div>
        </div>
         <div class="block p-2 w-full">
-          <p class="font-semibold text-gray-900 dark:text-gray-200 text-5xl">5,289</p>
+          <p class="font-semibold text-gray-900 text-5xl">5,289</p>
           <h2 class="font-normal text-md mt-1">CQE使用次数</h2>
         </div>
       </div>
-      <div class="card bg-white dark:bg-gray-800 w-full rounded-md p-2 shadow flex">
+      <div class="card bg-white w-full rounded-md p-2 shadow flex">
         <div class="p-2 max-w-sm">
           <div class="bg-purple-200 rounded-full w-14 h-14 text-lg p-3 text-purple-600 mx-auto">
             <span class="">
@@ -113,76 +113,76 @@ const router = useRouter()
           </div>
         </div>
         <div class="block p-2 w-full">
-          <p class="font-semibold text-gray-900 dark:text-gray-200 text-5xl">41,230</p>
+          <p class="font-semibold text-gray-900 text-5xl">41,230</p>
           <h2 class="font-normal text-md mt-1">总访问次数</h2>
         </div>
       </div>
     </div>
     <div class="mt-2 ml-5 mr-5 lg:flex block lg:gap-3">
-      <div class="bg-white dark:bg-gray-800 p-5 w-2/3 rounded-md border-solid border-gray-300 border-2">
+      <div class="bg-white p-5 w-2/3 rounded-md border-solid border-gray-300 border-2">
         <div class="wrapper-card grid lg:grid-cols-2 grid-cols-1 md:grid-cols-1 gap-1 mt-1">
           <div class="card">
-            <h2 class="font-bold text-2xl text-gray-800 dark:text-gray-200">学生事务系统访问量</h2>
+            <h2 class="font-bold text-2xl text-gray-800">学生事务系统访问量</h2>
             <p class="text-gray-400 font-lexend text-sm">系统每天凌晨1点刷新数据</p>
             <div id="systemView" style="height: 350px; width: 500px;"></div>
           </div>
           <div class="card">
-            <h2 class="font-bold text-2xl text-gray-800 dark:text-gray-200">综合素质评价访问量</h2>
+            <h2 class="font-bold text-2xl text-gray-800">综合素质评价访问量</h2>
             <p class="text-gray-400 font-lexend text-sm">系统每天凌晨1点刷新数据</p>
             <div id="cqeView" style="height: 350px; width: 500px;"></div>
           </div>
         </div>
       </div>
-      <div class="bg-white dark:bg-gray-800 p-5 w-1/3 rounded-md border-solid border-gray-300 border-2">
-        <h2 class="font-bold text-2xl dark:text-gray-200">安全检测</h2>
+      <div class="bg-white p-5 w-1/3 rounded-md border-solid border-gray-300 border-2">
+        <h2 class="font-bold text-2xl">安全检测</h2>
         <div class="mt-6 ml-4 grid grid-cols-2 gap-5">
           <span class="text-left">
-            <h3 class="font-bold text-lg dark:text-gray-200 mb-5">综合素质评价</h3>
+            <h3 class="font-bold text-lg mb-5">综合素质评价</h3>
             <div class="all-transition text-white font-bold text-lg rounded-full w-10 h-10 mb-1 text-center ring bg-green-600"><CheckIcon/></div>
           </span>
           <span class="text-left">
-            <h3 class="font-bold text-lg dark:text-gray-200 mb-5">用户授权</h3>
+            <h3 class="font-bold text-lg mb-5">用户授权</h3>
             <div class="all-transition text-white font-bold text-lg rounded-full w-10 h-10 mb-1 text-center ring bg-green-600"><CheckIcon/></div>
           </span>
           <span class="text-left">
-            <h3 class="font-bold text-lg dark:text-gray-200 mb-5">消息管理</h3>
+            <h3 class="font-bold text-lg mb-5">消息管理</h3>
             <div class="all-transition text-white font-bold text-lg rounded-full w-10 h-10 mb-1 text-center ring bg-green-600"><CheckIcon/></div>
           </span>
           <span class="text-left">
-            <h3 class="font-bold text-lg dark:text-gray-200 mb-5">学生档案导入</h3>
+            <h3 class="font-bold text-lg mb-5">学生档案导入</h3>
             <div class="all-transition text-white font-bold text-lg rounded-full w-10 h-10 mb-1 text-center ring bg-green-600"><CheckIcon/></div>
           </span>
           <span class="text-left">
-            <h3 class="font-bold text-lg dark:text-gray-200 mb-5">二维码生成</h3>
+            <h3 class="font-bold text-lg mb-5">二维码生成</h3>
             <div class="all-transition text-white font-bold text-lg rounded-full w-10 h-10 mb-1 text-center ring bg-green-600"><CheckIcon/></div>
           </span>
           <span class="text-left">
-            <h3 class="font-bold text-lg dark:text-gray-200 mb-5">选课管理</h3>
+            <h3 class="font-bold text-lg mb-5">选课管理</h3>
             <div class="all-transition text-white font-bold text-lg rounded-full w-10 h-10 mb-1 text-center ring bg-green-600"><CheckIcon/></div>
           </span>
         </div>
       </div>
     </div>  
     <div class="mt-2 lg:flex block lg:gap-2 ml-5 mr-5">
-      <div class="bg-white dark:bg-gray-800 p-5 w-3/4 rounded-md border-solid border-gray-300 border-2">
-      <h2 class="font-bold text-2xl text-gray-800 dark:text-gray-200">存储空间</h2>
+      <div class="bg-white p-5 w-3/4 rounded-md border-solid border-gray-300 border-2">
+      <h2 class="font-bold text-2xl text-gray-800">存储空间</h2>
         <div class="wrapper-card grid lg:grid-cols-1 grid-cols-1 md:grid-cols-1 gap-4 mt-2">
           <div class="card">
-            <h2 class="ml-4 font-bold text-base text-gray-800 dark:text-gray-200">云盘存储</h2>
+            <h2 class="ml-4 font-bold text-base text-gray-800">云盘存储</h2>
             <div class="flex text-black bg-gray-300 rounded-full overflow-hidden">
               <div class="bg-blue-500 rounded-full all-transition" :style="{ width: '18%'}" />
               <div class="font-bold relative pl-2 all-transition" :class="0.18 > 0.4 && 'right-16 text-white pl-0 w-0'">18%</div>
             </div>
           </div>
           <div class="card">
-            <h2 class="ml-4 font-bold text-base text-gray-800 dark:text-gray-200">档案存储</h2>
+            <h2 class="ml-4 font-bold text-base text-gray-800">档案存储</h2>
             <div class="flex text-black bg-gray-300 rounded-full overflow-hidden">
               <div class="bg-blue-500 rounded-full all-transition" :style="{ width: '11%'}" />
               <div class="font-bold relative pl-2 all-transition" :class="0.11 > 0.4 && 'right-16 text-white pl-0 w-0'">11%</div>
             </div>
           </div>
           <div class="card">
-            <h2 class="ml-4 font-bold text-base text-gray-800 dark:text-gray-200">选课存量</h2>
+            <h2 class="ml-4 font-bold text-base text-gray-800">选课存量</h2>
             <div class="flex text-black bg-gray-300 rounded-full overflow-hidden">
               <div class="bg-blue-500 rounded-full all-transition" :style="{ width: '14%'}" />
               <div class="font-bold relative pl-2 all-transition" :class="0.14 > 0.4 && 'right-16 text-white pl-0 w-0'">14%</div>
@@ -190,24 +190,24 @@ const router = useRouter()
           </div>
         </div>
       </div>
-      <div class="bg-white dark:bg-gray-800 p-5 w-1/4 rounded-md border-solid border-gray-300 border-2">
-        <h2 class="font-bold text-2xl text-gray-800 dark:text-gray-200">项目概述</h2>
+      <div class="bg-white p-5 w-1/4 rounded-md border-solid border-gray-300 border-2">
+        <h2 class="font-bold text-2xl text-gray-800">项目概述</h2>
         <div class="mt-4 grid grid-cols-2 gap-2">
           <span class="text-left">
-            <h3 class="font-bold text-ml dark:text-gray-200">学生事务系统启动时间</h3>
-            <p class="text-gray-400 dark:text-gray-200">01/2021</p>
+            <h3 class="font-bold text-ml">学生事务系统启动时间</h3>
+            <p class="text-gray-400">01/2021</p>
           </span>
           <span class="text-left">
-            <h3 class="font-bold text-ml dark:text-gray-200">综合素质评价启动时间</h3>
-            <p class="text-gray-400 dark:text-gray-200">07/2022</p>
+            <h3 class="font-bold text-ml">综合素质评价启动时间</h3>
+            <p class="text-gray-400">07/2022</p>
           </span>
           <span class="text-left">
-            <h3 class="font-bold text-ml dark:text-gray-200">项目进展</h3>
-            <p class="text-gray-400 dark:text-gray-200">进行中</p>
+            <h3 class="font-bold text-ml">项目进展</h3>
+            <p class="text-gray-400">进行中</p>
           </span>
           <span class="text-left">
-            <h3 class="font-bold text-ml dark:text-gray-200">项目负责人</h3>
-            <p class="text-gray-400 dark:text-gray-200">Shiheng Li</p>
+            <h3 class="font-bold text-ml">项目负责人</h3>
+            <p class="text-gray-400">Shiheng Li</p>
           </span>
         </div>
       </div>
