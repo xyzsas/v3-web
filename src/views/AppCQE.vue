@@ -107,11 +107,6 @@ async function init () {
 }
 init()
 
-async function updateCredit (k, idx) {
-  const res = await local.app.CQE.updateCredit(state.user.token, state.user.id, k, term, idx, C[k][term * 3 + idx])
-  if (res) return true
-  await Swal.fire('错误', '保存时出错！', 'error')
-}
 </script>
 
 <template>
@@ -169,53 +164,53 @@ async function updateCredit (k, idx) {
     </template>
     <template v-if="current === 6">
       <div>
-        <div class="rounded bg-white shadow px-4 py-2 m-2 flex flex-col items-center">
+        <div class="rounded m-2 sm:mx-8 sm:my-4 bg-white shadow-md px-4 py-2 flex flex-col">
           <div class="text-2xl m-2">学业水平（学分）</div>
           <div class="flex flex-wrap whitespace-nowrap">
-            <div v-for="(v, k) in C" class="m-4">
+            <div v-for="(v, k) in C" class="my-4 mx-2">
               <div class="text-xl border-l-2 border-blue-500 px-4">{{ k }}</div>
               <div class="font-mono px-4">
                 <div class="flex my-2">
-                  必修
+                  <div :class="C[k][term * 3] || 'text-gray-500'">必修</div>
                   <div class="grow" />
-                  <input class="rounded border mx-2 w-16" type="number" v-model="C[k][term * 3]" @change="updateCredit(k, 0)">
+                  <div class="ml-16">{{ C[k][term * 3] }}</div>
                 </div>
                 <div class="flex my-2">
-                  选择性必修
+                  <div :class="C[k][term * 3 + 1] || 'text-gray-500'">选择性必修</div>
                   <div class="grow" />
-                  <input class="rounded border mx-2 w-16" type="number" v-model="C[k][term * 3 + 1]" @change="updateCredit(k, 1)">
+                  <div class="ml-16">{{ C[k][term * 3 + 1] }}</div>
                 </div>
                 <div class="flex my-2">
-                  选修
+                  <div :class="C[k][term * 3 + 2] || 'text-gray-500'">选修</div>
                   <div class="grow" />
-                  <input class="rounded border mx-2 w-16" type="number" v-model="C[k][term * 3 + 2]" @change="updateCredit(k, 2)">
+                  <div class="ml-16">{{ C[k][term * 3 + 2] }}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="rounded bg-white shadow px-4 py-2 m-2">
+        <div class="rounded m-2 sm:mx-8 sm:my-4 bg-white shadow-md px-4 py-2">
           <div class="flex items-center my-2">
             <div class="text-2xl">思想品德</div>
             <div class="text-mono mx-2">总积分: {{ calcGrade('思想品德') }}</div>
           </div>
           <div class="text-gray-500 my-2">说明：1、本项积分105分以上为A等级（其中德育活动高一、二年级每学期不得少于10分，高三年级不得少于6分）2、本项积分95分以上为B等级（其中德育活动高一、二年级每学期不得少于8分，高三年级不得少于4分）3、本项积分85分以上为C等级（其中德育活动高一、二年级每学期不得少于6分，高三年级不得少于2分）4、本项积分85分以下为D等级</div>
         </div>
-        <div class="rounded bg-white shadow px-4 py-2 m-2">
+        <div class="rounded m-2 sm:mx-8 sm:my-4 bg-white shadow-md px-4 py-2">
           <div class="flex items-center my-2">
             <div class="text-2xl">身心健康</div>
             <div class="text-mono mx-2">总积分: {{ calcGrade('身心健康') }}</div>
           </div>
           <div class="text-gray-500 my-2">说明：1、五项内容至少两项为A等级，其他为B等级以上才能获得校级及以上“三好生”、“优秀学生干部”、“优秀团员”、“优秀团干”等荣誉称号。2、五项内容全部B等级以上才能获得“单项之星”荣誉称号和参加相关奖学金评定。3、突出表现的证明材料另附，在上述表格中简单说明并注明材料份数。</div>
         </div>
-        <div class="rounded bg-white shadow px-4 py-2 m-2">
+        <div class="rounded m-2 sm:mx-8 sm:my-4 bg-white shadow-md px-4 py-2">
           <div class="flex items-center my-2">
             <div class="text-2xl">艺术素养</div>
             <div class="text-mono mx-2">总积分: {{ calcGrade('艺术素养') }}</div>
           </div>
           <div class="text-gray-500 my-2">说明：1、本项45分以上为A等级（其中学校课程必须在40分以上）2、本项35分以上为B等级（其中学校课程必须在30分以上）3、本项25分以上为C等级 4、本项25分以下为D等级</div>
         </div>
-        <div class="rounded bg-white shadow px-4 py-2 m-2">
+        <div class="rounded m-2 sm:mx-8 sm:my-4 bg-white shadow-md px-4 py-2">
           <div class="flex items-center my-2">
             <div class="text-2xl">社会实践</div>
             <div class="text-mono mx-2">总积分: {{ calcGrade('社会实践') }}</div>
