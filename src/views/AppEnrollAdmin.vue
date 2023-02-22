@@ -54,16 +54,20 @@ function parseData (d) {
   for (const u in data) data[u] = JSON.parse(data[u]).sort((a, b) => a - b)
 }
 
+function parseInfo (d) {
+  info = d
+  info.min = info.min || 0
+  info.max = info.max || 9e9
+  list = JSON.parse(info.options).map((x, i) => ({ title: x, space: info[`$${i + 1}`], key: Math.random() }))
+  delete info.id
+}
+
 async function init () {
   if (!state.user?.token) return router.push('/')
   if (route.query.cmd) return
   const res = await srpc.app.enroll.getAll(state.user.token)
   if (!res.ok) return router.push('/')
-  info = res.info
-  info.min = info.min || 0
-  info.max = info.max || 9e9
-  list = JSON.parse(info.options).map((x, i) => ({ title: x, space: info[`$${i + 1}`], key: Math.random() }))
-  delete info.id
+  parseInfo(res.info)
   parseData(res.data)
   userMap = await query(Object.keys(data), false)
   state.loading = false
@@ -160,6 +164,7 @@ async function adminProcess (use2 = true, force = false) {
     proc.cot = res.cot
     proc.time = parseTime(Date.now())
     if (res.data) parseData(res.data)
+    if (res.info) parseInfo(res.info)
     await new Promise(r => setTimeout(r, 1e3))
   }
 }
