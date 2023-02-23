@@ -131,7 +131,11 @@ init()
   </div>
   <div class="flex flex-col items-start p-4 sm:p-10" :key="target">
     <template v-if="current === 0">
-      填写指南
+      <h3 class="my-2 font-bold text-xl">江苏省扬州中学学生综合素质评价填报要求</h3>
+      <p class="my-2">1. 认真如实填写，不得弄虚作假。</p>
+      <p class="my-2">2. 如有提供佐证材料，一定事先将佐证材料准备好，佐证材料可以是Word、PDF或者JPG等格式，文件的大小不超过50MB。如果佐证材料较多，把你认为最重要的部分优先上传。</p>
+      <p class="my-2">3. 请仔细阅读各个项目的“评价方式”，分项的积分总分不要超过该项总分，如“学习态度”一项总分为20分，你所填报的数据应该小于等于20分。</p>
+      <p class="my-2">4. 某单项分值为分数段时，根据自己实际情况打分。如“积极参加学生生涯测评（1-5分）”一栏，你做的很好可以5分，你只是参加而完成情况不好只能打1分。</p>
     </template>
     <template v-if="current === 1">
       <div v-for="(v, k) in D.思想品德" class="w-full">
