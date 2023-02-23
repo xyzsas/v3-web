@@ -8,7 +8,7 @@ import state from '../state.js'
 import local from '../utils/srpc-local.js'
 import fc from '../utils/srpc-fc.js'
 import { search } from '../utils/user.js'
-import { T, initGrade, initCredit } from '../utils/CQE.js'
+import { T, initGrade, initCredit, fileFields } from '../utils/CQE.js'
 const router = useRouter()
 
 let target = $ref(state.user.id)
@@ -25,13 +25,13 @@ let fields = $ref({
 })
 let current = $ref(0), term = $ref(0), mode = $ref('0')
 
-const titles = ['思想品德', '身心健康', '艺术素养', '社会实践']
+const terms = ['高一上学期', '高一下学期', '高二上学期', '高二下学期', '高三上学期', '高三下学期']
 
 let D = $ref(JSON.parse(JSON.stringify(initGrade)))
 let C = $ref(JSON.parse(JSON.stringify(initCredit)))
 
 watchEffect(() => {
-  for (const f in D) {
+  for (const f in fields) {
     fields[f] = true
     for (const k in D[f]) {
       for (let i = 0; i <= 3; i++) {
@@ -106,19 +106,15 @@ async function init () {
   fetch(state.user.id)
 }
 init()
-
 </script>
 
 <template>
   <div class="flex items-center">
     <BackHeader @back="router.push('/')">综合素质评价</BackHeader>
     <select v-model="term" class="py-1 px-2 rounded border text-sm font-bold">
-      <option value="0">高一上学期</option>
-      <option value="1" v-if="account.year > 0.5">高一下学期</option>
-      <option value="2" v-if="account.year > 1">高二上学期</option>
-      <option value="3" v-if="account.year > 1.5">高二下学期</option>
-      <option value="4" v-if="account.year > 2">高三上学期</option>
-      <option value="5" v-if="account.year > 2.5">高三下学期</option>
+      <template v-for="(t, i) in terms">
+        <option :value="i" v-if="account.year > (i / 2)">{{ t }}</option>
+      </template>
     </select>
   </div>
   <!-- fields selector -->
@@ -139,27 +135,27 @@ init()
     </template>
     <template v-if="current === 1">
       <div v-for="(v, k) in D.思想品德" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :value="D.思想品德[k]" :content="T.思想品德[k]"/>
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.思想品德[k]" :content="T.思想品德[k]" :files="files" :file-key="fileFields.includes(k) && k" />
       </div>
     </template>
     <template v-if="current === 2">
       <div v-for="(v, k) in D.学业水平" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :value="D.学业水平[k]" :content="T.学业水平[k]"/>
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.学业水平[k]" :content="T.学业水平[k]" :files="files" :file-key="fileFields.includes(k) && k" />
       </div>
     </template>
     <template v-if="current === 3">
       <div v-for="(v, k) in D.身心健康" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :value="D.身心健康[k]" :content="T.身心健康[k]"/>
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.身心健康[k]" :content="T.身心健康[k]" :files="files" :file-key="fileFields.includes(k) && k" />
       </div>
     </template>
     <template v-if="current === 4">
       <div v-for="(v, k) in D.艺术素养" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :value="D.艺术素养[k]" :content="T.艺术素养[k]" :files="files" :file-key="k" />
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.艺术素养[k]" :content="T.艺术素养[k]" :files="files" :file-key="fileFields.includes(k) && k" />
       </div>
     </template>
     <template v-if="current === 5">
       <div v-for="(v, k) in D.社会实践" class="w-full">
-        <CQECard :mode="mode" :target="target" :term="term" :value="D.社会实践[k]" :content="T.社会实践[k]" :files="files" :file-key="k" />
+        <CQECard :mode="mode" :target="target" :term="term" :value="D.社会实践[k]" :content="T.社会实践[k]" :files="files" :file-key="fileFields.includes(k) && k" />
       </div>
     </template>
     <template v-if="current === 6">
@@ -220,23 +216,22 @@ init()
       </div>
     </template>
     <template v-if="current === 7">
-      <div class="w-full font-serif overflow-x-auto text-center">
+      <div class="w-full overflow-x-auto text-center">
         <table class="w-full bg-white whitespace-nowrap">
           <thead>
             <tr>
               <th class="border p-2 text-xl">评价内容</th>
-              <th class="border p-1">高一上学期</th>
-              <th class="border p-1">高一下学期</th>
-              <th class="border p-1">高二上学期</th>
-              <th class="border p-1">高二下学期</th>
-              <th class="border p-1">高三上学期</th>
-              <th class="border p-1">高三下学期</th>
+              <th class="border p-1" v-for="t in terms">{{ t }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="k in titles" class="border">
+            <tr v-for="k in ['思想品德', '身心健康', '艺术素养', '社会实践']" class="border">
               <td class="border p-1">{{ k }}</td>
               <td v-for="i in 6" class="border">{{ calcGrade(k, i - 1) }}</td>
+            </tr>
+            <tr class="border">
+              <td class="border p-1">突出表现</td>
+              <td v-for="i in 6" class="border">{{ D.突出表现?.[i - 1] }}</td>
             </tr>
           </tbody>
         </table>
