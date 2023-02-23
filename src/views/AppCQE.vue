@@ -20,8 +20,8 @@ let fields = $ref({
   '身心健康': false,
   '艺术素养': false,
   '社会实践': false,
-  '学期总表': false,
-  '三年汇总表': false
+  '学期总表': true,
+  '三年汇总表': true
 })
 let current = $ref(0), term = $ref(0), mode = $ref('0')
 
