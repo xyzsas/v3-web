@@ -83,11 +83,11 @@ function submit () {
     <div class="p-3">
       <Transition name="fade" mode="out-in">
         <div v-if="mode === 0">
-          <label class="flex items-center my-1">uid: <input class="border bg-gray-100 rounded px-1 ml-2" v-model="filter.uid"></label>
-          <label class="flex items-center my-1">姓名: <input class="border bg-gray-100 rounded px-1 ml-2" v-model="filter.姓名"></label>
-          <label class="flex items-center my-1">年级: <input class="border bg-gray-100 rounded px-1 ml-2" v-model="filter.年级"></label>
-          <label class="flex items-center my-1">班级: <input class="border bg-gray-100 rounded px-1 ml-2" v-model="filter.班级"></label>
-          <label class="flex items-center my-1">学号: <input class="border bg-gray-100 rounded px-1 ml-2" v-model="filter.学号"></label>
+          <label class="flex items-center my-1">uid: <input class="border bg-gray-100 rounded px-1 ml-2" placeholder="超星uid" v-model="filter.uid"></label>
+          <label class="flex items-center my-1">姓名: <input class="border bg-gray-100 rounded px-1 ml-2" placeholder="例：小明" v-model="filter.姓名"></label>
+          <label class="flex items-center my-1">年级: <input class="border bg-gray-100 rounded px-1 ml-2" placeholder="例：2022" v-model="filter.年级"></label>
+          <label class="flex items-center my-1">班级: <input class="border bg-gray-100 rounded px-1 ml-2" placeholder="例：04" v-model="filter.班级"></label>
+          <label class="flex items-center my-1">学号: <input class="border bg-gray-100 rounded px-1 ml-2" placeholder="例：001" v-model="filter.学号"></label>
         </div>
         <div v-else-if="mode === 1">
           <textarea v-model="queryInput" class="rounded border w-full p-2 font-mono bg-gray-100" rows="6" :placeholder="'每行一个用户id或超星uid\n例如：\nabcdABCD1234-_aA\n123456789'" />

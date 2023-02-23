@@ -10,6 +10,9 @@ const index = {
   // Y
   '/y/admin': () => import('./views/YAdmin.vue'),
   '/y/send': () => import('./views/YSend.vue'),
+  // Z
+  '/z/import': () => import('./views/ZImport.vue'),
+  '/z/query': () => import('./views/ZQuery.vue'),
   // App
   '/app/photo': () => import('./views/AppPhoto.vue'),
   '/app/scan': () => import('./views/AppScan.vue'),
@@ -18,9 +21,7 @@ const index = {
   '/app/enroll': () => import('./views/AppEnroll.vue'),
   '/app/enroll/admin': () => import('./views/AppEnrollAdmin.vue'),
   '/app/cqe': () => import('./views/AppCQE.vue'),
-  '/app/check': () => import('./views/AppCheck.vue'),
-  // Z
-  '/z/import': () => import('./views/ZImport.vue')
+  '/app/check': () => import('./views/AppCheck.vue')
 }
 
 const routes = []
