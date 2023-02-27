@@ -6,31 +6,31 @@ import BackHeader from '../components/BackHeader.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
-let showUserSelector = $ref(false), doc = $ref(null)
-let re = $ref('')
+let showUserSelector = $ref(false), doc = $ref('')
 
 async function query (_id) {
-  doc = null
+  doc = ''
   state.loading = true
   const res = await local.Z.get(state.user?.token, _id)
   state.loading = false
   if (!res) return Swal.fire('查询失败', '', 'error')
-  doc = parseJson(res)
+  parseJSON(res)
 }
 
-function parseJson(jso) {
-    for (let key in jso) {
-        let element = jso[key];
-        if (typeof(element) == "object" && !(element instanceof Array)) {
-            parseJson(element);
-        } else if (element instanceof Array) {
-          re = re + key + " : " + element.toString() + '\n'
-        } else { 
-            re = re + key + " : " + element + "\n"
-        }
-        console.log(re)
+function parseJSON (obj, indent = '') {
+  for (const key in obj) {
+    const el = obj[key]
+    if (typeof el !== 'object') {
+      doc += indent + key + ': ' + el.toString() + '\n'
+      continue
     }
-    return re
+    if (el instanceof Array && el.join(', ').length < 100) {
+      doc += indent + key + ': [' + el.join(', ') + ']\n'
+      continue
+    }
+    doc += indent + key + ':' + '\n'
+    parseJSON(el, indent + '  ')
+  }
 }
 
 function select (obj) {
@@ -41,11 +41,11 @@ function select (obj) {
 </script>
 
 <template>
-  <div class="min-h-screen p-10">
+  <div class="min-h-screen p-10 print:p-4">
     <BackHeader @back="router.push('/')">学生档案查询</BackHeader>
-    <button class="block rounded-full all-transition shadow hover:shadow-md text-white bg-blue-500 font-bold text-lg px-6 mx-8 py-2" @click="showUserSelector = true">查询学生</button>
+    <button class="block rounded-full all-transition shadow hover:shadow-md text-white bg-blue-500 font-bold text-lg px-6 mx-8 py-2 print:hidden" @click="showUserSelector = true">查询学生</button>
     <UserSelector v-model="showUserSelector" @select="select" />
-    <div v-if="doc" class="bg-white p-2 my-4 overflow-auto">
+    <div v-if="doc" class="bg-white p-2 my-4 overflow-auto" contenteditable>
       <pre>{{ doc }}</pre>
     </div>
   </div>
