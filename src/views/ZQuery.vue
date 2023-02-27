@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 let showUserSelector = $ref(false), doc = $ref(null)
+let re = $ref('')
 
 async function query (_id) {
   doc = null
@@ -14,7 +15,22 @@ async function query (_id) {
   const res = await local.Z.get(state.user?.token, _id)
   state.loading = false
   if (!res) return Swal.fire('查询失败', '', 'error')
-  doc = JSON.stringify(res, null, 2)
+  doc = parseJson(res)
+}
+
+function parseJson(jso) {
+    for (let key in jso) {
+        let element = jso[key];
+        if (typeof(element) == "object" && !(element instanceof Array)) {
+            parseJson(element);
+        } else if (element instanceof Array) {
+          re = re + key + " : " + element.toString() + '\n'
+        } else { 
+            re = re + key + " : " + element + "\n"
+        }
+        console.log(re)
+    }
+    return re
 }
 
 function select (obj) {
