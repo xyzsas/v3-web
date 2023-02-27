@@ -46,7 +46,7 @@ export async function query (list, queryX = true) {
 // @return: { 'id': { id, uid, 姓名, 年级, 班级, 学号 } }
 export async function search (filter) {
   const res = {}
-  const ZRes = await local.Z.search(state.user.token, filter)
+  const ZRes = await local.Z.search(state.user?.token, filter)
   for (const k in ZRes) res[k] = { ...ZRes[k], id: k }
   return res
 }
