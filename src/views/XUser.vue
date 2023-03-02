@@ -25,6 +25,7 @@ async function getUser () {
   state.loading = true
   const res = await srpc.X.getUser(state.user.token, userId)
   state.loading = false
+  cqe = { data: {} }
   for (const r of res) {
     if (general[r.perm]) general[r.perm].on = true
     if (r.perm === 'AppCQEAdmin') cqe = { on: true, data: JSON.parse(r.data || '{}') }
