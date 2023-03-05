@@ -1,7 +1,6 @@
 <script setup>
 import srpc from '../utils/srpc-fc.js'
 import state from '../state.js'
-import spinner from '../assets/spinner.svg'
 import Toggle from '../components/Toggle.vue'
 import BackHeader from '../components/BackHeader.vue'
 import UserInput from '../components/UserInput.vue'
@@ -26,6 +25,7 @@ async function getUser () {
   const res = await srpc.X.getUser(state.user.token, userId)
   state.loading = false
   cqe = { data: {} }
+  for (const k in general) general[k].on = false
   for (const r of res) {
     if (general[r.perm]) general[r.perm].on = true
     if (r.perm === 'AppCQEAdmin') cqe = { on: true, data: JSON.parse(r.data || '{}') }
