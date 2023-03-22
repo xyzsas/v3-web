@@ -3,14 +3,19 @@ import { CheckIcon } from '@heroicons/vue/24/solid'
 import { sendOut, setListener } from '../utils/iframe.js'
 
 let result = $ref({}), comment = $ref(''), data = $ref({}), name = $ref(''), submitted = $ref(false)
-const questions = ['总体评价', '课前备课认真充分', '课堂讲解内容丰富，逻辑清晰', '课堂氛围活跃，互动率高', '合理安排课堂进度，按时上下课', '课堂与作业的难度适当', '布置作业适量', '课后答疑细致', '关心学生学习状态与心理状况']
-for (const q of questions) result[q] = ''
 
 sendOut({ ready: 1 })
 
 setListener(msg => {
   if (msg.slide) {
     data = msg.slide.data || {}
+    const qs = (data.questions || '').trim().split('\n').map(x => x.trim())
+    for (const k in result) {
+      if (!qs.includes(k)) delete result[k]
+    }
+    for (const k of qs) {
+      if (!result[k]) result[k] = ''
+    }
   }
 })
 
@@ -29,7 +34,7 @@ let ready = $computed(() => {
 
 function response (key) {
   if (!ready) return
-  sendOut({ response: { ...result, comment, name } })
+  sendOut({ response: { name, ...result, comment } })
   submitted = true
 }
 </script>
@@ -42,7 +47,7 @@ function response (key) {
       <p v-if="data.type" class="font-bold my-2 text-xl">
         当前正在评价：{{ data.type }}
         <select v-model="name" class="bg-white border rounded p-1 mx-2">
-          <option value="">请选择教师</option>
+          <option v-if="names.length > 1" value="">请选择教师</option>
           <option v-for="n in names" :value="n.replace(/\(.*\)/, '')">{{ n }}</option>
         </select>
       </p>
@@ -56,11 +61,11 @@ function response (key) {
         </div>
       </div>
       <textarea class="block rounded w-full border my-4 p-2" placeholder="对该老师的主观评价请补充在这里！" rows="5" v-model="comment"></textarea>
-      <button class="border py-2 px-5 my-2 font-bold rounded-full text-white all-transition hover:shadow-md flex items-center" :class="ready ? 'bg-blue-500' : 'bg-gray-500'" @click="response">
+      <button class="border py-2 px-5 my-2 font-bold rounded-full text-white all-transition hover:shadow-md flex items-center" :class="ready ? (submitted ? 'bg-green-600' : 'bg-blue-500') : 'bg-gray-500'" @click="response">
         <CheckIcon class="w-6 mr-2" />
         提交
       </button>
-      <p v-if="submitted" class="text-sm text-green-500 my-2">您已成功提交当前评价！</p>
+      <p v-if="submitted" class="text-sm text-green-500 my-2">您已成功提交当前评价，请等待管理员的进一步指示。在此期间，您可以再次点击提交以修改您的评价。</p>
     </div>
   </div>
 </template>

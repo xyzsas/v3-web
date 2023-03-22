@@ -3,9 +3,11 @@ import { reactive, watch } from 'vue'
 import { debounce } from '../utils/utils.js'
 import ProgressBar from '../components/ProgressBar.vue'
 import { sendOut, setListener } from '../utils/iframe.js'
+import { CircleStackIcon } from '@heroicons/vue/24/outline'
 sendOut({ ready: 1 })
 
 const data = reactive({}), sessions = reactive({}), responses = reactive({})
+const defaultQuestions = '总体评价\n课前备课充分\n课堂讲解内容丰富，逻辑清晰\n课堂氛围活跃，互动率高\n合理安排课堂进度，按时上下课\n课堂与作业的难度适当\n课后作业适量\n课后答疑细致\n关心学生学习状态与心理状况'
 
 let fileName = $ref('')
 
@@ -14,8 +16,10 @@ let responseCot = $computed(() => Object.keys(sessions).filter(x => responses[x]
 
 setListener(msg => {
   if (msg.slide) {
-    data.type = msg.slide.data?.type || ''
-    data.name = msg.slide.data?.name || ''
+    for (const k in msg.slide.data) {
+      data[k] = msg.slide.data[k] || ''
+    }
+    if (!data.questions) data.questions = defaultQuestions
   }
   if (msg.sessions) {
     for (const k in msg.sessions) {
@@ -71,11 +75,13 @@ function excel () {
         <input v-model="data.name" class="px-2 py-1 border bg-white rounded block grow" placeholder="可逗号隔开多个教师(备注)，例如：张三(乒乓球),李四(羽毛球),王五(篮球)" >
       </label>
     </div>
+    <textarea v-model="data.questions" rows="10" placeholder="打分类问题列表，一行一个问题" class="block w-full border rounded p-2 my-4"></textarea>
     <div class="flex items-center my-4 font-bold">
       <ProgressBar class="grow mr-2" :ratio="responseCot / sessionCot" />
       {{ responseCot }} / {{ sessionCot }}
     </div>
     <div class="flex items-center my-4">
+      <CircleStackIcon class="w-8 text-gray-700 mr-2" />
       <input v-model="fileName" placeholder="输出文件名称" class="p-2 mx-2 rounded border">
       <button @click="excel" class="rounded-full bg-green-600 shadow all-transition hover:shadow-md px-4 py-2 text-white font-bold">导出数据</button>
     </div>
