@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.0.16",
-    "@vladmandic/face-api": "^1.7.9",
-    "@zxing/library": "^0.19.2",
+    "@vladmandic/face-api": "^1.7.10",
     "echarts": "^5.4.1",
     "sortablejs": "^1.15.0",
     "v-calendar": "^3.0.0-alpha.8",
@@ -18,10 +17,10 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.0.0",
-    "autoprefixer": "^10.4.13",
+    "@vitejs/plugin-vue": "^4.1.0",
+    "autoprefixer": "^10.4.14",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7",
-    "vite": "^4.1.2"
+    "vite": "^4.2.1"
   }
 }

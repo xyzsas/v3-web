@@ -2,7 +2,6 @@
 import { FingerPrintIcon, UserGroupIcon, FolderOpenIcon, SwatchIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
 import MsgCard from '../components/MsgCard.vue'
-import scanImg from '../assets/scan.svg'
 import state from '../state.js'
 import { greet } from '../utils/greet.js'
 import srpc from '../utils/srpc-fc.js'
@@ -12,13 +11,10 @@ const user = state.user
 state.msg = {}
 
 let msgs = $ref([]), perms = $ref({}), loading = $ref(true)
-let showScan = $ref(false)
 
 async function get () {
   const res = await srpc.home(state.user.token)
   loading = false
-  // check scan
-  if (res.pub && res.pub.scanReq && res.pub.scanReqTime > Date.now() - 60e3) showScan = res.pub.scanReq
   msgs = res.msgs
   perms = res.perms
 }
@@ -62,7 +58,7 @@ function showID () {
       <button v-if="perms.YAdmin" class="round" @click="router.push('/y/admin')">消息管理</button>
       <button v-if="perms.ZAdmin" class="round" @click="router.push('/z/import')">学生档案导入</button>
       <button v-if="perms.ZAdmin" class="round" @click="router.push('/z/query')">学生档案查询</button>
-      <button v-if="perms.UserQuery" class="round" @click="router.push('/app/scan/print')">二维码生成</button>
+      <button v-if="perms.UserQuery" class="round" @click="router.push('/app/datamatrix')">二维码生成</button>
       <button v-if="perms.AppEnrollAdmin" class="round" @click="router.push('/app/enroll/admin')">选课管理</button>
     </div>
     <!-- msgs -->
@@ -73,9 +69,6 @@ function showID () {
       <p v-if="!loading && !msgIds.length">暂时没有消息</p>
       <MsgCard v-for="id in msgIds" :key="id" :msg="msgs[id]" />
     </div>
-  </div>
-  <div v-if="showScan" @click="router.push('/app/scan?req=' + showScan)" class="rounded-full all-transition shadow hover:shadow-md bg-blue-500 p-3 cursor-pointer fixed right-10 bottom-10">
-    <img :src="scanImg" class="w-8">
   </div>
 </template>
 
