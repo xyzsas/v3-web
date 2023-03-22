@@ -63,8 +63,9 @@ function excel () {
 
 <template>
   <div class="w-full h-full p-2">
-    <h1 class="font-bold text-2xl my-2">教师评价管理页面</h1>
-    <hr>
+    <h1 class="font-bold text-2xl">教师评价管理</h1>
+    <p class="text-red-500 text-sm">离开此演示页面前，请务必导出当前页面的数据！离开此页后数据将自动清空！</p>
+    <hr class="my-2">
     <div class="my-2 flex items-center">
       <label>
         类型：
