@@ -6,6 +6,6 @@ const bar = $computed(() => ((ratio || 0) * 100).toFixed(1) + '%')
 <template>
   <div class="flex text-black bg-gray-200 rounded-full overflow-hidden">
     <div class="bg-blue-500 rounded-full all-transition" :style="{ width: bar }" />
-    <div class="font-bold relative text-black all-transition" :class="ratio > 0.4 ? 'right-16 text-white px-0 w-0' : 'px-0'">{{ bar }}</div>
+    <div class="font-bold relative text-black all-transition" :class="ratio > 0.4 ? 'right-16 text-white px-0 w-0' : 'px-2'">{{ bar }}</div>
   </div>
 </template>
