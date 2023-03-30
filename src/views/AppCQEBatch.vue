@@ -56,7 +56,7 @@ async function submit () {
   }).then(async (r) => {
     if (r.isConfirmed) {
       state.loading = true
-      const res = await local.app.CQE.batch(state.user.token, term, index, filter)
+      const res = await local.app.CQE.batch(state.user.token, term, index, filter, user)
       if (!res) return await Swal.fire('错误', '提交失败', 'error')
       await Swal.fire('成功', '提交成功', 'success')
       state.loading = false
@@ -71,10 +71,10 @@ async function init () {
   if (!res) return await Swal.fire('错误', '无访问权限！', 'error')
   else {
     const data = JSON.parse(res.data)
-    const filter = {}
-    if (data.grade) filter['账户.年级'] = { $in: data.grade.split(',') }
-    if (data.class) filter['账户.班级'] = { $in: data.class.split(',') }
-    const us = await search(filter)
+    const f = {}
+    if (data.grade) f['账户.年级'] = { $in: data.grade.split(',') }
+    if (data.class) f['账户.班级'] = { $in: data.class.split(',') }
+    const us = await search(f)
     for (const u in us) user[u] = 0
     admin = {
       index: data.index.split(','),
@@ -84,7 +84,7 @@ async function init () {
     }
   }
   for (const k in T) {
-    for (const i in T[k]) filter[i] = false
+    for (const i in T[k]) filter[k + '.' + i] = false
   }
   for (const k in initCredit) filter.credit[k] = false
 }
@@ -146,7 +146,7 @@ init()
                 <div class="text-sm font-bold text-gray-700">选修: </div>
                 <input type="number" v-model="filter.credit[k][2]" class="py-1 px-2 rounded border text-sm font-bold mx-1 w-16">
               </div>
-              <button class="rounded mx-1 px-2 py-1 text-sm font-bold bg-red-100 text-red-400" @click.stop="filter.credit[k] = false">取消</button>
+              <button v-if="filter.credit[k]" class="rounded mx-1 px-2 py-1 text-sm font-bold bg-red-100 text-red-400" @click.stop="filter.credit[k] = false">取消</button>
             </div>
           </div>
         </Wrapper>
