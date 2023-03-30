@@ -1,29 +1,45 @@
 <script setup>
 import BackHeader from '../components/BackHeader.vue'
-import { useRouter } from 'vue-router'
-import Wrapper from '../components/Wrapper.vue'
+import UserSelector from '../components/UserSelector.vue'
 import state from '../state.js'
 import local from '../utils/srpc-local.js'
 import fc from '../utils/srpc-fc.js'
 import { search } from '../utils/user.js'
 import { CheckIcon, PlusIcon } from '@heroicons/vue/24/solid'
 import { T, initCredit, terms } from '../utils/CQE.js'
+import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const indexName = ['分项积分', '班级评价', '年级评价', '学校评价']
 
-let showUser = $ref(false), showCredit = $ref(false)
-let user = $ref({}), admin = $ref({ users: {}, index: [], ids: [] })
+let showUser = $ref(false), showCredit = $ref(false), showUserSelector = $ref(false)
+let users = $ref({}), admin = $ref({ index: [], grade: '', class: '' })
 let filter = $ref({ credit: {} }), index = $ref(''), term = $ref('')
 
-function selectAll () {
-  let sum = 0
-  for (const k in user) sum += user[k]
-  if (sum === Object.keys(user).length) {
-    for (const k in user) user[k] = 0
-    return
+function select (us) {
+  for (const k in us) {
+    const u = us[k]
+    if (admin.grade && !admin.grade.includes(u.年级)) continue
+    if (admin.class && !admin.class.includes(u.班级)) continue
+    users[k] = u
   }
-  for (const k in user) user[k] = 1
+}
+
+let openAllConfig = $ref(-1)
+function openAll (name = '') {
+  const obj = name === 'credit' ? filter.credit : filter
+  const value = name === 'credit' ? [0, 0, 0] : { value: 0, copy: openAllConfig }
+  for (const k in obj) {
+    if (k === 'credit') continue
+    obj[k] = obj[k] || value
+  }
+}
+function closeAll (name = '') {
+  const obj = name === 'credit' ? filter.credit : filter
+  for (const k in obj) {
+    if (k === 'credit') continue
+    obj[k] = false
+  }
 }
 
 async function submit () {
@@ -39,7 +55,7 @@ async function submit () {
   })
   if (!isConfirmed) return
   state.loading = true
-  const res = await local.app.CQE.batch(state.user.token, term, index, filter, user)
+  const res = await local.app.CQE.batch(state.user.token, term, index, filter, Object.keys(users))
   state.loading = false
   if (!res) return await Swal.fire('错误', '提交失败', 'error')
   await Swal.fire('成功', '提交成功', 'success')
@@ -51,15 +67,10 @@ async function init () {
   state.loading = false
   if (!res) return await Swal.fire('错误', '无访问权限！', 'error')
   const data = JSON.parse(res.data)
-  const f = {}
-  if (data.grade) f['账户.年级'] = { $in: data.grade.split(',') }
-  if (data.class) f['账户.班级'] = { $in: data.class.split(',') }
-  const us = await search(f)
-  for (const u in us) user[u] = 0
   admin = {
     index: data.index.split(','),
-    users: us,
-    ids: Object.keys(us).sort((a, b) => us[a].年级 + us[a].班级 + us[a].学号 < us[b].年级 + us[b].班级 + us[b].学号 ? -1 : 1)
+    grade: data.grade?.split(',') || '',
+    class: data.class?.split(',') || ''
   }
   for (const k in T) {
     for (const i in T[k]) filter[`${k}.${i}`] = false
@@ -70,6 +81,7 @@ init()
 </script>
 
 <template>
+  <UserSelector v-model="showUserSelector" @select="select" />
   <div class="flex items-center">
     <BackHeader @back="router.push('/')">综合素质评价 批量打分</BackHeader>
     <select v-model="term" class="py-1 px-2 rounded border text-sm font-bold m-1">
@@ -84,7 +96,15 @@ init()
   <div class="md:flex">
     <div class="md:w-2/3">
       <div class="rounded bg-white shadow-md px-4 py-2 m-2 sm:mx-8 sm:my-4">
-        <div class="text-2xl font-bold m-1">项目</div>
+        <div class="text-2xl font-bold m-1 flex items-center">
+          综评项目
+          <select v-model="openAllConfig" class="rounded font-normal text-xs py-1 border text-sm ml-4">
+            <option value="-1">不继承</option>
+            <option v-for="(n, i) in indexName" :value="i">{{ n }}</option>
+          </select>
+          <button class="mx-1 text-xs bg-gray-100 border text-yellow-600 rounded py-1 px-2" @click="openAll('')">全部打开</button>
+          <button class="mx-1 text-xs bg-gray-100 border text-red-600 rounded py-1 px-2" @click="closeAll('')">全部关闭</button>
+        </div>
         <hr class="mb-4">
         <div v-for="(items, k) in T">
           <div class="px-2 border-l-4 border-blue-500 text-xl my-2">{{ k }}</div>
@@ -104,11 +124,15 @@ init()
         </div>
       </div>
       <div class="rounded bg-white shadow-md px-4 py-2 m-2 sm:mx-8 sm:my-4">
-        <div class="text-2xl font-bold m-1">学分</div>
+        <div class="text-2xl font-bold m-1 flex items-center">
+          综评学分
+          <button class="ml-4 text-xs bg-gray-100 border text-yellow-600 rounded py-1 px-2" @click="openAll('credit')">全部打开</button>
+          <button class="mx-1 text-xs bg-gray-100 border text-red-600 rounded py-1 px-2" @click="closeAll('credit')">全部关闭</button>
+        </div>
         <hr class="mb-4">
         <div class="flex-wrap flex items-center">
           <div v-for="(v, k) in filter.credit" class="py-2 px-2 rounded border-2 m-2 flex items-center all-transition" :class="filter.credit[k] ? 'border-blue-400 bg-blue-100' : 'border-gray-200 cursor-pointer'" @click="filter.credit[k] = filter.credit[k] || [0, 0, 0]">
-            <div class="mx-2 font-bold" :class="filter.credit[k] ? 'text-blue-400' : 'text-gray-700'">{{ k }}</div>
+            <div class="mx-2 font-bold" :class="filter.credit[k] ? 'text-blue-500' : 'text-gray-700'">{{ k }}</div>
             <div v-if="filter.credit[k]" class="flex items-center">
               <div class="text-sm text-gray-700">必修</div>
               <input type="number" v-model="filter.credit[k][0]" class="pl-1 rounded border text-sm mx-1 w-12">
@@ -126,13 +150,12 @@ init()
       <div class="rounded bg-white shadow-md px-4 py-2 m-2 sm:mx-8 sm:my-4">
         <div class="text-2xl font-bold m-1">学生</div>
         <hr>
-        <label class="flex items-center select-none m-2"><input type="checkbox" :checked="admin.ids.length === Object.keys(user).filter(x => user[x]).length" @change="selectAll">&nbsp;全选</label>
+        <button class="bg-blue-500 px-2 py-1 rounded shadow all-transition hover:shadow-md text-white font-bold text-sm my-2 mr-2" @click="showUserSelector = true">选择学生</button>
+        <button class="bg-red-500 px-2 py-1 rounded shadow all-transition hover:shadow-md text-white font-bold text-sm my-2" @click="users = {}">清空选择</button>
+        <div class="text-sm">已选中：<code>{{ Object.keys(users).length }}</code></div>
         <div class="max-h-[70vh] overflow-auto">
-          <div v-for="k in admin.ids" class="flex items-center px-1 cursor-pointer all-transition" :class="user[k] ? 'bg-blue-200' : 'bg-gray-100'" @click="user[k] = !user[k]">
-            <CheckIcon v-if="user[k]" class="w-4 text-blue-500" />
-            <PlusIcon v-else class="w-4 text-gray-400" />
-            <div class="mx-1 font-mono">{{ admin.users[k].年级 + admin.users[k].班级 + admin.users[k].学号 }}</div>
-            <div class="mx-1 font-bold" style="min-width: 4rem;">{{ admin.users[k].姓名 }}</div>
+          <div v-for="(u, k) in users" class="px-1 bg-gray-100 font-mono">
+            {{ u.年级 + u.班级 + u.学号 + '  ' + u.姓名 }}
           </div>
         </div>
       </div>
