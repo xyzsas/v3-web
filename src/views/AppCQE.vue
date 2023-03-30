@@ -8,7 +8,7 @@ import state from '../state.js'
 import local from '../utils/srpc-local.js'
 import fc from '../utils/srpc-fc.js'
 import { search } from '../utils/user.js'
-import { T, initGrade, initCredit, fileFields } from '../utils/CQE.js'
+import { T, initGrade, initCredit, fileFields, terms } from '../utils/CQE.js'
 const router = useRouter()
 
 let target = $ref(state.user.id)
@@ -24,8 +24,6 @@ let fields = $ref({
   '三年汇总表': true
 })
 let current = $ref(0), term = $ref(0), mode = $ref('0')
-
-const terms = ['高一上学期', '高一下学期', '高二上学期', '高二下学期', '高三上学期', '高三下学期']
 
 let D = $ref(JSON.parse(JSON.stringify(initGrade)))
 let C = $ref(JSON.parse(JSON.stringify(initCredit)))
@@ -106,6 +104,10 @@ async function init () {
   fetch(state.user.id)
 }
 init()
+
+function gotoBatch () {
+  window.open('./#/app/cqe/batch')
+}
 </script>
 
 <template>
@@ -243,7 +245,10 @@ init()
     </template>
   </div>
   <div v-if="admin" class="fixed right-2 bottom-2 rounded shadow overflow-hidden all-transition bg-white" :class="admin.show ? 'w-72' : 'w-48'">
-    <div class="bg-gray-700 text-white font-bold text-sm p-2 cursor-pointer" @click="admin.show = !admin.show">综评管理</div>
+    <div class="bg-gray-700 text-white font-bold text-sm p-2 cursor-pointer flex items-start justify-between" @click="admin.show = !admin.show">
+      <div>综评管理</div>
+      <button class="p-1 text-xs bg-blue-600 rounded" @click.stop="gotoBatch">批量打分</button>
+    </div>
     <div class="text-xs p-2" :set="u = target === state.user.id ? state.user : admin.users[target]">
       当前：{{ u?.name || u?.姓名 || '未知用户' }}
       <code v-if="u" class="ml-1">{{ u.年级 }}{{ u.班级 }}{{ u.学号 }}</code>
