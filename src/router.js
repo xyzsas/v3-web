@@ -4,7 +4,6 @@ const index = {
   '/': () => import('./views/Home.vue'),
   '/about': () => import('./views/About.vue'),
   '/login': () => import('./views/Login.vue'),
-  '/test': () => import('./views/Test.vue'),
 
   '/x/user': () => import('./views/XUser.vue'),
   // Y
@@ -15,11 +14,12 @@ const index = {
   '/z/query': () => import('./views/ZQuery.vue'),
   // App
   '/app/photo': () => import('./views/AppPhoto.vue'),
-  '/app/scan': () => import('./views/AppScan.vue'),
-  '/app/scan/print': () => import('./views/AppScanPrint.vue'),
+  '/app/datamatrix': () => import('./views/AppDatamatrix.vue'),
   '/app/profile': () => import('./views/AppProfile.vue'),
   '/app/enroll': () => import('./views/AppEnroll.vue'),
   '/app/enroll/admin': () => import('./views/AppEnrollAdmin.vue'),
+  '/app/rate': () => import('./views/AppRate.vue'),
+  '/app/rate/editor': () => import('./views/AppRateEditor.vue'),
   '/app/cqe': () => import('./views/AppCQE.vue'),
   '/app/check': () => import('./views/AppCheck.vue'),
   '/app/cqe/batch': () => import('./views/AppCQEBatch.vue')
