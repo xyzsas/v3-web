@@ -114,18 +114,18 @@ init()
           <div v-for="(items, k) in T">
             <div class="px-2 border-l-4 border-blue-500 text-xl my-2">{{ k }}</div>
             <div class="flex items-center flex-wrap whitespace-nowrap my-2">
-              <div v-for="(v, i) in T[k]" class="py-2 px-2 rounded font-bold border-2 m-2 flex items-center all-transition" :class="filter[i] ? 'border-blue-400 bg-blue-100' : 'border-gray-200 cursor-pointer'" @click="filter[i] = filter[i] || { value: 0, copy: -1 }">
-                <div class="mx-2" :class="filter[i] ? 'text-blue-400' : 'text-gray-700'">{{ i }}</div>
-                <div v-if="filter[i]" class="flex items-center">
+              <div v-for="(v, i) in T[k]" class="py-2 px-2 rounded font-bold border-2 m-2 flex items-center all-transition" :class="filter[k + '.' + i] ? 'border-blue-400 bg-blue-100' : 'border-gray-200 cursor-pointer'" @click="filter[k + '.' + i] = filter[k + '.' + i] || { value: 0, copy: -1 }">
+                <div class="mx-2" :class="filter[k + '.' + i] ? 'text-blue-400' : 'text-gray-700'">{{ i }}</div>
+                <div v-if="filter[k + '.' + i]" class="flex items-center">
                   <div class="text-gray-700">{{ indexName[index] }}: </div>
-                  <input v-if="filter[i].copy === -1" type="number" v-model="filter[i].value" class="py-1 px-2 rounded border text-sm font-bold mx-1 w-24">
-                  <select v-else v-model="filter[i].copy" class="py-1 px-2 rounded border text-sm font-bold mx-1 w-24">
+                  <input v-if="filter[k + '.' + i].copy === -1" type="number" v-model="filter[k + '.' + i].value" class="py-1 px-2 rounded border text-sm font-bold mx-1 w-24">
+                  <select v-else v-model="filter[k + '.' + i].copy" class="py-1 px-2 rounded border text-sm font-bold mx-1 w-24">
                     <template v-for="(n, i) in indexName">
                       <option :value="i">{{ n }}</option>
                     </template>
                   </select>
-                  <button class="rounded mx-1 px-2 py-1 text-sm font-bold all-transition" :class="filter[i].copy === -1 ? 'bg-yellow-100 text-yellow-400' : 'bg-yellow-400 text-white'" @click.stop="filter[i].copy = filter[i].copy === -1 ? 0 : -1">继承</button>
-                  <button class="rounded mx-1 px-2 py-1 text-sm font-bold bg-red-100 text-red-400" @click.stop="filter[i] = false">取消</button>
+                  <button class="rounded mx-1 px-2 py-1 text-sm font-bold all-transition" :class="filter[k + '.' + i].copy === -1 ? 'bg-yellow-100 text-yellow-400' : 'bg-yellow-400 text-white'" @click.stop="filter[k + '.' + i].copy = filter[k + '.' + i].copy === -1 ? 0 : -1">继承</button>
+                  <button class="rounded mx-1 px-2 py-1 text-sm font-bold bg-red-100 text-red-400" @click.stop="filter[k + '.' + i] = false">取消</button>
                 </div>
               </div>
             </div>
@@ -136,7 +136,7 @@ init()
         <div class="text-2xl font-bold m-1" @click="showCredit = !showCredit">学分</div>
         <Wrapper :show="showCredit" style="max-height: 80vh; overflow-y: auto;">
           <div class="flex-wrap flex items-center">
-            <div v-for="(v, k) in filter.credit" class="py-2 px-2 rounded font-bold border-2 m-2 flex items-center all-transition" :class="filter.credit[k] ? 'border-blue-400 bg-blue-100' : 'border-gray-200 cursor-pointer'" @click="filter.credit[k] = filter.credit[k] || { value: [0, 0, 0] }">
+            <div v-for="(v, k) in filter.credit" class="py-2 px-2 rounded font-bold border-2 m-2 flex items-center all-transition" :class="filter.credit[k] ? 'border-blue-400 bg-blue-100' : 'border-gray-200 cursor-pointer'" @click="filter.credit[k] = filter.credit[k] || [0, 0, 0]">
               <div class="mx-2" :class="filter.credit[k] ? 'text-blue-400' : 'text-gray-700'">{{ k }}</div>
               <div v-if="filter.credit[k]" class="flex items-center">
                 <div class="text-sm font-bold text-gray-700">必修: </div>
@@ -155,16 +155,16 @@ init()
     <div class="md:w-1/3">
       <div class="rounded bg-white shadow-md px-4 py-2 m-2 sm:mx-8 sm:my-4">
         <div class="text-2xl font-bold m-1" @click="showUser = !showUser">学生</div>
+        <div class="my-2">
+          <button class="bg-blue-500 text-white rounded py-1 px-2 m-1 font-bold text-sm" @click="selectAll">全选</button>
+          <button v-for="c in admin.class" class="bg-blue-500 text-white rounded py-1 px-2 m-1 font-bold text-sm" @click="selectClass(c)">{{ c }}</button>
+        </div>
         <Wrapper :show="showUser" style="max-height: 70vh; overflow-y: auto;">
           <div>
-            <div class="my-2">
-              <button class="bg-blue-500 text-white rounded py-1 px-2 m-1 font-bold text-sm" @click="selectAll">全选</button>
-              <button v-for="c in admin.class" class="bg-blue-500 text-white rounded py-1 px-2 m-1 font-bold text-sm" @click="selectClass(c)">{{ c }}</button>
-            </div>
             <div v-for="k in admin.ids" class="flex items-center px-1 cursor-pointer all-transition" :class="user[k] ? 'bg-blue-200' : 'bg-gray-100'" @click="user[k] = !user[k]">
               <CheckIcon v-if="user[k]" class="w-4 text-blue-500" />
               <PlusIcon v-else class="w-4 text-gray-400" />
-              <div class="mx-1 font-mono">{{ admin.users[k].年级 + '/' + admin.users[k].班级 + '/' + admin.users[k].学号 }}</div>
+              <div class="mx-1 font-mono">{{ admin.users[k].年级 + admin.users[k].班级 + admin.users[k].学号 }}</div>
               <div class="mx-1 font-bold" style="min-width: 4rem;">{{ admin.users[k].姓名 }}</div>
             </div>
           </div>
