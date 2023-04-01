@@ -14,7 +14,7 @@ const indexName = ['分项积分', '班级评价', '年级评价', '学校评价
 
 let showUser = $ref(false), showCredit = $ref(false), showUserSelector = $ref(false)
 let users = $ref({}), admin = $ref({ index: [], grade: '', class: '' })
-let filter = $ref({ credit: {} }), index = $ref(''), term = $ref('')
+let filter = $ref({ credit: {} }), index = $ref(''), term = $ref(0)
 
 function select (us) {
   for (const k in us) {
@@ -31,7 +31,7 @@ function openAll (name = '') {
   const value = name === 'credit' ? [0, 0, 0] : { value: 0, copy: openAllConfig }
   for (const k in obj) {
     if (k === 'credit') continue
-    obj[k] = obj[k] || value
+    obj[k] = obj[k] || JSON.parse(JSON.stringify(value))
   }
 }
 function closeAll (name = '') {
@@ -65,13 +65,15 @@ async function init () {
   state.loading = true
   const res = await fc.X.get(state.user.id, 'AppCQEAdmin')
   state.loading = false
-  if (!res) return await Swal.fire('错误', '无访问权限！', 'error')
+  if (!res) return Swal.fire('错误', '无访问权限！', 'error')
   const data = JSON.parse(res.data)
   admin = {
     index: data.index.split(','),
     grade: data.grade?.split(',') || '',
     class: data.class?.split(',') || ''
   }
+  if (!admin.index?.length) return Swal.fire('错误', '无访问权限！', 'error')
+  index = admin.index[0]
   for (const k in T) {
     for (const i in T[k]) filter[`${k}.${i}`] = false
   }
