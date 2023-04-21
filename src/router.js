@@ -13,7 +13,6 @@ const index = {
   '/z/import': () => import('./views/ZImport.vue'),
   '/z/query': () => import('./views/ZQuery.vue'),
   // App
-  '/app/photo': () => import('./views/AppPhoto.vue'),
   '/app/datamatrix': () => import('./views/AppDatamatrix.vue'),
   '/app/profile': () => import('./views/AppProfile.vue'),
   '/app/enroll': () => import('./views/AppEnroll.vue'),
@@ -21,7 +20,6 @@ const index = {
   '/app/rate': () => import('./views/AppRate.vue'),
   '/app/rate/editor': () => import('./views/AppRateEditor.vue'),
   '/app/cqe': () => import('./views/AppCQE.vue'),
-  '/app/check': () => import('./views/AppCheck.vue'),
   '/app/cqe/batch': () => import('./views/AppCQEBatch.vue')
 }
 
