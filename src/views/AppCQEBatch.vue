@@ -114,11 +114,11 @@ init()
             <div v-for="(v, i) in T[k]" class="py-2 px-2 rounded border-2 m-2 flex items-center all-transition" :class="filter[`${k}.${i}`] ? 'border-blue-400 bg-blue-100' : 'border-gray-200 cursor-pointer'" @click="filter[`${k}.${i}`] = filter[`${k}.${i}`] || { value: 0, copy: -1 }">
               <div class="mx-2 font-bold" :class="filter[`${k}.${i}`] ? 'text-blue-500' : 'text-gray-700'">{{ i }}</div>
               <div v-if="filter[`${k}.${i}`]" class="flex items-center">
-                <input v-if="filter[`${k}.${i}`].copy === -1" type="number" v-model="filter[`${k}.${i}`].value" class="pl-1 rounded border text-sm mx-1 w-20">
+                <input v-if="filter[`${k}.${i}`].copy < 0" type="number" v-model="filter[`${k}.${i}`].value" class="pl-1 rounded border text-sm mx-1 w-20">
                 <select v-else v-model="filter[`${k}.${i}`].copy" class="rounded border text-sm mx-1 w-20">
                   <option v-for="(n, i) in indexName" :value="i">{{ n }}</option>
                 </select>
-                <button class="rounded font-bold mx-1 py-1 px-2 text-xs all-transition" :class="filter[`${k}.${i}`].copy === -1 ? 'bg-yellow-100 text-yellow-500' : 'bg-yellow-500 text-white'" @click.stop="filter[`${k}.${i}`].copy = filter[`${k}.${i}`].copy === -1 ? 0 : -1">继承</button>
+                <button class="rounded font-bold mx-1 py-1 px-2 text-xs all-transition" :class="filter[`${k}.${i}`].copy < 0 ? 'bg-yellow-100 text-yellow-500' : 'bg-yellow-500 text-white'" @click.stop="filter[`${k}.${i}`].copy = filter[`${k}.${i}`].copy < 0 ? 0 : -1">继承</button>
                 <button class="rounded font-bold mx-1 py-1 px-2 text-xs bg-red-100 text-red-500" @click.stop="filter[`${k}.${i}`] = false">取消</button>
               </div>
             </div>
