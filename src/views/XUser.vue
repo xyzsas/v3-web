@@ -1,5 +1,6 @@
 <script setup>
 import srpc from '../utils/srpc-fc.js'
+import permList from '../utils/perm.js'
 import state from '../state.js'
 import Toggle from '../components/Toggle.vue'
 import BackHeader from '../components/BackHeader.vue'
@@ -12,12 +13,9 @@ if (!state.user?.token) router.push('/')
 
 let userId = $ref(''), got = $ref(false), cqe = $ref({ data: {} })
 
-const general = { // on: true/false
-  XAdmin: { label: '授权管理' },
-  YAdmin: { label: '消息管理' },
-  ZAdmin: { label: '学生档案管理' },
-  UserQuery: { label: '用户检索' },
-  AppEnrollAdmin: { label: '选课管理' },
+const general = JSON.parse(JSON.stringify(permList))
+for (const k in general) {
+  if (general[k].special) delete general[k]
 }
 
 async function getUser () {
@@ -54,7 +52,10 @@ async function submitCQE () {
 
 <template>
   <div class="w-full min-h-screen p-4">
-    <BackHeader @back="router.push('/')">用户权限管理</BackHeader>
+    <BackHeader @back="router.push('/')">
+      用户权限管理
+      <button class="rounded all-transition mx-4 px-2 py-1 text-sm font-bold shadow hover:shadow-md text-white bg-blue-500" @click="router.push('/x/perm')">管理权限</button>
+    </BackHeader>
     <div class="mx-4 flex items-start">
       <UserInput v-model="userId" class="w-64" @update:modelValue="got = false" @keyup.enter="getUser" />
       <MagnifyingGlassIcon @click="getUser" class="w-8 rounded-full p-1 mx-1 text-blue-500 cursor-pointer" />
