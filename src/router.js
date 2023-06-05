@@ -6,6 +6,7 @@ const index = {
   '/login': () => import('./views/Login.vue'),
 
   '/x/user': () => import('./views/XUser.vue'),
+  '/x/perm': () => import('./views/XPerm.vue'),
   // Y
   '/y/admin': () => import('./views/YAdmin.vue'),
   '/y/send': () => import('./views/YSend.vue'),

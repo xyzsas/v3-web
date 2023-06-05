@@ -26,6 +26,7 @@ let count = $computed(() => {
 
 async function modeSearch () {
   searching = true
+  let res = {}
   if (mode === 0) {
     const f = {}
     for (const k in filter) {
@@ -33,11 +34,11 @@ async function modeSearch () {
       else f['账户.' + k] = filter[k]
     }
     if (!Object.keys(f).length) return searching = false
-    result = await search(f)
+    res = await search(f)
   }
   if (mode === 1) {
     const list = queryInput.split('\n').map(x => x.trim())
-    result = await query(list)
+    res = await query(list)
   }
   if (mode === 2) {
     let f = {}
@@ -47,11 +48,17 @@ async function modeSearch () {
       Swal.fire('格式错误', '查询对象格式错误', 'error')
       return
     }
-    result = await search(f)
+    res = await search(f)
   }
-  for (const k in result) {
-    if (!result[k].uid) delete result[k]
+  for (const k in res) {
+    if (!res[k].uid) delete res[k]
   }
+  const ids = Object.keys(res).sort((a, b) => {
+    const ua = res[a], ub = res[b]
+    return (ua.年级 + ua.班级 + ua.学号 || ua.id) > (ub.年级 + ub.班级 + ub.学号 || ub.id) ? 1 : -1
+  })
+  result = {}
+  for (const id of ids) result[id] = res[id]
   searching = false
 }
 
