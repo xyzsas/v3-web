@@ -3,7 +3,11 @@ import CSYYInput from '../components/CSYYInput.vue'
 import srpc from '../utils/srpc-local.js'
 import state from '../state.js'
 import { XMarkIcon } from '@heroicons/vue/24/solid'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 srpc('https://a.aauth.link/other')
+
+const token = route.query.token
 
 const U = ['', '', '', 'U0131', 'U0129', 'U0127', 'U0125', 'U0123', 'U0121', '', 'U0119', 'U0117',
 'U0115', 'U0113', 'U0111', 'U0109', 'U0107', 'U0105', 'U0103', 'U0101', 'U0102',
@@ -101,17 +105,17 @@ const L = ['', '', '', 'L0131', 'L0129', 'L0127', 'L0125', 'L0123', 'L0121', '',
 'L1909', 'L1907', 'L1905', 'L1903', 'L1901', 'L1902', 'L1904', 'L1906', 'L1908',
 'L1910', 'L1912', '', '', '', '', 'L1920', 'L1922', 'L1924', 'L1926', 'L1928', 'L1930',
 'L1932', 'L1934', '']
-let showCover = $ref(true), showInput = $ref(false), showPayment = $ref(false)
+let showCover = $ref(true), showInput = $ref(false), showPayment = $ref(false), showAdmin = $ref(false)
 let selected = $ref({}), data = $ref({})
 let occupied = $ref({})
-window.srpc = srpc
 
 async function init () {
   state.loading = true
-  occupied = await srpc.csyy.get()
+  occupied = token ? await srpc.csyy.admin.get() : await srpc.csyy.get()
   showCover = false
   showInput = false
   showPayment = false
+  showAdmin = false
   state.loading = false
 }
 
@@ -126,6 +130,14 @@ function getType (k) {
 
 function getClass (k) {
   if (!k) return 'bg-white'
+  if (token) {
+    if (!occupied[k]?.status) return 'bg-gray-400'
+    switch (occupied[k].status) {
+      case 1: return 'bg-red-400'
+      case 2: return 'bg-orange-400'
+      case 3: return 'bg-sky-500'
+    }
+  }
   if (occupied[k]) return 'bg-gray-400'
   if (getType(k) === 'S') return 'bg-rose-400'
   if (getType(k) === 'A') return 'bg-orange-400'
@@ -134,8 +146,23 @@ function getClass (k) {
   if (getType(k) === 'D') return 'bg-sky-500'
 }
 
+function getText (k) {
+  return (k[0] === 'U' ? '二楼' : '一楼') + k.substring(1, 3) + '排' + k.substring(3) + '座（' + getType(k) + '类）'
+}
+
 function select (k) {
-  if (!k || occupied[k]) return
+  if (!k) return
+  if (token) {
+    showAdmin = { k }
+    if (occupied[k].time) showAdmin = { k, ...occupied[k] }
+    selected = { [k]: true }
+    if (!showAdmin.label) return
+    for (const k in occupied) {
+      if (occupied[k].label === showAdmin.label) selected[k] = true
+    }
+    return
+  }
+  if (occupied[k]) return
   if (selected[k]) delete selected[k]
   else selected[k] = true
 }
@@ -163,6 +190,13 @@ async function submit () {
   }
   state.loading = false
 }
+
+async function setStatus () {
+  state.loading = false
+  for (const k in selected) {
+    
+  }
+}
 </script>
 
 <template>
@@ -188,11 +222,14 @@ async function submit () {
     </div>
   </div>
   <Transition name="fade">
-    <div class="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-20" v-if="showInput" @click="showInput = !showInput" />
+    <div class="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-20" v-if="showInput || showAdmin" @click="showInput = showAdmin = false" />
   </Transition>
   <div class="fixed top-0 md:w-1/3 w-11/12 h-screen bg-white all-transition z-20 px-10 py-4 overflow-y-auto" :class="showInput ? 'right-0' : '-right-full'">
     <div class="text-xl font-bold my-1">您已选择：</div>
-    <div class="my-1 flex items-center" v-for="(v, k) in selected">- {{ k[0] === 'U' ? '二楼' : '一楼' }}{{ k.substring(1, 3) }}排{{ k.substring(3) }}座（{{ getType(k) }}类）<XMarkIcon class="text-red-500 w-4 ml-2 cursor-pointer" @click="delete selected[k]" /></div>
+    <div class="my-1 flex items-center" v-for="(v, k) in selected">
+      - {{ getText(k) }}
+      <XMarkIcon class="text-red-500 w-4 ml-2 cursor-pointer" @click="delete selected[k]" />
+    </div>
     <div class="font-bold">合计金额：{{ price }}元</div>
     <hr class="my-2">
     <div class="my-2">
@@ -211,6 +248,21 @@ async function submit () {
     <div class="flex items-center my-4">
       <button class="rounded all-transition font-bold text-white px-4 py-1" :class="data.name && data.wx && data.phone && Object.keys(selected).length ? 'bg-blue-600' : 'bg-gray-500'" :disabled="!(data.name && data.wx && data.phone && Object.keys(selected).length)" @click="submit">提交</button>
       <p class="text-gray-500 text-xs ml-2">请务必检查您的信息！</p>
+    </div>
+  </div>
+  <div class="fixed top-0 md:w-1/3 w-11/12 h-screen bg-white all-transition z-20 px-10 py-4 overflow-y-auto" :class="showAdmin ? 'right-0' : '-right-full'">
+    <div class="text-xl font-bold my-1" v-if="showAdmin">管理： {{ getText(showAdmin?.k) }}</div>
+    <div class="my-1 flex items-center" v-for="(v, k) in selected">
+      <span :class="getClass(k)">- {{ getText(k) }}</span>
+      <XMarkIcon class="text-red-500 w-4 ml-2 cursor-pointer" @click="delete selected[k]" />
+    </div>
+    <div class="font-bold">合计金额：{{ price }}元 ({{ showAdmin.label }})</div>
+    <hr class="my-2">
+    <div class="flex flex-col">
+      <button class="bg-gray-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(0)">！！设为未售出！！</button>
+      <button class="bg-red-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(1)">设为未付款</button>
+      <button class="bg-orange-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(2)">设为已付款</button>
+      <button class="bg-sky-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(3)">设为已取票</button>
     </div>
   </div>
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">

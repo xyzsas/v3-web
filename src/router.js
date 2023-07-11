@@ -22,7 +22,7 @@ const index = {
   '/app/rate/editor': () => import('./views/AppRateEditor.vue'),
   '/app/cqe': () => import('./views/AppCQE.vue'),
   '/app/cqe/batch': () => import('./views/AppCQEBatch.vue'),
-  '/app/csyy': () => import('./views/csyy.vue')
+  '/app/csyy': () => import('./views/AppCSYY.vue')
 }
 
 const routes = []
