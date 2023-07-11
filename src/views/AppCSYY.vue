@@ -111,7 +111,7 @@ let occupied = $ref({})
 
 async function init () {
   state.loading = true
-  occupied = token ? await srpc.csyy.admin.get() : await srpc.csyy.get()
+  occupied = token ? await srpc.csyy.admin.get(token) : await srpc.csyy.get()
   showCover = false
   showInput = false
   showPayment = false
@@ -183,7 +183,7 @@ async function submit () {
   const res = await srpc.csyy.book(Object.keys(selected), data.name, data.wx, data.phone)
   if (res.ok) {
     await Swal.fire('订单创建成功！', '请抓紧时间支付，超时将取消订单', 'success')
-    showPayment = true
+    showPayment = res.label
   } else {
     await Swal.fire('创建订单失败', res.err, 'error')
     await init()
@@ -191,11 +191,18 @@ async function submit () {
   state.loading = false
 }
 
-async function setStatus () {
-  state.loading = false
+async function setStatus (s) {
+  if (!token) return
+  state.loading = true
   for (const k in selected) {
-    
+    if (!s) occupied[k] = {}
+    else {
+      occupied[k].status = s
+      occupied[k].time = Date.now()
+    }
+    await srpc.csyy.admin.update(token, k, occupied[k])
   }
+  state.loading = false
 }
 </script>
 
@@ -209,11 +216,11 @@ async function setStatus () {
     <h1 class="my-4 text-xl font-bold">扬州中学慈善义演购票</h1>
     <p class="text-sm text-gray-500">请点击选择座位, 左右拖动可查看全部座位</p>
     <div class="text-xl m-2 p-2">一楼座位表</div>
-    <div class="grid m-2 w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
+    <div class="grid m-2 max-w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
       <div v-for="k in L" class="border w-6 h-6 cursor-pointer text-xs flex items-center justify-center text-gray-600" :class="[getClass(k), selected[k] ? 'brightness-125' : '']" @click="select(k)">{{ k.substring(3) }}</div>
     </div>
     <div class="text-xl m-2 p-2">二楼座位表</div>
-    <div class="grid m-2 w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
+    <div class="grid m-2 max-w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
       <div v-for="k in U" class="border w-6 h-6 cursor-pointer text-xs flex items-center justify-center text-gray-600" :class="[getClass(k), selected[k] ? 'brightness-125' : '']" @click="select(k)">{{ k.substring(3) }}</div>
     </div>
     <div class="flex items-center justify-end w-full">
@@ -243,7 +250,7 @@ async function setStatus () {
     <div class="my-2">
       <div class="text-lg font-bold my-1">微信号：</div>
       <input class="w-4/5 rounded px-2 py-1 border my-1 w-full" placeholder="请输入您的微信号" v-model="data.wx">
-      <div><a href="https://www.google.com" target="_blank" class="text-blue-400 text-sm underline underline-offset-1">如何查询微信号？</a></div>
+      <div><a href="https://img1.imgtp.com/2023/07/11/xVqCNzx6.jpg" target="_blank" class="text-blue-400 text-sm underline underline-offset-1">如何查询微信号？</a></div>
     </div>
     <div class="flex items-center my-4">
       <button class="rounded all-transition font-bold text-white px-4 py-1" :class="data.name && data.wx && data.phone && Object.keys(selected).length ? 'bg-blue-600' : 'bg-gray-500'" :disabled="!(data.name && data.wx && data.phone && Object.keys(selected).length)" @click="submit">提交</button>
@@ -266,7 +273,10 @@ async function setStatus () {
     </div>
   </div>
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
-    <h2 class="text-4xl sm:text-6xl font-bold m-6">请支付{{ price }}元</h2>
-    <p class="text-gray-500">支付完成后请等待工作人员审核</p>
+    <h2 class="text-3xl sm:text-6xl font-bold m-6">请支付{{ price }}元</h2>
+    <p class="text-2xl"><b class="text-red-500">请在支付时备注<code>{{ showPayment }}</code></b></p>
+    <p><a href="https://img1.imgtp.com/2023/07/11/SLrnawtO.png" target="_blank" class="text-blue-400 text-sm underline underline-offset-1">如何添加备注？</a></p>
+    <p class="my-2">支付完成后请等待工作人员审核！</p>
+    <img class="w-64 my-5" src="https://img1.imgtp.com/2023/07/11/NHEQMyKM.png">
   </div>
 </template>
