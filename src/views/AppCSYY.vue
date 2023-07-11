@@ -1,5 +1,4 @@
 <script setup>
-import CSYYInput from '../components/CSYYInput.vue'
 import srpc from '../utils/srpc-local.js'
 import state from '../state.js'
 import { XMarkIcon } from '@heroicons/vue/24/solid'
@@ -204,6 +203,7 @@ async function setStatus (s) {
   }
   state.loading = false
 }
+
 </script>
 
 <template>
@@ -214,12 +214,15 @@ async function setStatus (s) {
   </div>
   <div class="flex flex-col w-full justify-around items-center py-4">
     <h1 class="my-4 text-xl font-bold">扬州中学慈善义演购票</h1>
-    <p class="text-sm text-gray-500">请点击选择座位, 左右拖动可查看全部座位</p>
-    <div class="text-xl m-2 p-2">一楼座位表</div>
+    <p>报告厅座位示意图</p>
+    <img class="w-72 my-2" src="https://img1.imgtp.com/2023/07/11/u0Xqc46I.png">
+    <p class="text-sm my-2 text-gray-500">请在下方点击选择座位, <b class="text-black">左右拖动</b>可查看全部座位</p>
+    <div class="text m-1 p-1">一楼座位表</div>
+    <div>（舞台）</div>
     <div class="grid m-2 max-w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
       <div v-for="k in L" class="border w-6 h-6 cursor-pointer text-xs flex items-center justify-center text-gray-600" :class="[getClass(k), selected[k] ? 'brightness-125' : '']" @click="select(k)">{{ k.substring(3) }}</div>
     </div>
-    <div class="text-xl m-2 p-2">二楼座位表</div>
+    <div class="text m-1 p-1">二楼座位表</div>
     <div class="grid m-2 max-w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
       <div v-for="k in U" class="border w-6 h-6 cursor-pointer text-xs flex items-center justify-center text-gray-600" :class="[getClass(k), selected[k] ? 'brightness-125' : '']" @click="select(k)">{{ k.substring(3) }}</div>
     </div>
@@ -254,7 +257,7 @@ async function setStatus (s) {
     </div>
     <div class="flex items-center my-4">
       <button class="rounded all-transition font-bold text-white px-4 py-1" :class="data.name && data.wx && data.phone && Object.keys(selected).length ? 'bg-blue-600' : 'bg-gray-500'" :disabled="!(data.name && data.wx && data.phone && Object.keys(selected).length)" @click="submit">提交</button>
-      <p class="text-gray-500 text-xs ml-2">请务必检查您的信息！</p>
+      <p class="text-gray-500 text-xs ml-2">如需返回选座请轻触屏幕左侧</p>
     </div>
   </div>
   <div class="fixed top-0 md:w-1/3 w-11/12 h-screen bg-white all-transition z-20 px-10 py-4 overflow-y-auto" :class="showAdmin ? 'right-0' : '-right-full'">
@@ -265,18 +268,24 @@ async function setStatus (s) {
     </div>
     <div class="font-bold">合计金额：{{ price }}元 ({{ showAdmin.label }})</div>
     <hr class="my-2">
+    <div>姓名：{{ showAdmin.name }}</div>
+    <div>手机号：{{ showAdmin.phone }}</div>
+    <div>微信号：{{ showAdmin.wx }}</div>
     <div class="flex flex-col">
       <button class="bg-gray-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(0)">！！设为未售出！！</button>
       <button class="bg-red-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(1)">设为未付款</button>
       <button class="bg-orange-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(2)">设为已付款</button>
       <button class="bg-sky-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(3)">设为已取票</button>
     </div>
+    <p class="my-2 text-xs">[扬州中学慈善义演]您的订单{{ showAdmin.label }}已确认，凭此短信取票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
   </div>
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
-    <h2 class="text-3xl sm:text-6xl font-bold m-6">请支付{{ price }}元</h2>
+    <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
     <p class="text-2xl"><b class="text-red-500">请在支付时备注<code>{{ showPayment }}</code></b></p>
     <p><a href="https://img1.imgtp.com/2023/07/11/SLrnawtO.png" target="_blank" class="text-blue-400 text-sm underline underline-offset-1">如何添加备注？</a></p>
-    <p class="my-2">支付完成后请等待工作人员审核！</p>
-    <img class="w-64 my-5" src="https://img1.imgtp.com/2023/07/11/NHEQMyKM.png">
+    <p class="m-2">支付完成后请等待工作人员审核！</p>
+    <p >审核通过后您会收到短信通知</p>
+    <img class="w-64 my-5" src="https://img1.imgtp.com/2023/07/11/bX72JFRN.png">
   </div>
+  
 </template>
