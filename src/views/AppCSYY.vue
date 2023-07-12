@@ -207,7 +207,7 @@ async function setStatus (s) {
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-screen justify-center items-center fixed z-30 top-0 left-0 bg-gradient-to-b from-purple-700 to-pink-700" v-if="showCover">
+  <div class="flex flex-col w-full h-screen justify-center items-center bg-cover fixed z-30 top-0 left-0" style="background-image: url(https://img1.imgtp.com/2023/07/12/AK87Bzca.jpg)" v-if="showCover">
     <div class="text-2xl text-white">扬州中学</div>
     <h2 class="text-4xl sm:text-6xl font-bold text-white m-6">慈善义演</h2>
     <button class="bg-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold m-10" @click="init">点击购票</button>
