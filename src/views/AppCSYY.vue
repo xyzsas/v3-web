@@ -104,7 +104,7 @@ const L = ['', '', '', 'L0131', 'L0129', 'L0127', 'L0125', 'L0123', 'L0121', '',
 'L1909', 'L1907', 'L1905', 'L1903', 'L1901', 'L1902', 'L1904', 'L1906', 'L1908',
 'L1910', 'L1912', '', '', '', '', 'L1920', 'L1922', 'L1924', 'L1926', 'L1928', 'L1930',
 'L1932', 'L1934', '']
-let showCover = $ref(true), showInput = $ref(false), showPayment = $ref(false), showAdmin = $ref(false)
+let showCover = $ref(true), showIntro = $ref(true), showInput = $ref(false), showPayment = $ref(false), showAdmin = $ref(false)
 let selected = $ref({}), data = $ref({})
 let occupied = $ref({})
 
@@ -112,6 +112,7 @@ async function init () {
   state.loading = true
   occupied = token ? await srpc.csyy.admin.get(token) : await srpc.csyy.get()
   showCover = false
+  showIntro = false
   showInput = false
   showPayment = false
   showAdmin = false
@@ -207,10 +208,24 @@ async function setStatus (s) {
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-screen justify-center items-center bg-cover fixed z-30 top-0 left-0" style="background-image: url(https://img1.imgtp.com/2023/07/12/AK87Bzca.jpg)" v-if="showCover">
+  <div class="flex flex-col w-full h-screen justify-center items-center bg-cover fixed z-30 left-0 all-transition" :class="showCover ? 'top-0' : '-top-full'" style="background-image: url(https://img1.imgtp.com/2023/07/12/AK87Bzca.jpg)">
     <div class="text-2xl text-white">扬州中学</div>
     <h2 class="text-4xl sm:text-6xl font-bold text-white m-6">慈善义演</h2>
-    <button class="bg-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold m-10" @click="init">点击购票</button>
+    <button class="bg-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold m-10" @click="showCover = false">点击购票</button>
+  </div>
+  <div class="w-full h-screen justify-center items-center bg-white fixed z-20 top-0 left-0 p-4 sm:p-10 overflow-y-auto" v-if="showIntro">
+    <h2 class="text-2xl sm:text-4xl font-bold m-6">扬州中学慈善义演</h2>
+    <p class="m-2">江苏省扬州中学作为具有浓厚人文情怀的百年名校，素有举办慈善义演活动的传统，往届活动均获得高度评价，成果丰硕，至今募捐善款金额已逾二十万元。除义演门票收入外，活动现场亦有丰富周边进行售卖，周边售卖所获收益去除成本后将与门票收入共同成为善款，捐赠至扬州红十字会。</p>
+    <p class="m-2 font-bold">2023，第九届扬州中学慈善义演如约而至。</p>
+    <p class="m-2">本届义演主题为“爱逾山海，善行无疆”。我们坚信每一片善心、每一个善举都能打破时间和空间的阻碍，点亮世界的每一处角落。在义演的舞台上，我们愿与您共同见证热爱与精彩，梦想与情怀。</p>
+    <h3 class="text-lg font-bold m-2">义演具体信息如下：</h3>
+    <p class="m-2">1、<b>活动时间：7月22日下午4:00—6:00</b><br>活动时长约为两小时，现场将在下午2:00开始检票入场，请您预留充足时间，绿色出行，从学校东门（淮海路20号）进入，在演出正式开始前五分钟入座，以避免影响自己与他人的观看体验。</p>
+    <p class="m-2">2、<b>活动地点：江苏省扬州中学实验楼2楼报告厅</b><br>入校后请关注<b>检票处</b>位置，在检票处凭<b>短信核验码和姓名</b>核验门票，再领取<b>纸质票</b>入场。</p>
+    <p class="m-2">3、活动购票方式：点击文末链接网址进入网站，根据流程指引进行线上选座购票（不支持退票），购票后将有确认短信发至手机，请注意查收。</p>
+    <p class="m-2"><b>7月18日中午12:00</b>前购票的观众将获得随票附赠的<b>主题徽章</b>一套，将于现场验票时随纸质票一并发放。购买<b>A区票将附赠主题帆布包一件</b>，将放置于预定的座位上。</p>
+    <p class="m-2">4、活动观看指南<br>演出前，请您将手机及时静音，演出过程中，请您遵守观赏之礼，遵循现场秩序，避免大声交谈，踢踏座椅等不文明行为，专心观赏演出，礼貌予以喝彩，爱护会场环境，及时清理垃圾。</p>
+    <p class="m-2">感谢您的支持与配合，江苏省扬州中学慈善义演，期待您的到来。</p>
+    <button class="bg-blue-500 text-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold my-4 mx-2" @click="init">点击购票</button>
   </div>
   <div class="flex flex-col w-full justify-around items-center py-4">
     <h1 class="my-4 text-xl font-bold">扬州中学慈善义演购票</h1>
