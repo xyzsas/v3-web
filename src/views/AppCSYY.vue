@@ -217,6 +217,8 @@ async function setStatus (s) {
     <p>报告厅座位示意图</p>
     <img class="w-72 my-2" src="https://img1.imgtp.com/2023/07/11/u0Xqc46I.png">
     <p class="text-sm my-2 text-gray-500">请在下方点击选择座位, <b class="text-black">左右拖动</b>可查看全部座位</p>
+    <p class="text-sm">7月18日中午12:00前购票将获赠主题徽章一套</p>
+    <p class="text-sm my-2">每张A区票（橙色）将附赠主题帆布包一件</p>
     <div class="text m-1 p-1">一楼座位表</div>
     <div>（舞台）</div>
     <div class="grid m-2 max-w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
@@ -238,9 +240,13 @@ async function setStatus (s) {
     <div class="text-xl font-bold my-1">您已选择：</div>
     <div class="my-1 flex items-center" v-for="(v, k) in selected">
       - {{ getText(k) }}
-      <XMarkIcon class="text-red-500 w-4 ml-2 cursor-pointer" @click="delete selected[k]" />
+      <div v-if="getType(k) === 'A'" class="text-xs">赠帆布包</div>
+      <XMarkIcon class="text-red-500 w-4 ml-1 cursor-pointer" @click="delete selected[k]" />
     </div>
-    <div class="font-bold">合计金额：{{ price }}元</div>
+    <div class="flex items-center">
+      <div class="font-bold">合计金额：{{ price }}元</div>
+      <div class="mx-2 text-xs">赠主题徽章</div>
+    </div>
     <hr class="my-2">
     <div class="my-2">
       <div class="text-lg font-bold my-1 mt-4">姓名：</div>
@@ -277,7 +283,7 @@ async function setStatus (s) {
       <button class="bg-orange-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(2)">设为已付款</button>
       <button class="bg-sky-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(3)">设为已取票</button>
     </div>
-    <p class="my-2 text-xs">[扬州中学慈善义演]您的订单{{ showAdmin.label }}已确认，凭此短信取票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
+    <p class="my-2 text-xs">[扬州中学慈善义演]您的订单{{ showAdmin.label }}已确认，凭此短信取票并领取主题徽章。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
   </div>
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
     <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
