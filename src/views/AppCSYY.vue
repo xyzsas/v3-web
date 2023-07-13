@@ -229,6 +229,7 @@ async function setStatus (s) {
     <p class="m-2"><b>7月18日中午12:00</b>前购票的观众将获得随票附赠的<b>主题徽章</b>一套，将于现场验票时随纸质票一并发放。购买<b>A区票将附赠主题帆布包一件</b>，将放置于预定的座位上。</p>
     <p class="m-2">4、活动观看指南<br>演出前，请您将手机及时静音，演出过程中，请您遵守观赏之礼，遵循现场秩序，避免大声交谈，踢踏座椅等不文明行为，专心观赏演出，礼貌予以喝彩，爱护会场环境，及时清理垃圾。</p>
     <p class="m-2">感谢您的支持与配合，江苏省扬州中学慈善义演，期待您的到来。</p>
+    <p class="m-2">如关于购票流程有任何疑问，或购票出现问题，请致电客服18752712819（工作时间8:00-21:00）</p>
     <button class="bg-blue-500 text-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold my-4 mx-2 mb-20" @click="init">点击购票</button>
   </div>
   <div class="flex flex-col w-full justify-around items-center py-4">
