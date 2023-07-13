@@ -198,6 +198,13 @@ async function submit () {
 
 async function setStatus (s) {
   if (!token) return
+  const { isConfirmed } = await Swal.fire({
+    title: '确认？',
+    html: s ? '' : '<b style="color: red;">危险操作！正在删除订单！</b>',
+    icon: 'warning',
+    showCancelButton: true
+  })
+  if (!isConfirmed) return
   state.loading = true
   for (const k in selected) {
     if (!s) occupied[k] = {}
@@ -310,15 +317,16 @@ function showImg (url) {
       <button class="bg-orange-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(2)">设为已付款</button>
       <button class="bg-sky-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(3)">设为已取票</button>
     </div>
-    <p class="my-2 text-xs">【扬州中学慈善义演】您的订单{{ showAdmin.label }}已确认，凭此短信取票并领取主题徽章。您可选择在7月20和21日的9:00-17:00前往扬州中学东门传达室提前兑票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
+    <p class="my-2 text-xs select-all">【扬州中学慈善义演】您的订单{{ showAdmin.label }}已确认，凭此短信取票并领取主题徽章。您可在7月20和21日的9:00-17:00前往扬州中学东门传达室提前兑票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
   </div>
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
     <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
     <p class="text-2xl"><b class="text-red-500">请在支付时备注<code>{{ showPayment }}</code></b></p>
     <p><a @click="showImg('https://img1.imgtp.com/2023/07/11/SLrnawtO.png')" class="text-blue-400 text-sm underline underline-offset-1">如何添加备注？</a></p>
     <p class="m-2">支付完成后请等待工作人员审核！</p>
-    <p >审核通过后您会收到短信通知</p>
-    <img class="w-64 my-5" src="https://img1.imgtp.com/2023/07/11/bX72JFRN.png">
+    <p>审核通过后您会收到短信通知</p>
+    <img class="w-64 my-5" src="https://img1.imgtp.com/2023/07/13/4BD9xAMB.png">
+    <p class="m-2">手机端请截图后打开微信扫码付款</p>
   </div>
   
 </template>
