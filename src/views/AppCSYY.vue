@@ -7,6 +7,7 @@ const route = useRoute()
 srpc('https://a.aauth.link/other')
 
 const token = route.query.token
+const parseDate = t => moment(t).fromNow()
 
 const U = ['', '', '', 'U0131', 'U0129', 'U0127', 'U0125', 'U0123', 'U0121', '', 'U0119', 'U0117',
 'U0115', 'U0113', 'U0111', 'U0109', 'U0107', 'U0105', 'U0103', 'U0101', 'U0102',
@@ -209,6 +210,11 @@ async function setStatus (s) {
   state.loading = false
 }
 
+function showImg (url) {
+  Swal.fire({
+    html: `<img style="max-height: 80vh; margin: 0 auto;" src="${url}">`
+  })
+}
 </script>
 
 <template>
@@ -279,7 +285,7 @@ async function setStatus (s) {
     <div class="my-2">
       <div class="text-lg font-bold my-1">微信号：</div>
       <input class="w-4/5 rounded px-2 py-1 border my-1 w-full" placeholder="请输入您的微信号" v-model="data.wx">
-      <div><a href="https://img1.imgtp.com/2023/07/11/xVqCNzx6.jpg" target="_blank" class="text-blue-400 text-sm underline underline-offset-1">如何查询微信号？</a></div>
+      <div><a @click="showImg('https://img1.imgtp.com/2023/07/11/xVqCNzx6.jpg')" class="text-blue-400 text-sm underline underline-offset-1">如何查询微信号？</a></div>
     </div>
     <div class="flex items-center my-4">
       <button class="rounded all-transition font-bold text-white px-4 py-1" :class="data.name && data.wx && data.phone && Object.keys(selected).length ? 'bg-blue-600' : 'bg-gray-500'" :disabled="!(data.name && data.wx && data.phone && Object.keys(selected).length)" @click="submit">提交</button>
@@ -297,6 +303,7 @@ async function setStatus (s) {
     <div>姓名：{{ showAdmin.name }}</div>
     <div>手机号：{{ showAdmin.phone }}</div>
     <div>微信号：{{ showAdmin.wx }}</div>
+    <div>{{ parseDate(showAdmin.time) }}</div>
     <div class="flex flex-col">
       <button class="bg-gray-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(0)">！！设为未售出！！</button>
       <button class="bg-red-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(1)">设为未付款</button>
@@ -308,7 +315,7 @@ async function setStatus (s) {
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
     <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
     <p class="text-2xl"><b class="text-red-500">请在支付时备注<code>{{ showPayment }}</code></b></p>
-    <p><a href="https://img1.imgtp.com/2023/07/11/SLrnawtO.png" target="_blank" class="text-blue-400 text-sm underline underline-offset-1">如何添加备注？</a></p>
+    <p><a @click="showImg('https://img1.imgtp.com/2023/07/11/SLrnawtO.png')" class="text-blue-400 text-sm underline underline-offset-1">如何添加备注？</a></p>
     <p class="m-2">支付完成后请等待工作人员审核！</p>
     <p >审核通过后您会收到短信通知</p>
     <img class="w-64 my-5" src="https://img1.imgtp.com/2023/07/11/bX72JFRN.png">
