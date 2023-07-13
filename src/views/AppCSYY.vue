@@ -329,6 +329,7 @@ function showImg (url) {
     <p>审核通过后您会收到短信通知</p>
     <img class="w-64 my-5" src="https://img1.imgtp.com/2023/07/13/4BD9xAMB.png">
     <p class="m-2">手机端请截图后打开微信扫码付款</p>
+    <p class="m-2"><a href="https://img1.imgtp.com/2023/07/13/4BD9xAMB.png" class="text-blue-400 text-sm underline underline-offset-1">没看见二维码？截图本页后点击这里！</a></p>
   </div>
   
 </template>
