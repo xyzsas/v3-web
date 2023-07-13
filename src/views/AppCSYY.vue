@@ -143,7 +143,7 @@ function getClass (k) {
   if (getType(k) === 'S') return 'bg-rose-400'
   if (getType(k) === 'A') return 'bg-orange-400'
   if (getType(k) === 'B') return 'bg-purple-400'
-  if (getType(k) === 'C') return 'bg-cyan-400'
+  if (getType(k) === 'C') return 'bg-green-400'
   if (getType(k) === 'D') return 'bg-sky-500'
 }
 
@@ -242,7 +242,7 @@ function showImg (url) {
     <p class="m-2"><b>7月18日中午12:00</b>前购票的观众将获得随票附赠的<b>主题徽章</b>一套，将于现场验票时随纸质票一并发放。购买<b>A区票将附赠主题帆布包一件</b>，将放置于预定的座位上。</p>
     <p class="m-2">4、活动观看指南<br>演出前，请您将手机及时静音，演出过程中，请您遵守观赏之礼，遵循现场秩序，避免大声交谈，踢踏座椅等不文明行为，专心观赏演出，礼貌予以喝彩，爱护会场环境，及时清理垃圾。</p>
     <p class="m-2">感谢您的支持与配合，江苏省扬州中学慈善义演，期待您的到来。</p>
-    <p class="m-2">如关于购票流程有任何疑问，或购票出现问题，请致电客服18752712819（工作时间8:00-21:00）</p>
+    <p class="m-2">推荐使用电脑端选票。如关于购票流程有任何疑问，或购票出现问题，请致电客服18752712819（工作时间8:00-21:00）</p>
     <button class="bg-blue-500 text-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold my-4 mx-2 mb-20" @click="init">点击购票</button>
   </div>
   <div class="flex flex-col w-full justify-around items-center py-4">
@@ -250,8 +250,10 @@ function showImg (url) {
     <p>报告厅座位示意图</p>
     <img class="w-72 my-2" src="https://img1.imgtp.com/2023/07/11/u0Xqc46I.png">
     <p class="text-sm my-2 text-gray-500">请在下方点击选择座位, <b class="text-black">左右拖动</b>可查看全部座位</p>
-    <p class="text-sm">7月18日中午12:00前购票将获赠主题徽章一套</p>
-    <p class="text-sm my-2">每张A区票（橙色）将附赠主题帆布包一件</p>
+    <p class="text-sm">推荐使用电脑端选票</p>
+    <p class="text-sm mt-2 font-bold">A区（橙色）128元&nbsp; B区（紫色）88元</p>
+    <p class="text-sm mb-2 font-bold">C区（绿色）&nbsp;58元&nbsp; D区（蓝色）38元</p>
+    <p class="text-center">每张A区票（橙色）将附赠主题帆布包一件<br>7月18日中午12:00前购票将获赠主题徽章一套</p>
     <div class="text m-1 p-1">一楼座位表</div>
     <div>（舞台）</div>
     <div class="grid m-2 max-w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
