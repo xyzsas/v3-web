@@ -180,15 +180,19 @@ let price = $computed(() => {
 
 async function submit () {
   state.loading = true
-  const res = await srpc.csyy.book(Object.keys(selected), data.name, data.wx, data.phone)
-  if (res.ok) {
-    await Swal.fire('订单创建成功！', '请抓紧时间支付，超时将取消订单', 'success')
-    showPayment = res.label
-  } else {
-    await Swal.fire('创建订单失败', res.err, 'error')
-    await init()
+  try {
+    const res = await srpc.csyy.book(Object.keys(selected), data.name, data.wx, data.phone)
+    if (res.ok) {
+      await Swal.fire('订单创建成功！', '请抓紧时间支付，超时将取消订单', 'success')
+      showPayment = res.label
+    } else {
+      await Swal.fire('创建订单失败', res.err, 'error')
+      await init()
+    }
+    state.loading = false
+  } catch {
+    Swal.fire('订单创建失败！', '请更换浏览器重试', 'error')
   }
-  state.loading = false
 }
 
 async function setStatus (s) {
@@ -217,15 +221,15 @@ async function setStatus (s) {
     <h2 class="text-2xl sm:text-4xl font-bold m-6">扬州中学慈善义演</h2>
     <p class="m-2">江苏省扬州中学作为具有浓厚人文情怀的百年名校，素有举办慈善义演活动的传统，往届活动均获得高度评价，成果丰硕，至今募捐善款金额已逾二十万元。除义演门票收入外，活动现场亦有丰富周边进行售卖，周边售卖所获收益去除成本后将与门票收入共同成为善款，捐赠至扬州红十字会。</p>
     <p class="m-2 font-bold">2023，第九届扬州中学慈善义演如约而至。</p>
-    <p class="m-2">本届义演主题为“爱逾山海，善行无疆”。我们坚信每一片善心、每一个善举都能打破时间和空间的阻碍，点亮世界的每一处角落。在义演的舞台上，我们愿与您共同见证热爱与精彩，梦想与情怀。</p>
+    <p class="m-2">本届义演主题为<b>“爱逾山海，善行无疆”</b>。我们坚信每一片善心、每一个善举都能打破时间和空间的阻碍，点亮世界的每一处角落。在义演的舞台上，我们愿与您共同见证热爱与精彩，梦想与情怀。</p>
     <h3 class="text-lg font-bold m-2">义演具体信息如下：</h3>
-    <p class="m-2">1、<b>活动时间：7月22日下午4:00—6:00</b><br>活动时长约为两小时，现场将在下午2:00开始检票入场，请您预留充足时间，绿色出行，从学校东门（淮海路20号）进入，在演出正式开始前五分钟入座，以避免影响自己与他人的观看体验。</p>
+    <p class="m-2">1、<b>活动时间：7月22日下午4:00—6:00</b><br>活动时长约为两小时，现场将在<b>下午3:00</b>开始检票入场，请您预留充足时间，绿色出行，从<b>扬州中学东门（淮海路20号）</b>进入，在演出正式开始前五分钟入座，以避免影响自己与他人的观看体验。<br>为避免现场拥堵，除现场取票外，您可选择在<b>7月20和21日的早晨9:00至下午5:00</b>前往<b>扬州中学东门传达室</b>提前兑票，并于义演当天凭票入场（如有条件，推荐提前兑票）。</p>
     <p class="m-2">2、<b>活动地点：江苏省扬州中学实验楼2楼报告厅</b><br>入校后请关注<b>检票处</b>位置，在检票处凭<b>短信核验码和姓名</b>核验门票，再领取<b>纸质票</b>入场。</p>
     <p class="m-2">3、活动购票方式：点击文末链接网址进入网站，根据流程指引进行线上选座购票（不支持退票），购票后将有确认短信发至手机，请注意查收。</p>
     <p class="m-2"><b>7月18日中午12:00</b>前购票的观众将获得随票附赠的<b>主题徽章</b>一套，将于现场验票时随纸质票一并发放。购买<b>A区票将附赠主题帆布包一件</b>，将放置于预定的座位上。</p>
     <p class="m-2">4、活动观看指南<br>演出前，请您将手机及时静音，演出过程中，请您遵守观赏之礼，遵循现场秩序，避免大声交谈，踢踏座椅等不文明行为，专心观赏演出，礼貌予以喝彩，爱护会场环境，及时清理垃圾。</p>
     <p class="m-2">感谢您的支持与配合，江苏省扬州中学慈善义演，期待您的到来。</p>
-    <button class="bg-blue-500 text-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold my-4 mx-2" @click="init">点击购票</button>
+    <button class="bg-blue-500 text-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold my-4 mx-2 mb-20" @click="init">点击购票</button>
   </div>
   <div class="flex flex-col w-full justify-around items-center py-4">
     <h1 class="my-4 text-xl font-bold">扬州中学慈善义演购票</h1>
@@ -298,7 +302,7 @@ async function setStatus (s) {
       <button class="bg-orange-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(2)">设为已付款</button>
       <button class="bg-sky-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(3)">设为已取票</button>
     </div>
-    <p class="my-2 text-xs">[扬州中学慈善义演]您的订单{{ showAdmin.label }}已确认，凭此短信取票并领取主题徽章。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
+    <p class="my-2 text-xs">【扬州中学慈善义演】您的订单{{ showAdmin.label }}已确认，凭此短信取票并领取主题徽章。您可选择在7月20和21日的9:00-17:00前往扬州中学东门传达室提前兑票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
   </div>
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
     <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
