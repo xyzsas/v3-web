@@ -253,7 +253,7 @@ function showImg (url) {
     <p class="text-sm">推荐使用电脑端选票</p>
     <p class="text-sm mt-2 font-bold">A区（橙色）128元&nbsp; B区（紫色）88元</p>
     <p class="text-sm mb-2 font-bold">C区（绿色）&nbsp;58元&nbsp; D区（蓝色）38元</p>
-    <p class="text-center">每张A区票（橙色）将附赠主题帆布包一件<br>7月18日中午12:00前购票将获赠主题徽章一套</p>
+    <p class="text-center">每张A区票（橙色）将附赠主题帆布包一件</p>
     <div class="text m-1 p-1">一楼座位表</div>
     <div>（舞台）</div>
     <div class="grid m-2 max-w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
@@ -280,7 +280,6 @@ function showImg (url) {
     </div>
     <div class="flex items-center">
       <div class="font-bold">合计金额：{{ price }}元</div>
-      <div class="mx-2 text-xs">赠主题徽章</div>
     </div>
     <hr class="my-2">
     <div class="my-2">
@@ -319,7 +318,7 @@ function showImg (url) {
       <button class="bg-orange-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(2)">设为已付款</button>
       <button class="bg-sky-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(3)">设为已取票</button>
     </div>
-    <p class="my-2 text-xs select-all">【扬州中学慈善义演】您的订单{{ showAdmin.label }}已确认，凭此短信取票并领取主题徽章。您可在7月20和21日的9:00-17:00前往扬州中学东门传达室提前兑票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
+    <p class="my-2 text-xs select-all">【扬州中学慈善义演】您的订单{{ showAdmin.label }}已确认，凭此短信取票。您可在7月20和21日的9:00-17:00前往扬州中学东门传达室提前兑票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
   </div>
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
     <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
