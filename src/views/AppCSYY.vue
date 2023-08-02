@@ -4,7 +4,7 @@ import state from '../state.js'
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 import { useRoute } from 'vue-router'
 const route = useRoute()
-srpc('https://a.aauth.link/other')
+srpc('https://a.njsc.ltd/other')
 
 const token = route.query.token
 const parseDate = t => moment(t).fromNow()
