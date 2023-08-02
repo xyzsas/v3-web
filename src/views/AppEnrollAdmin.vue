@@ -156,7 +156,7 @@ async function adminProcess (use2 = true, force = false) {
   })
   if (!isConfirmed) return
   proc.time = parseTime(Date.now())
-  if (use2) srpc('https://sas.aauth.link/srpc2')
+  if (use2) srpc('https://sas.njsc.ltd/srpc2')
   while (1) {
     const res = await srpc.app.enroll.process(state.user.token, force)
     console.log(res)

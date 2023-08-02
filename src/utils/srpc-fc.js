@@ -1,4 +1,4 @@
-let url = 'https://sas.aauth.link/srpc'
+let url = 'https://sas.njsc.ltd/srpc'
 
 const getFunction = name => ((...args) => fetch(url, {
   method: 'POST', mode: 'cors', cache: 'no-cache',
