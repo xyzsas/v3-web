@@ -25,7 +25,7 @@ let msgIds = $computed(() => {
 })
 
 if (user?.token) get()
-else window.location.href = 'https://cn.aauth.link/#/launch/xyzsas'
+else window.location.href = 'https://auth.njsc.ltd/#/launch/xyzsas'
 state.loading = false
 
 let trans = $ref('opacity-0')
