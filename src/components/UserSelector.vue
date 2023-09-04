@@ -30,7 +30,11 @@ async function modeSearch () {
   if (mode === 0) {
     const f = {}
     for (const k in filter) {
-      if (!filter[k]) delete filter[k]
+      if (!filter[k]) {
+        delete filter[k]
+        continue
+      }
+      if (filter[k].includes(',')) f['账户.' + k] = { $in: filter[k].split(',').map(x => x.trim()) }
       else f['账户.' + k] = filter[k]
     }
     if (!Object.keys(f).length) return searching = false
