@@ -187,7 +187,7 @@ function edit (k) {
             <PencilSquareIcon v-if="editing === k" class="w-4 ml-2 text-blue-500" />
           </div>
           <Wrapper :show="editing === k" class="px-4 py-2 bg-white">
-            <DatePicker v-if="editors[k].date" @change="edit(k)" v-model="editors[k].value" :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }">
+            <DatePicker v-if="editors[k].date" @change="edit(k)" v-model.string="editors[k].value" :masks="{ modelValue: 'YYYY-MM-DD' }">
               <template v-slot="{ inputValue, inputEvents }">
                 <input class="border rounded px-2 py-1 block w-full" :value="inputValue" v-on="inputEvents" :placeholder="editors[k].placeholder" />
               </template>

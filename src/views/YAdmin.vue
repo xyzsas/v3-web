@@ -11,7 +11,7 @@ import UserSelector from '../components/UserSelector.vue'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute(), q = route.query
 
-let range = $ref({ start: 0, end: 0 }), user = $ref('')
+let range = $ref({ start: Date.now() - 100, end: Date.now() }), user = $ref('')
 let list = $ref([]), userMap = $ref({})
 
 const parseDate = t => moment(t).format('YYYY-MM-DD HH:mm:ss')
@@ -73,7 +73,7 @@ async function del () {
   <div class="flex flex-col sm:flex-row items-start">
     <div class="rounded border bg-white p-4 mx-4 mb-4 flex flex-col items-start">
       <p class="text-gray-700 text-sm mx-2">请选择时间范围，如有需要可以指定用户</p>
-      <DatePicker class="m-2" v-model="range" mode="dateTime" is24hr :model-config="{ type: 'number' }" is-range />
+      <DatePicker class="m-2" v-model.number.range="range" mode="dateTime" is24hr />
       <UserInput class="m-2" v-model="user" />
       <button class="all-transition bg-blue-500 font-bold text-white rounded shadow hover:shadow-md text-lg mx-2 px-3 py-1" @click="getRange">查询消息</button>
     </div>

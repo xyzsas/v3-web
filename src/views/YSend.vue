@@ -16,7 +16,7 @@ let data = $ref({
   link: ['外链（可选）', '系统外部链接', q.link || ''],
   tags: ['标签（可选）', 'tag1,tag2', q.tags || '']
 })
-let msg = $ref({}), time = $ref(0), showTime = $ref(false)
+let msg = $ref({}), time = $ref(Date.now()), showTime = $ref(false)
 let showUserSelector = $ref(false)
 const user = state.user
 
@@ -64,7 +64,7 @@ async function sendMsg() {
         <label class="block my-2 mx-4 mt-4">
           <input type="checkbox" v-model="showTime">&nbsp;自定义消息发送时间
         </label>
-        <DatePicker class="my-2 mx-4" v-if="showTime" v-model="time" mode="dateTime" is24hr :model-config="{ type: 'number' }">
+        <DatePicker class="my-2 mx-4" v-if="showTime" v-model.number="time" mode="dateTime" is24hr>
           <template v-slot="{ inputValue, inputEvents }">
             <input class="px-2 py-1 shadow appearance-none border rounded block w-full" placeholder="请选择消息发送时间" :value="inputValue"
               v-on="inputEvents">

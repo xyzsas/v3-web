@@ -9,8 +9,9 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.0.18",
+    "@popperjs/core": "^2.11.8",
     "sortablejs": "^1.15.0",
-    "v-calendar": "^3.0.0-alpha.8",
+    "v-calendar": "^3.0.3",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },

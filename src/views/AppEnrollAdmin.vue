@@ -190,7 +190,7 @@ console.log('AppEnrollAdmin utils: data.value, userMap.value, adminProcess(use2,
       </div>
       <div class="flex items-center my-2">
         <div class="w-16">开始时间</div>
-        <DatePicker class="ml-2" v-model="info.start" mode="dateTime" is24hr :model-config="{ type: 'number' }">
+        <DatePicker class="ml-2" v-model.number="info.start" mode="dateTime" is24hr>
           <template v-slot="{ inputValue, inputEvents }">
             <input
               class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300"
