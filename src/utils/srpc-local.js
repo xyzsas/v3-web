@@ -1,18 +1,25 @@
-let url = 'https://s.yzzx.org/srpc'
+// ES Module SRPC Client
+// https://github.com/yzITI/srpc
 
-const getFunction = name => ((...args) => fetch(url, {
-  method: 'POST', mode: 'cors', cache: 'no-cache',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ N: name, A: args })
-}).then(async r => {
-  if (r.status === 200) return (await r.json()).R
-  else throw (await r.text())
-}))
-
-const proxyGet = (target, prop) => {
-  const key = target.key, newKey = key ? key + '.' + prop : prop, f = getFunction(newKey)
-  f.key = newKey
-  return new Proxy(f, { get: proxyGet })
+export const SRPC = () => {
+  let url = 'https://s.yzzx.org/srpc'
+  
+  const getFunction = N => ((...A) => fetch(url, {
+    method: 'POST', mode: 'cors', cache: 'no-cache',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ N, A })
+  }).then(async r => {
+    if (r.status === 200) return (await r.json()).R
+    else throw (await r.text())
+  }))
+  const proxyGet = (target, key) => {
+    const N = target.N || [], newN = [...N, key], f = getFunction(newN)
+    f.N = newN
+    return new Proxy(f, { get: proxyGet })
+  }
+  return new Proxy((endpoint = '/') => url = endpoint, { get: proxyGet })
 }
 
-export default new Proxy((endpoint = '/') => url = endpoint, { get: proxyGet })
+export const srpc = SRPC()
+
+export default srpc
