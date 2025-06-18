@@ -155,11 +155,11 @@ function select (k) {
   if (!k) return
   if (token) {
     showAdmin = { k }
-    if (occupied[k].time) showAdmin = { k, ...occupied[k] }
+    if (occupied[k]?.time) showAdmin = { k, ...occupied[k] }
     selected = { [k]: true }
     if (!showAdmin.label) return
     for (const k in occupied) {
-      if (occupied[k].label === showAdmin.label) selected[k] = true
+      if (occupied[k]?.label === showAdmin.label) selected[k] = true
     }
     return
   }
@@ -225,7 +225,7 @@ function showImg (url) {
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-screen justify-center items-center bg-cover fixed z-30 top-0 all-transition" :class="showCover ? 'left-0' : '-left-full'" style="background-image: url(https://img1.imgtp.com/2023/07/12/AK87Bzca.jpg)">
+  <div class="flex flex-col w-full h-screen justify-center items-center bg-cover fixed z-30 top-0 all-transition" :class="showCover ? 'left-0' : '-left-full'" style="background: url(https://img1.imgtp.com/2023/07/12/AK87Bzca.jpg); background-color: oklch(43.2% 0.232 292.759);">
     <div class="text-2xl text-white">扬州中学</div>
     <h2 class="text-4xl sm:text-6xl font-bold text-white m-6">慈善义演</h2>
     <button class="bg-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold m-10" @click="showCover = false">点击购票</button>
