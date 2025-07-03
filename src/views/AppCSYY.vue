@@ -225,24 +225,24 @@ function showImg (url) {
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-screen justify-center items-center bg-cover fixed z-30 top-0 all-transition" :class="showCover ? 'left-0' : '-left-full'" style="background: url(https://img1.imgtp.com/2023/07/12/AK87Bzca.jpg); background-color: oklch(43.2% 0.232 292.759);">
+  <div class="flex flex-col w-full h-screen justify-center items-center bg-cover fixed z-30 top-0 all-transition" :class="showCover ? 'left-0' : '-left-full'" style="background: oklch(43.2% 0.232 292.759);">
     <div class="text-2xl text-white">扬州中学</div>
     <h2 class="text-4xl sm:text-6xl font-bold text-white m-6">慈善义演</h2>
     <button class="bg-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold m-10" @click="showCover = false">点击购票</button>
   </div>
   <div class="w-full h-screen justify-center items-center bg-white fixed z-20 top-0 left-0 p-4 sm:p-10 overflow-y-auto" v-if="showIntro">
     <h2 class="text-2xl sm:text-4xl font-bold m-6">扬州中学慈善义演</h2>
-    <p class="m-2">江苏省扬州中学作为具有浓厚人文情怀的百年名校，素有举办慈善义演活动的传统，往届活动均获得高度评价，成果丰硕，至今募捐善款金额已逾二十万元。除义演门票收入外，活动现场亦有丰富周边进行售卖，周边售卖所获收益去除成本后将与门票收入共同成为善款，捐赠至扬州红十字会。</p>
-    <p class="m-2 font-bold">2023，第九届扬州中学慈善义演如约而至。</p>
-    <p class="m-2">本届义演主题为<b>“爱逾山海，善行无疆”</b>。我们坚信每一片善心、每一个善举都能打破时间和空间的阻碍，点亮世界的每一处角落。在义演的舞台上，我们愿与您共同见证热爱与精彩，梦想与情怀。</p>
+    <p class="m-2">江苏省扬州中学作为具有浓厚人文情怀的百年名校，素有举办慈善义演活动的传统。十九载光阴流转，江苏省扬州中学以公益为舟，在岁月长河中笃定前行，每两年一届的慈善义演，宛如永不熄灭的灯塔，以艺术之弦奏响善意乐章，用行动之笔书写温暖诗行。九届义演中，无数善意如星辰汇聚，至今募捐善款金额已逾二十万元。除义演门票收入外，活动现场亦有精美文创进行售卖，文创售卖所获利润将与门票收入共同成为善款，捐赠至扬州红十字会。</p>
+    <p class="m-2 font-bold">2025，江苏省扬州中学第十届慈善义演如约而至。</p>
+    <p class="m-2">本届义演主题为<b>“拾光扬爱・行远无疆”</b>。我们坚信每一片善心、每一个善举都能打破时间和空间的阻碍，点亮世界的每一处角落。在义演的舞台上，我们愿与您共同见证热爱与精彩，梦想与情怀。</p>
     <h3 class="text-lg font-bold m-2">义演具体信息如下：</h3>
-    <p class="m-2">1、<b>活动时间：7月22日下午4:00—6:00</b><br>活动时长约为两小时，现场将在<b>下午3:00</b>开始检票入场，请您预留充足时间，绿色出行，从<b>扬州中学东门（淮海路20号）</b>进入，在演出正式开始前五分钟入座，以避免影响自己与他人的观看体验。<br>为避免现场拥堵，除现场取票外，您可选择在<b>7月20和21日的早晨9:00至下午5:00</b>前往<b>扬州中学东门传达室</b>提前兑票，并于义演当天凭票入场（如有条件，推荐提前兑票）。</p>
-    <p class="m-2">2、<b>活动地点：江苏省扬州中学实验楼2楼报告厅</b><br>入校后请关注<b>检票处</b>位置，在检票处凭<b>短信核验码和姓名</b>核验门票，再领取<b>纸质票</b>入场。</p>
-    <p class="m-2">3、活动购票方式：点击文末链接网址进入网站，根据流程指引进行线上选座购票（不支持退票），购票后将有确认短信发至手机，请注意查收。</p>
-    <p class="m-2"><b>7月18日中午12:00</b>前购票的观众将获得随票附赠的<b>主题徽章</b>一套，将于现场验票时随纸质票一并发放。购买<b>A区票将附赠主题帆布包一件</b>，将放置于预定的座位上。</p>
-    <p class="m-2">4、活动观看指南<br>演出前，请您将手机及时静音，演出过程中，请您遵守观赏之礼，遵循现场秩序，避免大声交谈，踢踏座椅等不文明行为，专心观赏演出，礼貌予以喝彩，爱护会场环境，及时清理垃圾。</p>
+    <p class="m-2">1、<b>活动时间：7月20日下午15:00~17:00</b><br>活动时长约为两小时，现场将在<b>下午14:00</b>开始检票入场，请您预留充足时间，绿色出行，从<b>扬州中学东门（淮海路20号）</b>进入，在演出正式开始前五分钟入座，以避免影响自己与他人的观看体验。<br>为避免现场拥堵，除现场取票外，您可选择在<b>7月19日9:00~12:00/14:00~17:00</b>前往<b>扬州中学东门传达室凭核验短信和手机号</b>提前兑票，并于义演当天凭票入场（如有条件，推荐提前兑票）。</p>
+    <p class="m-2">2、<b>活动地点：江苏省扬州中学实验楼2楼报告厅</b><br>入校后请关注<b>检票处</b>位置，在检票处凭<b>纸质票</b>入场。</p>
+    <p class="m-2">3、活动购票方式：点击文末链接网址进入网站，根据流程指引进行线上选座购票（不支持退票），购票后将有核验短信发至手机（工作时间：9:00～11:00/14:00～17:00），请注意查收。</p>
+    <p class="m-2"><b>前200位</b>下单的观众将获得随票附赠的主题徽章，将于现场兑票时随纸质票一并发放。购买<b>A区票将附赠主题帆布包一件</b>，将放置于预定的座位上。</p>
+    <p class="m-2">4、演出前，请您将手机及时静音，演出过程中，请您遵守观赏之礼，遵循现场秩序，避免大声交谈、踢踏座椅等不文明行为，专心观赏演出，礼貌予以喝彩，爱护会场环境，及时清理垃圾。</p>
     <p class="m-2">感谢您的支持与配合，江苏省扬州中学慈善义演，期待您的到来。</p>
-    <p class="m-2">推荐使用电脑端选票。如关于购票流程有任何疑问，或购票出现问题，请致电客服18752712819（工作时间8:00-21:00）</p>
+    <p class="m-2">推荐使用电脑端选票。如关于购票流程有任何疑问，或购票出现问题，欢迎添加客服微信咨询。</p>
     <button class="bg-blue-500 text-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold my-4 mx-2 mb-20" @click="init">点击购票</button>
   </div>
   <div class="flex flex-col w-full justify-around items-center py-4">
@@ -318,17 +318,17 @@ function showImg (url) {
       <button class="bg-orange-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(2)">设为已付款</button>
       <button class="bg-sky-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(3)">设为已取票</button>
     </div>
-    <p class="my-2 text-xs select-all">【扬州中学慈善义演】您的订单{{ showAdmin.label }}已确认，凭此短信取票。您可在7月20和21日的9:00-17:00前往扬州中学东门传达室提前兑票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}</p>
+    <p class="my-2 text-xs select-all">【扬州中学慈善义演核验短信】感谢您对我校“拾光扬爱·行远无疆”慈善义演的支持！您的订单{{ showAdmin.label }}已确认，凭此短信取票。您可在7月19日9:00~12:00/14:00~17:00前往扬州中学东门传达室提前兑票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}。如有任何疑问，欢迎添加客服微信（微信号：xycm3151）咨询。温馨提示：演出当日将在下午14:00开始检票入场，请您预留充足时间，绿色出行，现场设有文创义卖区，欢迎继续传递爱心。十届温暖，因你延续！</p>
   </div>
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
     <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
     <p class="text-2xl"><b class="text-red-500">请在支付时备注<code>{{ showPayment }}</code></b></p>
     <p><a @click="showImg('https://img1.imgtp.com/2023/07/11/SLrnawtO.png')" class="text-blue-400 text-sm underline underline-offset-1">如何添加备注？</a></p>
     <p class="m-2">支付完成后请等待工作人员审核！</p>
-    <p>审核通过后您会收到短信通知</p>
-    <img class="w-64 my-5" src="https://img1.imgtp.com/2023/07/13/4BD9xAMB.png">
+    <p>审核通过后您会收到核验短信</p>
+    <img class="w-64 my-5" src="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png">
     <p class="m-2">手机端请截图后打开微信扫码付款</p>
-    <p class="m-2"><a href="https://img1.imgtp.com/2023/07/13/4BD9xAMB.png" class="text-blue-400 text-sm underline underline-offset-1">没看见二维码？截图本页后点击这里！</a></p>
+    <p class="m-2"><a href="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png" class="text-blue-400 text-sm underline underline-offset-1">没看见二维码？截图本页后点击这里！</a></p>
   </div>
   
 </template>
