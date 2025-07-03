@@ -242,13 +242,11 @@ function showImg (url) {
     <p class="m-2"><b>前200位</b>下单的观众将获得随票附赠的主题徽章，将于现场兑票时随纸质票一并发放。购买<b>A区票将附赠主题帆布包一件</b>，将放置于预定的座位上。</p>
     <p class="m-2">4、演出前，请您将手机及时静音，演出过程中，请您遵守观赏之礼，遵循现场秩序，避免大声交谈、踢踏座椅等不文明行为，专心观赏演出，礼貌予以喝彩，爱护会场环境，及时清理垃圾。</p>
     <p class="m-2">感谢您的支持与配合，江苏省扬州中学慈善义演，期待您的到来。</p>
-    <p class="m-2">推荐使用电脑端选票。如关于购票流程有任何疑问，或购票出现问题，欢迎添加客服微信咨询。</p>
+    <p class="m-2">推荐使用电脑端选票。如关于购票流程有任何疑问，或购票出现问题，欢迎添加客服微信咨询（微信号：xycm3151）。</p>
     <button class="bg-blue-500 text-white py-2 px-4 rounded shadow all-transition hover:shadow-md font-bold my-4 mx-2 mb-20" @click="init">点击购票</button>
   </div>
   <div class="flex flex-col w-full justify-around items-center py-4">
     <h1 class="my-4 text-xl font-bold">扬州中学慈善义演购票</h1>
-    <p>报告厅座位示意图</p>
-    <img class="w-72 my-2" src="https://img1.imgtp.com/2023/07/11/u0Xqc46I.png">
     <p class="text-sm my-2 text-gray-500">请在下方点击选择座位, <b class="text-black">左右拖动</b>可查看全部座位</p>
     <p class="text-sm">推荐使用电脑端选票</p>
     <p class="text-sm mt-2 font-bold">A区（橙色）128元&nbsp; B区（紫色）88元</p>
@@ -274,7 +272,7 @@ function showImg (url) {
   <div class="fixed top-0 md:w-1/3 w-11/12 h-screen bg-white all-transition z-20 px-10 py-4 overflow-y-auto" :class="showInput ? 'right-0' : '-right-full'">
     <div class="text-xl font-bold my-1">您已选择：</div>
     <div class="my-1 flex items-center" v-for="(v, k) in selected">
-      - {{ getText(k) }}
+      &nbsp;{{ getText(k) }}
       <div v-if="getType(k) === 'A'" class="text-xs">赠帆布包</div>
       <XMarkIcon class="text-red-500 w-4 ml-1 cursor-pointer" @click="delete selected[k]" />
     </div>
@@ -291,9 +289,8 @@ function showImg (url) {
       <input class="w-4/5 rounded px-2 py-1 border my-1 w-full" placeholder="请输入您的手机号"  v-model="data.phone">
     </div>
     <div class="my-2">
-      <div class="text-lg font-bold my-1">微信号：</div>
-      <input class="w-4/5 rounded px-2 py-1 border my-1 w-full" placeholder="请输入您的微信号" v-model="data.wx">
-      <div><a @click="showImg('https://img1.imgtp.com/2023/07/11/xVqCNzx6.jpg')" class="text-blue-400 text-sm underline underline-offset-1">如何查询微信号？</a></div>
+      <div class="text-lg font-bold my-1">微信昵称：</div>
+      <input class="w-4/5 rounded px-2 py-1 border my-1 w-full" placeholder="请输入您的微信昵称" v-model="data.wx">
     </div>
     <div class="flex items-center my-4">
       <button class="rounded all-transition font-bold text-white px-4 py-1" :class="data.name && data.wx && data.phone && Object.keys(selected).length ? 'bg-blue-600' : 'bg-gray-500'" :disabled="!(data.name && data.wx && data.phone && Object.keys(selected).length)" @click="submit">提交</button>
@@ -310,7 +307,7 @@ function showImg (url) {
     <hr class="my-2">
     <div>姓名：{{ showAdmin.name }}</div>
     <div>手机号：{{ showAdmin.phone }}</div>
-    <div>微信号：{{ showAdmin.wx }}</div>
+    <div>微信昵称：{{ showAdmin.wx }}</div>
     <div>{{ parseDate(showAdmin.time) }}</div>
     <div class="flex flex-col">
       <button class="bg-gray-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(0)">！！设为未售出！！</button>
@@ -323,12 +320,11 @@ function showImg (url) {
   <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
     <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
     <p class="text-2xl"><b class="text-red-500">请在支付时备注<code>{{ showPayment }}</code></b></p>
-    <p><a @click="showImg('https://img1.imgtp.com/2023/07/11/SLrnawtO.png')" class="text-blue-400 text-sm underline underline-offset-1">如何添加备注？</a></p>
     <p class="m-2">支付完成后请等待工作人员审核！</p>
     <p>审核通过后您会收到核验短信</p>
     <img class="w-64 my-5" src="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png">
     <p class="m-2">手机端请截图后打开微信扫码付款</p>
-    <p class="m-2"><a href="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png" class="text-blue-400 text-sm underline underline-offset-1">没看见二维码？截图本页后点击这里！</a></p>
+    <p class="m-2"><a target="_blank" href="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png" class="text-blue-400 text-sm underline underline-offset-1">没看见二维码？截图本页后点击这里！</a></p>
   </div>
   
 </template>
