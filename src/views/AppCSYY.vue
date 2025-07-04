@@ -182,7 +182,7 @@ let price = $computed(() => {
 async function submit () {
   state.loading = true
   try {
-    const res = await srpc.csyy.book(Object.keys(selected), data.name, data.wx, data.phone)
+    const res = await srpc.csyy.book(Object.keys(selected), '_name', data.wx, data.phone)
     if (res.ok) {
       await Swal.fire('订单创建成功！', '请抓紧时间支付，超时将取消订单', 'success')
       showPayment = res.label
@@ -254,11 +254,11 @@ function showImg (url) {
     <p class="text-center">每张A区票（橙色）将附赠主题帆布包一件</p>
     <div class="text m-1 p-1">一楼座位表</div>
     <div>（舞台）</div>
-    <div class="grid m-2 max-w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
+    <div class="grid m-2 max-w-full overflow-x-auto select-none" style="grid-template-columns: repeat(39, 1fr);">
       <div v-for="k in L" class="border w-6 h-6 cursor-pointer text-xs flex items-center justify-center text-gray-600" :class="[getClass(k), selected[k] ? 'brightness-125' : '']" @click="select(k)">{{ k.substring(3) }}</div>
     </div>
     <div class="text m-1 p-1">二楼座位表</div>
-    <div class="grid m-2 max-w-full overflow-x-auto" style="grid-template-columns: repeat(39, 1fr);">
+    <div class="grid m-2 max-w-full overflow-x-auto select-none" style="grid-template-columns: repeat(39, 1fr);">
       <div v-for="k in U" class="border w-6 h-6 cursor-pointer text-xs flex items-center justify-center text-gray-600" :class="[getClass(k), selected[k] ? 'brightness-125' : '']" @click="select(k)">{{ k.substring(3) }}</div>
     </div>
     <div class="flex items-center justify-end w-full">
@@ -281,10 +281,6 @@ function showImg (url) {
     </div>
     <hr class="my-2">
     <div class="my-2">
-      <div class="text-lg font-bold my-1 mt-4">姓名：</div>
-      <input class="w-4/5 rounded px-2 py-1 border my-1 w-full" placeholder="请输入您的真实姓名"  v-model="data.name">
-    </div>
-    <div class="my-2">
       <div class="text-lg font-bold my-1">手机号：</div>
       <input class="w-4/5 rounded px-2 py-1 border my-1 w-full" placeholder="请输入您的手机号"  v-model="data.phone">
     </div>
@@ -293,7 +289,7 @@ function showImg (url) {
       <input class="w-4/5 rounded px-2 py-1 border my-1 w-full" placeholder="请输入您的微信昵称" v-model="data.wx">
     </div>
     <div class="flex items-center my-4">
-      <button class="rounded all-transition font-bold text-white px-4 py-1" :class="data.name && data.wx && data.phone && Object.keys(selected).length ? 'bg-blue-600' : 'bg-gray-500'" :disabled="!(data.name && data.wx && data.phone && Object.keys(selected).length)" @click="submit">提交</button>
+      <button class="rounded all-transition font-bold text-white px-4 py-1" :class="data.wx && data.phone && Object.keys(selected).length ? 'bg-blue-600' : 'bg-gray-500'" :disabled="!(data.wx && data.phone && Object.keys(selected).length)" @click="submit">提交</button>
       <p class="text-gray-500 text-xs ml-2">如需返回选座请轻触屏幕左侧</p>
     </div>
   </div>
@@ -305,7 +301,6 @@ function showImg (url) {
     </div>
     <div class="font-bold">合计金额：{{ price }}元 ({{ showAdmin.label }})</div>
     <hr class="my-2">
-    <div>姓名：{{ showAdmin.name }}</div>
     <div>手机号：{{ showAdmin.phone }}</div>
     <div>微信昵称：{{ showAdmin.wx }}</div>
     <div>{{ parseDate(showAdmin.time) }}</div>
@@ -315,16 +310,20 @@ function showImg (url) {
       <button class="bg-orange-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(2)">设为已付款</button>
       <button class="bg-sky-500 py-1 px-3 rounded shadow all-transition hover:shadow-md my-2 text-white font-bold" @click="setStatus(3)">设为已取票</button>
     </div>
-    <p class="my-2 text-xs select-all">【扬州中学慈善义演核验短信】感谢您对我校“拾光扬爱·行远无疆”慈善义演的支持！您的订单{{ showAdmin.label }}已确认，凭此短信取票。您可在7月19日9:00~12:00/14:00~17:00前往扬州中学东门传达室提前兑票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}。如有任何疑问，欢迎添加客服微信（微信号：xycm3151）咨询。温馨提示：演出当日将在下午14:00开始检票入场，请您预留充足时间，绿色出行，现场设有文创义卖区，欢迎继续传递爱心。十届温暖，因你延续！</p>
+    <p class="my-2 text-xs select-all">【扬州中学慈善义演核验短信】感谢您对本届慈善义演的支持！您的购票订单{{ showAdmin.label }}已确认，凭此短信取票。您可在7月19日9:00~12:00/14:00~17:00前往扬州中学东门传达室提前兑票。您的座位是：{{ Object.keys(selected).map(getText).join('，') }}。如有任何疑问，欢迎添加客服微信（微信号：xycm3151）咨询。演出当日将在14:00开始检票入场，现场设有文创义卖区，欢迎继续传递爱心。十届温暖，因你延续！</p>
   </div>
-  <div class="flex flex-col w-full h-screen justify-center items-center fixed top-0 left-0 z-30 bg-white" v-if="showPayment">
-    <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
-    <p class="text-2xl"><b class="text-red-500">请在支付时备注<code>{{ showPayment }}</code></b></p>
-    <p class="m-2">支付完成后请等待工作人员审核！</p>
-    <p>审核通过后您会收到核验短信</p>
-    <img class="w-64 my-5" src="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png">
-    <p class="m-2">手机端请截图后打开微信扫码付款</p>
-    <p class="m-2"><a target="_blank" href="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png" class="text-blue-400 text-sm underline underline-offset-1">没看见二维码？截图本页后点击这里！</a></p>
+  <div class="w-full h-screen fixed top-0 left-0 z-30 bg-white overflow-y-auto pb-6 pt-16" v-if="showPayment">
+    <div class="flex flex-col justify-center items-center">
+      <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
+      <p class="text-2xl"><b class="text-red-500">请在支付时备注<code>{{ showPayment }}</code></b></p>
+      <p class="m-2">支付完成后请等待工作人员审核！</p>
+      <p>审核通过后您会收到核验短信</p>
+      <img class="w-64 my-5" src="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png">
+      <p class="m-2">手机端请截图后打开微信扫码付款</p>
+      <p class="m-2"><a target="_blank" href="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png" class="text-blue-400 text-sm underline underline-offset-1">没看见二维码？截图本页后点击这里！</a></p>
+      <p class="mt-16 mb-4 font-bold text-xl">主题文化衫预售通道现已开启，欢迎抢购~</p>
+      <img class="my-2 w-full block" style="max-width: 800px;" src="https://cdn.luogu.com.cn/upload/image_hosting/s0qou143.png">
+      <img class="my-2 w-full block" style="max-width: 800px;" src="https://cdn.luogu.com.cn/upload/image_hosting/oyqhtf2p.png">
+    </div>
   </div>
-  
 </template>
