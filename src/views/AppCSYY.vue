@@ -317,7 +317,7 @@ function showImg (url) {
       <h2 class="text-3xl sm:text-6xl font-bold m-6">共需支付{{ price }}元</h2>
       <p class="text-2xl"><b class="text-red-500">请在支付时备注<code>{{ showPayment }}</code></b></p>
       <p class="m-2">支付完成后请等待工作人员审核！</p>
-      <p>审核通过后您会收到核验短信</p>
+      <p>审核通过后您会收到核验短信（工作时间：9:00～11:00/14:00～17:00）</p>
       <img class="w-64 my-5" src="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png">
       <p class="m-2">手机端请截图后打开微信扫码付款</p>
       <p class="m-2"><a target="_blank" href="https://cdn.luogu.com.cn/upload/image_hosting/tyaa69pa.png" class="text-blue-400 text-sm underline underline-offset-1">没看见二维码？截图本页后点击这里！</a></p>
